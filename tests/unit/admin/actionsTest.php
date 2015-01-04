@@ -35,7 +35,7 @@ class Unit_Admin_ActionsTest extends OxidTestCase
     {
         // testing..
         $oView = new Actions();
-        $this->assertEquals('actions.tpl', $oView->render());
+        $this->assertEqualss('actions.tpl', $oView->render());
     }
 
 }
