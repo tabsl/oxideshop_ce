@@ -384,12 +384,48 @@ function showInvitations()
 
             <dl>
                 <dt>
+                    <input type=hidden name=confbools[blEnableIntangibleProdAgreement] value=false>
+                    <input type=checkbox name=confbools[blEnableIntangibleProdAgreement] value=true  [{if ($confbools.blEnableIntangibleProdAgreement)}]checked[{/if}] [{ $readonly}]>
+                    [{oxinputhelp ident="HELP_SHOP_CONFIG_ENABLE_INTANGIBLE_PRODUCTS_AGREEMENT" }]
+                </dt>
+                <dd>
+                    [{oxmultilang ident="SHOP_CONFIG_ENABLE_INTANGIBLE_PRODUCTS_AGREEMENT" }]
+                </dd>
+                <div class="spacer"></div>
+            </dl>
+
+            <dl>
+                <dt>
                     <input type=hidden name=confbools[blStoreCreditCardInfo] value=false>
                     <input type=checkbox name=confbools[blStoreCreditCardInfo] value=true  [{if ($confbools.blStoreCreditCardInfo)}]checked[{/if}] [{ $readonly}]>
                     [{ oxinputhelp ident="HELP_SHOP_CONFIG_STORECREDITCARDINFO" }]
                 </dt>
                 <dd>
                     [{ oxmultilang ident="SHOP_CONFIG_STORECREDITCARDINFO" }] [{ oxinputhelp ident="HELP_SHOP_CONFIG_ATTENTION" }]
+                </dd>
+                <div class="spacer"></div>
+            </dl>
+
+            <dl>
+                <dt>
+                    <input type=hidden name=confbools[blShowTSInternationalFeesMessage] value=false>
+                    <input type=checkbox name=confbools[blShowTSInternationalFeesMessage] value=true  [{if ($confbools.blShowTSInternationalFeesMessage)}]checked[{/if}] [{ $readonly}]>
+                    [{ oxinputhelp ident="HELP_SHOP_CONFIG_SHOWTSINTERNATIONALFEESMESSAGE" }]
+                </dt>
+                <dd>
+                    [{ oxmultilang ident="SHOP_CONFIG_SHOWTSINTERNATIONALFEESMESSAGE" }]
+                </dd>
+                <div class="spacer"></div>
+            </dl>
+
+            <dl>
+                <dt>
+                    <input type=hidden name=confbools[blShowTSCODMessage] value=false>
+                    <input type=checkbox name=confbools[blShowTSCODMessage] value=true  [{if ($confbools.blShowTSCODMessage)}]checked[{/if}] [{ $readonly}]>
+                    [{ oxinputhelp ident="HELP_SHOP_CONFIG_SHOWTSCODMESSAGE" }]
+                </dt>
+                <dd>
+                    [{ oxmultilang ident="SHOP_CONFIG_SHOWTSCODMESSAGE" }]
                 </dd>
                 <div class="spacer"></div>
             </dl>
@@ -534,7 +570,28 @@ function showInvitations()
                 <div class="spacer"></div>
             </dl>
 
+            <dl>
+                <dt>
+                    <input type=hidden name=confbools[blVatIdCheckDisabled] value=false>
+                    <input type=checkbox name=confbools[blVatIdCheckDisabled] value=true  [{if ($confbools.blVatIdCheckDisabled)}]checked[{/if}] [{ $readonly}]>
+                    [{ oxinputhelp ident="HELP_SHOP_CONFIG_DISABLEONLINEVATIDCHECK" }]
+                </dt>
+                <dd>
+                    [{ oxmultilang ident="SHOP_CONFIG_DISABLEONLINEVATIDCHECK" }]
+                </dd>
+                <div class="spacer"></div>
+            </dl>
 
+            <dl>
+                <dt>
+                    <input type=text class="editinput" size="35" name=confstrs[sVatIdCheckInterfaceWsdl] value="[{$confstrs.sVatIdCheckInterfaceWsdl}]" [{ $readonly}]>
+                    [{ oxinputhelp ident="HELP_SHOP_CONFIG_ALTVATIDCHECKINTERFACEWSDL" }]
+                </dt>
+                <dd>
+                    [{ oxmultilang ident="SHOP_CONFIG_ALTVATIDCHECKINTERFACEWSDL" }]
+                </dd>
+                <div class="spacer"></div>
+            </dl>
          </div>
     </div>
 
@@ -1256,7 +1313,35 @@ function showInvitations()
                 <div class="spacer"></div>
             </dl>
 
+            <dl>
+                <dt>
+                    <input type="text" class="txt" name="confstrs[sParcelService]" style="width: 300px;" value="[{$confstrs.sParcelService}]">
+                    [{ oxinputhelp ident="HELP_SHOP_CONFIG_PARCELSERVICE" }]
+                </dt>
+                <dd>
+                    [{ oxmultilang ident="SHOP_CONFIG_PARCELSERVICE" }]
+                </dd>
+                <div class="spacer"></div>
+            </dl>
+
          </div>
+    </div>
+
+    <div class="groupExp">
+        <div>
+            <a href="#" onclick="_groupExp(this);return false;" class="rc"><b>[{ oxmultilang ident="SHOP_OPTIONS_BANK_INFORMATION" }]</b></a>
+            <dl>
+                <dt>
+                    <input type=hidden name=confbools[blSkipDebitOldBankInfo] value=false>
+                    <input type=checkbox name=confbools[blSkipDebitOldBankInfo] value=true  [{if ($confbools.blSkipDebitOldBankInfo)}]checked[{/if}] [{ $readonly}]>
+                    [{ oxinputhelp ident="HELP_SHOP_CONFIG_DEBIT_OLD_BANK_INFORMATION_NOT_ALLOWED" }]
+                </dt>
+                <dd>
+                    [{ oxmultilang ident="SHOP_CONFIG_DEBIT_OLD_BANK_INFORMATION_NOT_ALLOWED" }]
+                </dd>
+                <div class="spacer"></div>
+            </dl>
+        </div>
     </div>
 [{/block}]
 

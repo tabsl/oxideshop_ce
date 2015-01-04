@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   views
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -33,6 +31,7 @@
  */
 class Account_Wishlist extends Account
 {
+
     /**
      * Current class template name.
      *
@@ -131,7 +130,7 @@ class Account_Wishlist extends Account
 
         // is logged in ?
         $oUser = $this->getUser();
-        if ( !$oUser ) {
+        if (!$oUser) {
             return $this->_sThisTemplate = $this->_sThisLoginTemplate;
         }
 
@@ -145,9 +144,10 @@ class Account_Wishlist extends Account
      */
     public function showSuggest()
     {
-        if ( $this->_blShowSuggest === null ) {
-            $this->_blShowSuggest = ( bool ) oxConfig::getParameter( 'blshowsuggest' );
+        if ($this->_blShowSuggest === null) {
+            $this->_blShowSuggest = ( bool ) oxRegistry::getConfig()->getRequestParameter('blshowsuggest');
         }
+
         return $this->_blShowSuggest;
     }
 
@@ -158,11 +158,11 @@ class Account_Wishlist extends Account
      */
     public function getWishList()
     {
-        if ( $this->_oWishList === null ) {
+        if ($this->_oWishList === null) {
             $this->_oWishList = false;
-            if ( $oUser = $this->getUser() ) {
-                $this->_oWishList = $oUser->getBasket( 'wishlist' );
-                if ( $this->_oWishList->isEmpty() ) {
+            if ($oUser = $this->getUser()) {
+                $this->_oWishList = $oUser->getBasket('wishlist');
+                if ($this->_oWishList->isEmpty()) {
                     $this->_oWishList = false;
                 }
             }
@@ -178,12 +178,13 @@ class Account_Wishlist extends Account
      */
     public function getWishProductList()
     {
-        if ( $this->_aWishProductList === null ) {
+        if ($this->_aWishProductList === null) {
             $this->_aWishProductList = false;
-            if ( $oWishList = $this->getWishList() ) {
+            if ($oWishList = $this->getWishList()) {
                 $this->_aWishProductList = $oWishList->getArticles();
             }
         }
+
         return $this->_aWishProductList;
     }
 
@@ -194,12 +195,12 @@ class Account_Wishlist extends Account
      */
     public function getSimilarRecommListIds()
     {
-        if ( $this->_aSimilarRecommListIds === null ) {
+        if ($this->_aSimilarRecommListIds === null) {
             $this->_aSimilarRecommListIds = false;
 
             $aWishProdList = $this->getWishProductList();
-            if ( is_array( $aWishProdList ) && ( $oSimilarProd = current( $aWishProdList ) ) ) {
-                $this->_aSimilarRecommListIds = array( $oSimilarProd->getId() );
+            if (is_array($aWishProdList) && ($oSimilarProd = current($aWishProdList))) {
+                $this->_aSimilarRecommListIds = array($oSimilarProd->getId());
             }
         }
 
@@ -213,25 +214,38 @@ class Account_Wishlist extends Account
      */
     public function sendWishList()
     {
-        $aParams = oxConfig::getParameter( 'editval', true );
-        if ( is_array( $aParams ) ) {
+        if (!oxRegistry::getSession()->checkSessionChallenge()) {
+            return false;
+        }
 
+        $aParams = oxRegistry::getConfig()->getRequestParameter('editval', true);
+        if (is_array($aParams)) {
+            $oUtilsView = oxRegistry::get("oxUtilsView");
             $oParams = ( object ) $aParams;
-            $this->setEnteredData( ( object ) oxConfig::getParameter( 'editval' ) );
+            $this->setEnteredData(( object ) oxRegistry::getConfig()->getRequestParameter('editval'));
 
-            if ( !isset( $aParams['rec_name'] ) || !isset( $aParams['rec_email'] ) ||
-                 !$aParams['rec_name'] || !$aParams['rec_email'] ) {
-                return oxRegistry::get("oxUtilsView")->addErrorToDisplay( 'ERROR_MESSAGE_COMPLETE_FIELDS_CORRECTLY', false, true );
+            if (!isset($aParams['rec_name']) || !isset($aParams['rec_email']) ||
+                !$aParams['rec_name'] || !$aParams['rec_email']
+            ) {
+                return $oUtilsView->addErrorToDisplay('ERROR_MESSAGE_COMPLETE_FIELDS_CORRECTLY', false, true);
             } else {
 
-                if ( $oUser = $this->getUser() ) {
-                    $oParams->send_email = $oUser->oxuser__oxusername->value;
-                    $oParams->send_name  = $oUser->oxuser__oxfname->getRawValue().' '.$oUser->oxuser__oxlname->getRawValue();
-                    $oParams->send_id    = $oUser->getId();
+                if ($oUser = $this->getUser()) {
+                    $sFirstName = 'oxuser__oxfname';
+                    $sLastName = 'oxuser__oxlname';
+                    $sSendName = 'send_name';
+                    $sSendEmail = 'send_email';
+                    $sUserNameField = 'oxuser__oxusername';
+                    $sSendName = 'send_name';
+                    $sSendId = 'send_id';
 
-                    $this->_blEmailSent = oxNew( 'oxemail' )->sendWishlistMail( $oParams );
-                    if ( !$this->_blEmailSent ) {
-                        return oxRegistry::get("oxUtilsView")->addErrorToDisplay( 'ERROR_MESSAGE_CHECK_EMAIL', false, true );
+                    $oParams->$sSendEmail = $oUser->$sUserNameField->value;
+                    $oParams->$sSendName = $oUser->$sFirstName->getRawValue() . ' ' . $oUser->$sLastName->getRawValue();
+                    $oParams->$sSendId = $oUser->getId();
+
+                    $this->_blEmailSent = oxNew('oxemail')->sendWishlistMail($oParams);
+                    if (!$this->_blEmailSent) {
+                        return $oUtilsView->addErrorToDisplay('ERROR_MESSAGE_CHECK_EMAIL', false, true);
                     }
                 }
             }
@@ -252,10 +266,8 @@ class Account_Wishlist extends Account
      * Wishlist data setter
      *
      * @param object $oData suggest data object
-     *
-     * @return null
      */
-    public function setEnteredData( $oData )
+    public function setEnteredData($oData)
     {
         $this->_aEditValues = $oData;
     }
@@ -278,11 +290,15 @@ class Account_Wishlist extends Account
      */
     public function togglePublic()
     {
-        if ( $oUser = $this->getUser() ) {
+        if (!oxRegistry::getSession()->checkSessionChallenge()) {
+            return false;
+        }
 
-            $blPublic = (int) oxConfig::getParameter( 'blpublic' );
-            $oBasket = $oUser->getBasket( 'wishlist' );
-            $oBasket->oxuserbaskets__oxpublic = new oxField( ( $blPublic == 1 ) ? $blPublic : 0 );
+        if ($oUser = $this->getUser()) {
+
+            $blPublic = (int) oxRegistry::getConfig()->getRequestParameter('blpublic');
+            $oBasket = $oUser->getBasket('wishlist');
+            $oBasket->oxuserbaskets__oxpublic = new oxField(($blPublic == 1) ? $blPublic : 0);
             $oBasket->save();
         }
     }
@@ -290,17 +306,15 @@ class Account_Wishlist extends Account
     /**
      * Searches for wishlist of another user. Returns false if no
      * searching conditions set (no login name defined).
-     *
-     * @return bool
      */
     public function searchForWishList()
     {
-        if ( $sSearch = oxConfig::getParameter( 'search' ) ) {
+        if ($sSearch = oxRegistry::getConfig()->getRequestParameter('search')) {
 
             // search for baskets
-            $oUserList = oxNew( 'oxuserlist' );
-            $oUserList->loadWishlistUsers( $sSearch );
-            if ( $oUserList->count() ) {
+            $oUserList = oxNew('oxuserlist');
+            $oUserList->loadWishlistUsers($sSearch);
+            if ($oUserList->count()) {
                 $this->_oWishListUsers = $oUserList;
             }
 
@@ -339,12 +353,15 @@ class Account_Wishlist extends Account
         $aPaths = array();
         $aPath = array();
 
-        $aPath['title'] = oxRegistry::getLang()->translateString( 'MY_ACCOUNT', oxRegistry::getLang()->getBaseLanguage(), false );
-        $aPath['link']  = oxRegistry::get("oxSeoEncoder")->getStaticUrl( $this->getViewConfig()->getSelfLink() . 'cl=account' );
+        $iBaseLanguage = oxRegistry::getLang()->getBaseLanguage();
+        $sSelfLink = $this->getViewConfig()->getSelfLink();
+
+        $aPath['title'] = oxRegistry::getLang()->translateString('MY_ACCOUNT', $iBaseLanguage, false);
+        $aPath['link'] = oxRegistry::get("oxSeoEncoder")->getStaticUrl($sSelfLink . 'cl=account');
         $aPaths[] = $aPath;
 
-        $aPath['title'] = oxRegistry::getLang()->translateString( 'MY_GIFT_REGISTRY', oxRegistry::getLang()->getBaseLanguage(), false );
-        $aPath['link']  = $this->getLink();
+        $aPath['title'] = oxRegistry::getLang()->translateString('MY_GIFT_REGISTRY', $iBaseLanguage, false);
+        $aPath['link'] = $this->getLink();
         $aPaths[] = $aPath;
 
         return $aPaths;

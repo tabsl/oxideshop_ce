@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -27,6 +25,7 @@
  */
 class oxOutOfStockException extends oxArticleException
 {
+
     /**
      * Maximal possible amount (e.g. 2 if two items of the article are left).
      *
@@ -35,7 +34,7 @@ class oxOutOfStockException extends oxArticleException
     private $_iRemainingAmount = 0;
 
     /**
-     * Enter description here ...
+     * Basket index value
      *
      * @var string
      */
@@ -45,10 +44,8 @@ class oxOutOfStockException extends oxArticleException
      * Sets the amount of the article remaining in stock.
      *
      * @param integer $iRemainingAmount Articles remaining in stock
-     *
-     * @return null
      */
-    public function setRemainingAmount( $iRemainingAmount )
+    public function setRemainingAmount($iRemainingAmount)
     {
         $this->_iRemainingAmount = (int) $iRemainingAmount;
     }
@@ -67,10 +64,8 @@ class oxOutOfStockException extends oxArticleException
      * Sets the basket index for the article
      *
      * @param string $sBasketIndex Basket index for the faulty article
-     *
-     * @return null
      */
-    public function setBasketIndex( $sBasketIndex )
+    public function setBasketIndex($sBasketIndex)
     {
         $this->_sBasketIndex = $sBasketIndex;
     }
@@ -93,7 +88,7 @@ class oxOutOfStockException extends oxArticleException
      */
     public function getString()
     {
-        return __CLASS__.'-'.parent::getString()." Remaining Amount --> ".$this->_iRemainingAmount;
+        return __CLASS__ . '-' . parent::getString() . " Remaining Amount --> " . $this->_iRemainingAmount;
     }
 
     /**
@@ -109,6 +104,7 @@ class oxOutOfStockException extends oxArticleException
         $aRes = parent::getValues();
         $aRes['remainingAmount'] = $this->getRemainingAmount();
         $aRes['basketIndex'] = $this->getBasketIndex();
+
         return $aRes;
     }
 
@@ -123,14 +119,14 @@ class oxOutOfStockException extends oxArticleException
      * any view (except basket).
      *
      * @param string $sDestination name of the view variable
-     *
-     * @return null
      */
-    public function setDestination( $sDestination )
+    public function setDestination($sDestination)
     {
         // in case destination not set, overriding default error message
-        if ( !$sDestination ) {
-            $this->message = oxRegistry::getLang()->translateString( $this->getMessage() ) . " " . $this->getRemainingAmount();
+        if (!$sDestination) {
+            $this->message = oxRegistry::getLang()->translateString($this->getMessage()) . ": " . $this->getRemainingAmount();
+        } else {
+            $this->message = oxRegistry::getLang()->translateString($this->getMessage()) . ": ";
         }
     }
 }

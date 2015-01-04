@@ -1,40 +1,31 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
  * Seo encoder base
  *
- * @package model
  */
 class oxSeoEncoderVendor extends oxSeoEncoder
 {
-    /**
-     * Singleton instance.
-     *
-     * @var oxvendor
-     */
-    protected static $_instance = null;
 
     /**
      * Root vendor uri cache
@@ -42,18 +33,6 @@ class oxSeoEncoderVendor extends oxSeoEncoder
      * @var string
      */
     protected $_aRootVendorUri = null;
-
-    /**
-     * Singleton method
-     *
-     * @deprecated since v5.0 (2012-08-10); Use oxRegistry::get("oxSeoEncoderVendor") instead.
-     *
-     * @return oxSeoEncoderVendor
-     */
-    public static function getInstance()
-    {
-        return oxRegistry::get("oxSeoEncoderVendor");
-    }
 
     /**
      * Returns target "extension" (/)
@@ -74,36 +53,37 @@ class oxSeoEncoderVendor extends oxSeoEncoder
      *
      * @return string
      */
-    public function getVendorUri( $oVendor, $iLang = null, $blRegenerate = false  )
+    public function getVendorUri($oVendor, $iLang = null, $blRegenerate = false)
     {
         if (!isset($iLang)) {
             $iLang = $oVendor->getLanguage();
         }
         // load from db
-        if ( $blRegenerate || !( $sSeoUrl = $this->_loadFromDb( 'oxvendor', $oVendor->getId(), $iLang ) ) ) {
+        if ($blRegenerate || !($sSeoUrl = $this->_loadFromDb('oxvendor', $oVendor->getId(), $iLang))) {
 
             if ($iLang != $oVendor->getLanguage()) {
                 $sId = $oVendor->getId();
                 $oVendor = oxNew('oxvendor');
-                $oVendor->loadInLang( $iLang, $sId );
+                $oVendor->loadInLang($iLang, $sId);
             }
 
             $sSeoUrl = '';
-            if ( $oVendor->getId() != 'root' ) {
-                if ( !isset( $this->_aRootVendorUri[$iLang] ) ) {
+            if ($oVendor->getId() != 'root') {
+                if (!isset($this->_aRootVendorUri[$iLang])) {
                     $oRootVendor = oxNew('oxvendor');
-                    $oRootVendor->loadInLang( $iLang, 'root' );
-                    $this->_aRootVendorUri[$iLang] = $this->getVendorUri( $oRootVendor, $iLang );
+                    $oRootVendor->loadInLang($iLang, 'root');
+                    $this->_aRootVendorUri[$iLang] = $this->getVendorUri($oRootVendor, $iLang);
                 }
                 $sSeoUrl .= $this->_aRootVendorUri[$iLang];
             }
 
-            $sSeoUrl .= $this->_prepareTitle( $oVendor->oxvendor__oxtitle->value, false, $oVendor->getLanguage() ) .'/';
-            $sSeoUrl  = $this->_processSeoUrl( $sSeoUrl, $oVendor->getId(), $iLang );
+            $sSeoUrl .= $this->_prepareTitle($oVendor->oxvendor__oxtitle->value, false, $oVendor->getLanguage()) . '/';
+            $sSeoUrl = $this->_processSeoUrl($sSeoUrl, $oVendor->getId(), $iLang);
 
             // save to db
-            $this->_saveToDb( 'oxvendor', $oVendor->getId(), $oVendor->getBaseStdLink($iLang), $sSeoUrl, $iLang );
+            $this->_saveToDb('oxvendor', $oVendor->getId(), $oVendor->getBaseStdLink($iLang), $sSeoUrl, $iLang);
         }
+
         return $sSeoUrl;
     }
 
@@ -117,7 +97,7 @@ class oxSeoEncoderVendor extends oxSeoEncoder
      *
      * @return string
      */
-    public function getVendorPageUrl( $oVendor, $iPage, $iLang = null, $blFixed = null )
+    public function getVendorPageUrl($oVendor, $iPage, $iLang = null, $blFixed = null)
     {
         if (!isset($iLang)) {
             $iLang = $oVendor->getLanguage();
@@ -125,13 +105,14 @@ class oxSeoEncoderVendor extends oxSeoEncoder
         $sStdUrl = $oVendor->getBaseStdLink($iLang) . '&amp;pgNr=' . $iPage;
         $sParams = (int) ($iPage + 1);
 
-        $sStdUrl = $this->_trimUrl( $sStdUrl, $iLang );
-        $sSeoUrl = $this->getVendorUri( $oVendor, $iLang ) . $sParams . "/";
+        $sStdUrl = $this->_trimUrl($sStdUrl, $iLang);
+        $sSeoUrl = $this->getVendorUri($oVendor, $iLang) . $sParams . "/";
 
-        if ( $blFixed === null ) {
-            $blFixed = $this->_isFixed( 'oxvendor', $oVendor->getId(), $iLang );
+        if ($blFixed === null) {
+            $blFixed = $this->_isFixed('oxvendor', $oVendor->getId(), $iLang);
         }
-        return $this->_getFullUrl( $this->_getPageUri( $oVendor, 'oxvendor', $sStdUrl, $sSeoUrl, $sParams, $iLang, $blFixed ), $iLang );
+
+        return $this->_getFullUrl($this->_getPageUri($oVendor, 'oxvendor', $sStdUrl, $sSeoUrl, $sParams, $iLang, $blFixed), $iLang);
     }
 
     /**
@@ -142,22 +123,21 @@ class oxSeoEncoderVendor extends oxSeoEncoder
      *
      * @return null
      */
-    public function getVendorUrl( $oVendor, $iLang = null )
+    public function getVendorUrl($oVendor, $iLang = null)
     {
         if (!isset($iLang)) {
             $iLang = $oVendor->getLanguage();
         }
-        return $this->_getFullUrl( $this->getVendorUri( $oVendor, $iLang ), $iLang );
+
+        return $this->_getFullUrl($this->getVendorUri($oVendor, $iLang), $iLang);
     }
 
     /**
      * Deletes Vendor seo entry
      *
      * @param oxvendor $oVendor Vendor object
-     *
-     * @return null
      */
-    public function onDeleteVendor( $oVendor )
+    public function onDeleteVendor($oVendor)
     {
         $oDb = oxDb::getDb();
         $sIdQuoted = $oDb->quote($oVendor->getId());
@@ -173,13 +153,14 @@ class oxSeoEncoderVendor extends oxSeoEncoder
      *
      * @return string
      */
-    protected function _getAltUri( $sObjectId, $iLang )
+    protected function _getAltUri($sObjectId, $iLang)
     {
         $sSeoUrl = null;
-        $oVendor = oxNew( "oxvendor" );
-        if ( $oVendor->loadInLang( $iLang, $sObjectId ) ) {
-            $sSeoUrl = $this->getVendorUri( $oVendor, $iLang, true );
+        $oVendor = oxNew("oxvendor");
+        if ($oVendor->loadInLang($iLang, $sObjectId)) {
+            $sSeoUrl = $this->getVendorUri($oVendor, $iLang, true);
         }
+
         return $sSeoUrl;
     }
 }

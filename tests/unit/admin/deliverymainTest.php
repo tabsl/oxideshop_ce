@@ -1,35 +1,31 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
-
-require_once realpath( "." ).'/unit/OxidTestCase.php';
-require_once realpath( "." ).'/unit/test_config.inc.php';
 
 /**
  * Tests for Delivery_Main class
  */
 class Unit_Admin_DeliveryMainTest extends OxidTestCase
 {
+
     /**
      * Delivery_Main::Render() test case
      *
@@ -37,15 +33,15 @@ class Unit_Admin_DeliveryMainTest extends OxidTestCase
      */
     public function testRender()
     {
-        oxTestModules::addFunction( "oxdelivery", "isDerived", "{return true;}" );
-        modConfig::setParameter( "oxid", "testId" );
+        oxTestModules::addFunction("oxdelivery", "isDerived", "{return true;}");
+        modConfig::setRequestParameter("oxid", "testId");
 
         // testing..
         $oView = new Delivery_Main();
-        $this->assertEquals( 'delivery_main.tpl', $oView->render() );
+        $this->assertEquals('delivery_main.tpl', $oView->render());
         $aViewData = $oView->getViewData();
-        $this->assertTrue( isset( $aViewData['edit'] ) );
-        $this->assertTrue( $aViewData['edit'] instanceof oxdelivery );
+        $this->assertTrue(isset($aViewData['edit']));
+        $this->assertTrue($aViewData['edit'] instanceof oxdelivery);
     }
 
     /**
@@ -55,14 +51,14 @@ class Unit_Admin_DeliveryMainTest extends OxidTestCase
      */
     public function testRenderNoRealObjectId()
     {
-        modConfig::setParameter( "oxid", "-1" );
+        modConfig::setRequestParameter("oxid", "-1");
 
         // testing..
         $oView = new Delivery_Main();
-        $this->assertEquals( 'delivery_main.tpl', $oView->render() );
+        $this->assertEquals('delivery_main.tpl', $oView->render());
         $aViewData = $oView->getViewData();
-        $this->assertTrue( isset( $aViewData['oxid'] ) );
-        $this->assertEquals( "-1", $aViewData['oxid'] );
+        $this->assertTrue(isset($aViewData['oxid']));
+        $this->assertEquals("-1", $aViewData['oxid']);
     }
 
     /**
@@ -72,19 +68,20 @@ class Unit_Admin_DeliveryMainTest extends OxidTestCase
      */
     public function testSave()
     {
-        oxTestModules::addFunction( 'oxdelivery', 'save', '{ throw new Exception( "save" ); }');
-        oxTestModules::addFunction( 'oxdelivery', 'isDerived', '{ return false; }');
-        modConfig::getInstance()->setConfigParam( "blAllowSharedEdit", true );
+        oxTestModules::addFunction('oxdelivery', 'save', '{ throw new Exception( "save" ); }');
+        oxTestModules::addFunction('oxdelivery', 'isDerived', '{ return false; }');
+        modConfig::getInstance()->setConfigParam("blAllowSharedEdit", true);
 
         // testing..
         try {
             $oView = new Delivery_Main();
             $oView->save();
-        } catch ( Exception $oExcp ) {
-            $this->assertEquals( "save", $oExcp->getMessage(), "error in Delivery_Main::save()" );
+        } catch (Exception $oExcp) {
+            $this->assertEquals("save", $oExcp->getMessage(), "error in Delivery_Main::save()");
+
             return;
         }
-        $this->fail( "error in Delivery_Main::save()" );
+        $this->fail("error in Delivery_Main::save()");
     }
 
     /**
@@ -94,18 +91,44 @@ class Unit_Admin_DeliveryMainTest extends OxidTestCase
      */
     public function testSaveinnlang()
     {
-        oxTestModules::addFunction( 'oxdelivery', 'save', '{ throw new Exception( "save" ); }');
-        oxTestModules::addFunction( 'oxdelivery', 'isDerived', '{ return false; }');
-        modConfig::getInstance()->setConfigParam( "blAllowSharedEdit", true );
+        oxTestModules::addFunction('oxdelivery', 'save', '{ throw new Exception( "save" ); }');
+        oxTestModules::addFunction('oxdelivery', 'isDerived', '{ return false; }');
+        modConfig::getInstance()->setConfigParam("blAllowSharedEdit", true);
 
         // testing..
         try {
             $oView = new Delivery_Main();
             $oView->saveinnlang();
-        } catch ( Exception $oExcp ) {
-            $this->assertEquals( "save", $oExcp->getMessage(), "error in Delivery_Main::save()" );
+        } catch (Exception $oExcp) {
+            $this->assertEquals("save", $oExcp->getMessage(), "error in Delivery_Main::save()");
+
             return;
         }
-        $this->fail( "error in Delivery_Main::save()" );
+        $this->fail("error in Delivery_Main::save()");
+    }
+
+    /**
+     * Delivery_Main::getDeliveryTypes() test case
+     *
+     * @return null
+     */
+    public function testGetDeliveryTypes()
+    {
+        $oView = new Delivery_Main();
+        $aDelTypes = $oView->getDeliveryTypes();
+
+        $oLang = oxRegistry::getLang();
+        $iLang = $oLang->getTplLanguage();
+
+        $oType = new stdClass();
+        $oType->sType = "t";      // test
+        $oType->sDesc = $oLang->translateString("test", $iLang);
+        $aDelTypes['t'] = $oType;
+
+        $this->assertInternalType('array', $aDelTypes);
+        $aDelTypeKeys = array('a', 's', 'w', 'p', 't');
+        foreach ($aDelTypeKeys as $sDelTypeKey) {
+            $this->assertArrayHasKey($sDelTypeKey, $aDelTypes);
+        }
     }
 }

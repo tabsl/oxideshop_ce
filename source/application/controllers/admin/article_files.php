@@ -1,35 +1,33 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   admin
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: article_extend.php 39045 2011-10-05 13:01:43Z arvydas.vapsva $
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
  * Admin article files parameters manager.
  * Collects and updates (on user submit) files.
  * Admin Menu: Manage Products -> Articles -> Files.
- * @package admin
  */
 class Article_Files extends oxAdminDetails
 {
+
     /**
      * Template name
      *
@@ -54,15 +52,15 @@ class Article_Files extends oxAdminDetails
     {
         parent::render();
 
-        if ( !$this->getConfig()->getConfigParam( 'blEnableDownloads' ) ) {
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay( 'EXCEPTION_DISABLED_DOWNLOADABLE_PRODUCTS' );
+        if (!$this->getConfig()->getConfigParam('blEnableDownloads')) {
+            oxRegistry::get("oxUtilsView")->addErrorToDisplay('EXCEPTION_DISABLED_DOWNLOADABLE_PRODUCTS');
         }
         $oArticle = $this->getArticle();
         // variant handling
-        if ( $oArticle->oxarticles__oxparentid->value) {
-            $oParentArticle = oxNew( 'oxarticle' );
-            $oParentArticle->load( $oArticle->oxarticles__oxparentid->value);
-            $oArticle->oxarticles__oxisdownloadable = new oxField( $oParentArticle->oxarticles__oxisdownloadable->value );
+        if ($oArticle->oxarticles__oxparentid->value) {
+            $oParentArticle = oxNew('oxarticle');
+            $oParentArticle->load($oArticle->oxarticles__oxparentid->value);
+            $oArticle->oxarticles__oxisdownloadable = new oxField($oParentArticle->oxarticles__oxisdownloadable->value);
             $this->_aViewData["oxparentid"] = $oArticle->oxarticles__oxparentid->value;
         }
 
@@ -72,24 +70,22 @@ class Article_Files extends oxAdminDetails
     /**
      * Saves editing article changes (oxisdownloadable)
      * and updates oxFile object which are associated with editing object
-     *
-     * @return null
      */
     public function save()
     {
         // save article changes
-        $aArticleChanges = oxConfig::getParameter('editval');
+        $aArticleChanges = oxRegistry::getConfig()->getRequestParameter('editval');
         $oArticle = $this->getArticle();
         $oArticle->assign($aArticleChanges);
         $oArticle->save();
 
         //update article files
-        $aArticleFiles = oxConfig::getParameter('article_files');
+        $aArticleFiles = oxRegistry::getConfig()->getRequestParameter('article_files');
         if (count($aArticleFiles) > 0) {
             foreach ($aArticleFiles as $sArticleFileId => $aArticleFileUpdate) {
                 $oArticleFile = oxNew('oxFile');
                 $oArticleFile->load($sArticleFileId);
-                $aArticleFileUpdate  = $this->_processOptions($aArticleFileUpdate);
+                $aArticleFileUpdate = $this->_processOptions($aArticleFileUpdate);
                 $oArticleFile->assign($aArticleFileUpdate);
                 $oArticleFile->save();
             }
@@ -110,8 +106,8 @@ class Article_Files extends oxAdminDetails
         }
         $sProductId = $this->getEditObjectId();
 
-        $oProduct = oxNew( 'oxArticle' );
-        $oProduct->load( $sProductId );
+        $oProduct = oxNew('oxArticle');
+        $oProduct->load($sProductId);
         $this->_oArticle = $oProduct;
 
         return $this->_oArticle;
@@ -126,41 +122,41 @@ class Article_Files extends oxAdminDetails
     {
         $myConfig = $this->getConfig();
 
-        if ( $myConfig->isDemoShop() ) {
-            $oEx = oxNew( "oxExceptionToDisplay" );
-            $oEx->setMessage( 'ARTICLE_EXTEND_UPLOADISDISABLED' );
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay( $oEx, false );
+        if ($myConfig->isDemoShop()) {
+            $oEx = oxNew("oxExceptionToDisplay");
+            $oEx->setMessage('ARTICLE_EXTEND_UPLOADISDISABLED');
+            oxRegistry::get("oxUtilsView")->addErrorToDisplay($oEx, false);
 
             return;
         }
-        
+
         $soxId = $this->getEditObjectId();
 
-        $aParams  = oxConfig::getParameter( "newfile");
-        $aParams  = $this->_processOptions($aParams);
-        $aNewFile = $this->getConfig()->getUploadedFile( "newArticleFile");
+        $aParams = oxRegistry::getConfig()->getRequestParameter("newfile");
+        $aParams = $this->_processOptions($aParams);
+        $aNewFile = $this->getConfig()->getUploadedFile("newArticleFile");
 
-        $sExistingFilename = trim(oxConfig::getParameter( "existingFilename"));
+        $sExistingFilename = trim(oxRegistry::getConfig()->getRequestParameter("existingFilename"));
 
         //uploading and processing supplied file
-        $oArticleFile = oxNew( "oxFile" );
+        $oArticleFile = oxNew("oxFile");
         $oArticleFile->assign($aParams);
 
         if (!$aNewFile['name'] && !$oArticleFile->oxfiles__oxfilename->value) {
-            return oxRegistry::get("oxUtilsView")->addErrorToDisplay( 'EXCEPTION_NOFILE' );
+            return oxRegistry::get("oxUtilsView")->addErrorToDisplay('EXCEPTION_NOFILE');
         }
 
         if ($aNewFile['name']) {
-            $oArticleFile->oxfiles__oxfilename        = new oxField($aNewFile['name'], oxField::T_RAW);
+            $oArticleFile->oxfiles__oxfilename = new oxField($aNewFile['name'], oxField::T_RAW);
             try {
-                $oArticleFile->processFile( 'newArticleFile' );
+                $oArticleFile->processFile('newArticleFile');
             } catch (Exception $e) {
-                return oxRegistry::get("oxUtilsView")->addErrorToDisplay( $e->getMessage() );
+                return oxRegistry::get("oxUtilsView")->addErrorToDisplay($e->getMessage());
             }
         }
 
         //save media url
-        $oArticleFile->oxfiles__oxartid       = new oxField($soxId, oxField::T_RAW);
+        $oArticleFile->oxfiles__oxartid = new oxField($soxId, oxField::T_RAW);
         $oArticleFile->save();
     }
 
@@ -173,20 +169,20 @@ class Article_Files extends oxAdminDetails
     {
         $myConfig = $this->getConfig();
 
-        if ( $myConfig->isDemoShop() ) {
-            $oEx = oxNew( "oxExceptionToDisplay" );
-            $oEx->setMessage( 'ARTICLE_EXTEND_UPLOADISDISABLED' );
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay( $oEx, false );
+        if ($myConfig->isDemoShop()) {
+            $oEx = oxNew("oxExceptionToDisplay");
+            $oEx->setMessage('ARTICLE_EXTEND_UPLOADISDISABLED');
+            oxRegistry::get("oxUtilsView")->addErrorToDisplay($oEx, false);
 
             return;
         }
-        
+
         $sArticleId = $this->getEditObjectId();
-        $sArticleFileId = oxConfig::getParameter('fileid');
+        $sArticleFileId = oxRegistry::getConfig()->getRequestParameter('fileid');
         $oArticleFile = oxNew('oxFile');
         $oArticleFile->load($sArticleFileId);
         if ($oArticleFile->hasValidDownloads()) {
-            return oxRegistry::get("oxUtilsView")->addErrorToDisplay( 'EXCEPTION_DELETING_VALID_FILE' );
+            return oxRegistry::get("oxUtilsView")->addErrorToDisplay('EXCEPTION_DELETING_VALID_FILE');
         }
         if ($oArticleFile->oxfiles__oxartid->value == $sArticleId) {
             $oArticleFile->delete();
@@ -200,9 +196,10 @@ class Article_Files extends oxAdminDetails
      *
      * @return int
      */
-    public function getConfigOptionValue( $iOption )
+    public function getConfigOptionValue($iOption)
     {
-        $iOption = ( $iOption < 0 ) ? "" : $iOption;
+        $iOption = ($iOption < 0) ? "" : $iOption;
+
         return $iOption;
     }
 
@@ -231,6 +228,7 @@ class Article_Files extends oxAdminDetails
         if (!isset($aParams["oxfiles__oxmaxdownloads"]) || $aParams["oxfiles__oxmaxdownloads"] == "") {
             $aParams["oxfiles__oxmaxdownloads"] = -1;
         }
+
         return $aParams;
     }
 }

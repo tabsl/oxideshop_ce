@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   admin
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -32,52 +30,53 @@ DEFINE("ERR_FILEIO", 1);
 /**
  * DynExportBase framework class encapsulating a method for defining implementation class.
  * Performs export function according to user chosen categories.
- * @package admin
+ *
  * @subpackage dyn
  */
 class DynExportBase extends oxAdminDetails
 {
+
     /**
      * Export class name
      *
      * @var string
      */
-    public $sClassDo            = "";
+    public $sClassDo = "";
 
     /**
      * Export ui class name
      *
      * @var string
      */
-    public $sClassMain          = "";
+    public $sClassMain = "";
 
     /**
      * Export output folder
      *
      * @var string
      */
-    public $sExportPath          = "export/";
+    public $sExportPath = "export/";
 
     /**
      * Export file extension
      *
      * @var string
      */
-    public $sExportFileType      = "txt";
+    public $sExportFileType = "txt";
 
     /**
      * Export file name
      *
      * @var string
      */
-    public $sExportFileName      = "dynexport";
+    public $sExportFileName = "dynexport";
 
     /**
      * Export file resource
      *
      * @var object
      */
-    public $fpFile               = null;
+    public $fpFile = null;
 
     /**
      * Default number of records to export per tick
@@ -85,21 +84,21 @@ class DynExportBase extends oxAdminDetails
      *
      * @var int
      */
-    public $iExportPerTick       = 30;
+    public $iExportPerTick = 30;
 
     /**
      * Number of records to export per tick
      *
      * @var int
      */
-    protected $_iExportPerTick   = null;
+    protected $_iExportPerTick = null;
 
     /**
      * Full export file path
      *
      * @var string
      */
-    protected $_sFilePath        = null;
+    protected $_sFilePath = null;
 
     /**
      * Export result set
@@ -132,7 +131,7 @@ class DynExportBase extends oxAdminDetails
         parent::__construct();
 
         // set generic frame template
-        $this->_sFilePath = $this->getConfig()->getConfigParam( 'sShopDir' ) . "/". $this->sExportPath . $this->sExportFileName . "." . $this->sExportFileType;
+        $this->_sFilePath = $this->getConfig()->getConfigParam('sShopDir') . "/" . $this->sExportPath . $this->sExportFileName . "." . $this->sExportFileType;
     }
 
     /**
@@ -140,37 +139,35 @@ class DynExportBase extends oxAdminDetails
      * and returns default template name
      *
      * @return string
-    */
+     */
     public function render()
     {
         parent::render();
 
         // assign all member variables to template
-        $aClassVars = get_object_vars( $this );
-        while ( list( $name, $value ) = each( $aClassVars ) ) {
+        $aClassVars = get_object_vars($this);
+        while (list($name, $value) = each($aClassVars)) {
             $this->_aViewData[$name] = $value;
         }
 
-        $this->_aViewData['sOutputFile']     = $this->_sFilePath;
-        $this->_aViewData['sDownloadFile']   = $this->getConfig()->getConfigParam( 'sShopURL' ) . $this->sExportPath . $this->sExportFileName . "." . $this->sExportFileType;
+        $this->_aViewData['sOutputFile'] = $this->_sFilePath;
+        $this->_aViewData['sDownloadFile'] = $this->getConfig()->getConfigParam('sShopURL') . $this->sExportPath . $this->sExportFileName . "." . $this->sExportFileType;
 
         return $this->_sThisTemplate;
     }
 
     /**
      * Prepares and fill all data which all the dyn exports needs
-     *
-     * @return null
-    */
+     */
     public function createMainExportView()
     {
         // parent categorie tree
-        $this->_aViewData["cattree"] = oxNew( "oxCategoryList" );
+        $this->_aViewData["cattree"] = oxNew("oxCategoryList");
         $this->_aViewData["cattree"]->loadList();
 
-        $oLangObj = oxNew( 'oxLang' );
+        $oLangObj = oxNew('oxLang');
         $aLangs = $oLangObj->getLanguageArray();
-        foreach ( $aLangs as $id => $language) {
+        foreach ($aLangs as $id => $language) {
             $language->selected = ($id == $this->_iEditLang);
             $this->_aViewData["aLangs"][$id] = clone $language;
         }
@@ -178,24 +175,22 @@ class DynExportBase extends oxAdminDetails
 
     /**
      * Prepares Export
-     *
-     * @return null
      */
     public function start()
     {
         // delete file, if its already there
-        $this->fpFile = @fopen( $this->_sFilePath, "w" );
-        if ( !isset( $this->fpFile ) || !$this->fpFile ) {
+        $this->fpFile = @fopen($this->_sFilePath, "w");
+        if (!isset($this->fpFile) || !$this->fpFile) {
             // we do have an error !
-            $this->stop( ERR_FILEIO );
+            $this->stop(ERR_FILEIO);
         } else {
             $this->_aViewData['refresh'] = 0;
-            $this->_aViewData['iStart']  = 0;
-            fclose( $this->fpFile );
+            $this->_aViewData['iStart'] = 0;
+            fclose($this->fpFile);
 
             // prepare it
             $iEnd = $this->prepareExport();
-            oxSession::setVar( "iEnd", $iEnd );
+            oxRegistry::getSession()->setVariable("iEnd", $iEnd);
             $this->_aViewData['iEnd'] = $iEnd;
         }
     }
@@ -204,17 +199,15 @@ class DynExportBase extends oxAdminDetails
      * Stops Export
      *
      * @param integer $iError error number
-     *
-     * @return null
      */
-    public function stop( $iError = 0 )
+    public function stop($iError = 0)
     {
-        if ( $iError ) {
+        if ($iError) {
             $this->_aViewData['iError'] = $iError;
         }
 
         // delete temporary heap table
-        oxDb::getDb()->execute( "drop TABLE if exists ". $this->_getHeapTableName() );
+        oxDb::getDb()->execute("drop TABLE if exists " . $this->_getHeapTableName());
     }
 
     /**
@@ -224,7 +217,7 @@ class DynExportBase extends oxAdminDetails
      *
      * @return bool
      */
-    public function nextTick( $iCnt)
+    public function nextTick($iCnt)
     {
         return false;
     }
@@ -233,51 +226,47 @@ class DynExportBase extends oxAdminDetails
      * writes one line into open export file
      *
      * @param string $sLine exported line
-     *
-     * @return null
      */
-    public function write( $sLine )
+    public function write($sLine)
     {
-        $sLine = $this->removeSID( $sLine );
-        $sLine = str_replace( array("\r\n","\n"), "", $sLine);
-        fwrite( $this->fpFile, $sLine."\r\n");
+        $sLine = $this->removeSID($sLine);
+        $sLine = str_replace(array("\r\n", "\n"), "", $sLine);
+        fwrite($this->fpFile, $sLine . "\r\n");
     }
 
     /**
      * Does Export
-     *
-     * @return null
      */
     public function run()
     {
         $blContinue = true;
         $iExportedItems = 0;
 
-        $this->fpFile = @fopen( $this->_sFilePath, "a");
-        if ( !isset( $this->fpFile) || !$this->fpFile) {
+        $this->fpFile = @fopen($this->_sFilePath, "a");
+        if (!isset($this->fpFile) || !$this->fpFile) {
             // we do have an error !
-            $this->stop( ERR_FILEIO);
+            $this->stop(ERR_FILEIO);
         } else {
             // file is open
-            $iStart = oxConfig::getParameter("iStart");
+            $iStart = oxRegistry::getConfig()->getRequestParameter("iStart");
             // load from session
-            $this->_aExportResultset = oxConfig::getParameter( "aExportResultset");
+            $this->_aExportResultset = oxRegistry::getConfig()->getRequestParameter("aExportResultset");
             $iExportPerTick = $this->getExportPerTick();
-            for ( $i = $iStart; $i < $iStart + $iExportPerTick; $i++) {
-                if ( ( $iExportedItems = $this->nextTick( $i ) ) === false ) {
+            for ($i = $iStart; $i < $iStart + $iExportPerTick; $i++) {
+                if (($iExportedItems = $this->nextTick($i)) === false) {
                     // end reached
-                    $this->stop( ERR_SUCCESS);
+                    $this->stop(ERR_SUCCESS);
                     $blContinue = false;
                     break;
                 }
             }
-            if ( $blContinue) {
+            if ($blContinue) {
                 // make ticker continue
                 $this->_aViewData['refresh'] = 0;
-                $this->_aViewData['iStart']  = $i;
+                $this->_aViewData['iStart'] = $i;
                 $this->_aViewData['iExpItems'] = $iExportedItems;
             }
-            fclose( $this->fpFile);
+            fclose($this->fpFile);
         }
     }
 
@@ -288,12 +277,13 @@ class DynExportBase extends oxAdminDetails
      */
     public function getExportPerTick()
     {
-        if ( $this->_iExportPerTick === null ) {
+        if ($this->_iExportPerTick === null) {
             $this->_iExportPerTick = (int) oxRegistry::getConfig()->getConfigParam("iExportNrofLines");
-            if ( !$this->_iExportPerTick ) {
+            if (!$this->_iExportPerTick) {
                 $this->_iExportPerTick = $this->iExportPerTick;
             }
         }
+
         return $this->_iExportPerTick;
     }
 
@@ -301,10 +291,8 @@ class DynExportBase extends oxAdminDetails
      * Sets how many articles should be exported per tick
      *
      * @param int $iCount articles count per tick
-     *
-     * @return int
      */
-    public function setExportPerTick( $iCount )
+    public function setExportPerTick($iCount)
     {
         $this->_iExportPerTick = $iCount;
     }
@@ -316,16 +304,16 @@ class DynExportBase extends oxAdminDetails
      *
      * @return null
      */
-    public function removeSid( $sInput )
+    public function removeSid($sInput)
     {
         $sSid = $this->getSession()->getId();
 
         // remove sid from link
-        $sOutput = str_replace( "sid={$sSid}/", "", $sInput);
-        $sOutput = str_replace( "sid/{$sSid}/", "", $sOutput);
-        $sOutput = str_replace( "sid={$sSid}&amp;", "", $sOutput);
-        $sOutput = str_replace( "sid={$sSid}&", "", $sOutput);
-        $sOutput = str_replace( "sid={$sSid}", "", $sOutput);
+        $sOutput = str_replace("sid={$sSid}/", "", $sInput);
+        $sOutput = str_replace("sid/{$sSid}/", "", $sOutput);
+        $sOutput = str_replace("sid={$sSid}&amp;", "", $sOutput);
+        $sOutput = str_replace("sid={$sSid}&", "", $sOutput);
+        $sOutput = str_replace("sid={$sSid}", "", $sOutput);
 
         return $sOutput;
     }
@@ -339,21 +327,21 @@ class DynExportBase extends oxAdminDetails
      *
      * @return string
      */
-    public function shrink( $sInput, $iMaxSize, $blRemoveNewline = true )
+    public function shrink($sInput, $iMaxSize, $blRemoveNewline = true)
     {
-        if ( $blRemoveNewline ) {
-            $sInput = str_replace( "\r\n", " ", $sInput );
-            $sInput = str_replace( "\n", " ", $sInput );
+        if ($blRemoveNewline) {
+            $sInput = str_replace("\r\n", " ", $sInput);
+            $sInput = str_replace("\n", " ", $sInput);
         }
 
-        $sInput = str_replace( "\t", "    ", $sInput );
+        $sInput = str_replace("\t", "    ", $sInput);
 
         // remove html entities, remove html tags
-        $sInput = $this->_unHTMLEntities( strip_tags( $sInput ) );
+        $sInput = $this->_unHTMLEntities(strip_tags($sInput));
 
         $oStr = getStr();
-        if ( $oStr->strlen( $sInput ) > $iMaxSize - 3 ) {
-            $sInput = $oStr->substr( $sInput, 0, $iMaxSize - 5 ) . "...";
+        if ($oStr->strlen($sInput) > $iMaxSize - 3) {
+            $sInput = $oStr->substr($sInput, 0, $iMaxSize - 5) . "...";
         }
 
         return $sInput;
@@ -367,33 +355,33 @@ class DynExportBase extends oxAdminDetails
      *
      * @return string
      */
-    public function getCategoryString( $oArticle, $sSeparator = "/" )
+    public function getCategoryString($oArticle, $sSeparator = "/")
     {
         $sCatStr = '';
 
         $sLang = oxRegistry::getLang()->getBaseLanguage();
         $oDB = oxDb::getDb();
 
-        $sCatView = getViewName( 'oxcategories', $sLang );
-        $sO2CView = getViewName( 'oxobject2category', $sLang );
+        $sCatView = getViewName('oxcategories', $sLang);
+        $sO2CView = getViewName('oxobject2category', $sLang);
 
         //selecting category
-        $sQ  = "select $sCatView.oxleft, $sCatView.oxright, $sCatView.oxrootid from $sO2CView as oxobject2category left join $sCatView on $sCatView.oxid = oxobject2category.oxcatnid ";
-        $sQ .= "where oxobject2category.oxobjectid=".$oDB->quote( $oArticle->getId() )." and $sCatView.oxactive = 1 order by oxobject2category.oxtime ";
+        $sQ = "select $sCatView.oxleft, $sCatView.oxright, $sCatView.oxrootid from $sO2CView as oxobject2category left join $sCatView on $sCatView.oxid = oxobject2category.oxcatnid ";
+        $sQ .= "where oxobject2category.oxobjectid=" . $oDB->quote($oArticle->getId()) . " and $sCatView.oxactive = 1 order by oxobject2category.oxtime ";
 
-        $oRs = $oDB->execute( $sQ );
-        if ( $oRs != false && $oRs->recordCount() > 0 ) {
-            $sLeft   = $oRs->fields[0];
-            $sRight  = $oRs->fields[1];
+        $oRs = $oDB->execute($sQ);
+        if ($oRs != false && $oRs->recordCount() > 0) {
+            $sLeft = $oRs->fields[0];
+            $sRight = $oRs->fields[1];
             $sRootId = $oRs->fields[2];
 
             //selecting all parent category titles
             $sQ = "select oxtitle from $sCatView where oxright >= {$sRight} and oxleft <= {$sLeft} and oxrootid = '{$sRootId}' order by oxleft ";
 
-            $oRs = $oDB->execute( $sQ );
-            if ( $oRs != false && $oRs->recordCount() > 0 ) {
-                while ( !$oRs->EOF ) {
-                    if ( $sCatStr ) {
+            $oRs = $oDB->execute($sQ);
+            if ($oRs != false && $oRs->recordCount() > 0) {
+                while (!$oRs->EOF) {
+                    if ($sCatStr) {
                         $sCatStr .= $sSeparator;
                     }
                     $sCatStr .= $oRs->fields[0];
@@ -412,19 +400,19 @@ class DynExportBase extends oxAdminDetails
      *
      * @return record set
      */
-    public function getDefaultCategoryString( $oArticle )
+    public function getDefaultCategoryString($oArticle)
     {
         $sLang = oxRegistry::getLang()->getBaseLanguage();
         $oDB = oxDb::getDb();
 
-        $sCatView = getViewName( 'oxcategories', $sLang );
-        $sO2CView = getViewName( 'oxobject2category', $sLang );
+        $sCatView = getViewName('oxcategories', $sLang);
+        $sO2CView = getViewName('oxobject2category', $sLang);
 
         //selecting category
-        $sQ =  "select $sCatView.oxtitle from $sO2CView as oxobject2category left join $sCatView on $sCatView.oxid = oxobject2category.oxcatnid ";
-        $sQ .= "where oxobject2category.oxobjectid=".$oDB->quote( $oArticle->getId() )." and $sCatView.oxactive = 1 order by oxobject2category.oxtime ";
+        $sQ = "select $sCatView.oxtitle from $sO2CView as oxobject2category left join $sCatView on $sCatView.oxid = oxobject2category.oxcatnid ";
+        $sQ .= "where oxobject2category.oxobjectid=" . $oDB->quote($oArticle->getId()) . " and $sCatView.oxactive = 1 order by oxobject2category.oxtime ";
 
-        return $oDB->getOne( $sQ);
+        return $oDB->getOne($sQ);
     }
 
     /**
@@ -434,10 +422,11 @@ class DynExportBase extends oxAdminDetails
      *
      * @return string
      */
-    public function prepareCSV( $sInput )
+    public function prepareCSV($sInput)
     {
-        $sInput = oxRegistry::get("oxUtilsString")->prepareCSVField( $sInput );
-        return str_replace( array( "&nbsp;", "&euro;", "|" ), array( " ", "", "" ), $sInput );
+        $sInput = oxRegistry::get("oxUtilsString")->prepareCSVField($sInput);
+
+        return str_replace(array("&nbsp;", "&euro;", "|"), array(" ", "", ""), $sInput);
     }
 
     /**
@@ -447,13 +436,13 @@ class DynExportBase extends oxAdminDetails
      *
      * @return string
      */
-    public function prepareXML( $sInput )
+    public function prepareXML($sInput)
     {
-        $sOutput = str_replace( "&", "&amp;", $sInput );
-        $sOutput = str_replace( "\"", "&quot;", $sOutput );
-        $sOutput = str_replace( ">", "&gt;", $sOutput );
-        $sOutput = str_replace( "<", "&lt;", $sOutput );
-        $sOutput = str_replace( "'", "&apos;", $sOutput );
+        $sOutput = str_replace("&", "&amp;", $sInput);
+        $sOutput = str_replace("\"", "&quot;", $sOutput);
+        $sOutput = str_replace(">", "&gt;", $sOutput);
+        $sOutput = str_replace("<", "&lt;", $sOutput);
+        $sOutput = str_replace("'", "&apos;", $sOutput);
 
         return $sOutput;
     }
@@ -465,9 +454,9 @@ class DynExportBase extends oxAdminDetails
      *
      * @return string
      */
-    public function getDeepestCategoryPath( $oArticle )
+    public function getDeepestCategoryPath($oArticle)
     {
-        return $this->_findDeepestCatPath( $oArticle );
+        return $this->_findDeepestCatPath($oArticle);
     }
 
     /**
@@ -482,28 +471,28 @@ class DynExportBase extends oxAdminDetails
 
         // #1070 Saulius 2005.11.28
         // check mySQL version
-        $oRs = $oDB->execute( "SHOW VARIABLES LIKE 'version'" );
-        $sTableCharset = $this->_generateTableCharSet( $oRs->fields[1] );
+        $oRs = $oDB->execute("SHOW VARIABLES LIKE 'version'");
+        $sTableCharset = $this->_generateTableCharSet($oRs->fields[1]);
 
         // create heap table
-        if ( !( $this->_createHeapTable( $sHeapTable, $sTableCharset ) ) ) {
+        if (!($this->_createHeapTable($sHeapTable, $sTableCharset))) {
             // error
-            oxRegistry::getUtils()->showMessageAndExit( "Could not create HEAP Table {$sHeapTable}\n<br>" );
+            oxRegistry::getUtils()->showMessageAndExit("Could not create HEAP Table {$sHeapTable}\n<br>");
         }
 
-        $sCatAdd = $this->_getCatAdd( oxConfig::getParameter( "acat" ) );
-        if ( !$this->_insertArticles( $sHeapTable, $sCatAdd ) ) {
-            oxRegistry::getUtils()->showMessageAndExit( "Could not insert Articles in Table {$sHeapTable}\n<br>" );
+        $sCatAdd = $this->_getCatAdd(oxRegistry::getConfig()->getRequestParameter("acat"));
+        if (!$this->_insertArticles($sHeapTable, $sCatAdd)) {
+            oxRegistry::getUtils()->showMessageAndExit("Could not insert Articles in Table {$sHeapTable}\n<br>");
         }
 
-        $this->_removeParentArticles( $sHeapTable );
+        $this->_removeParentArticles($sHeapTable);
         $this->_setSessionParams();
 
         // get total cnt
-        return $oDB->getOne( "select count(*) from {$sHeapTable}" );
+        return $oDB->getOne("select count(*) from {$sHeapTable}");
     }
 
-     /**
+    /**
      * get's one oxid for exporting
      *
      * @param integer $iCnt        counter
@@ -511,23 +500,23 @@ class DynExportBase extends oxAdminDetails
      *
      * @return mixed
      */
-    public function getOneArticle( $iCnt, & $blContinue )
+    public function getOneArticle($iCnt, & $blContinue)
     {
-        $myConfig  = $this->getConfig();
+        $myConfig = $this->getConfig();
 
         //[Alfonsas 2006-05-31] setting specific parameter
         //to be checked in oxarticle.php init() method
-        $myConfig->setConfigParam( 'blExport', true );
+        $myConfig->setConfigParam('blExport', true);
         $blContinue = false;
 
-        if ( ( $oArticle = $this->_initArticle( $this->_getHeapTableName(), $iCnt, $blContinue ) ) ) {
+        if (($oArticle = $this->_initArticle($this->_getHeapTableName(), $iCnt, $blContinue))) {
             $blContinue = true;
-            $oArticle = $this->_setCampaignDetailLink( $oArticle );
+            $oArticle = $this->_setCampaignDetailLink($oArticle);
         }
 
         //[Alfonsas 2006-05-31] unsetting specific parameter
         //to be checked in oxarticle.php init() method
-        $myConfig->setConfigParam( 'blExport', false );
+        $myConfig->setConfigParam('blExport', false);
 
         return $oArticle;
     }
@@ -540,15 +529,16 @@ class DynExportBase extends oxAdminDetails
      *
      * @return string
      */
-    public function assureContent( $sInput, $sReplace = null)
+    public function assureContent($sInput, $sReplace = null)
     {
         $oStr = getStr();
-        if ( !$oStr->strlen( $sInput ) ) {
-            if ( !isset( $sReplace ) || !$oStr->strlen( $sReplace ) ) {
+        if (!$oStr->strlen($sInput)) {
+            if (!isset($sReplace) || !$oStr->strlen($sReplace)) {
                 $sReplace = "-";
             }
             $sInput = $sReplace;
         }
+
         return $sInput;
     }
 
@@ -560,10 +550,11 @@ class DynExportBase extends oxAdminDetails
      *
      * @return string
      */
-    protected function _unHtmlEntities( $sInput )
+    protected function _unHtmlEntities($sInput)
     {
-        $aTransTbl = array_flip( get_html_translation_table( HTML_ENTITIES ) );
-        return strtr( $sInput, $aTransTbl );
+        $aTransTbl = array_flip(get_html_translation_table(HTML_ENTITIES));
+
+        return strtr($sInput, $aTransTbl);
     }
 
     /**
@@ -574,7 +565,7 @@ class DynExportBase extends oxAdminDetails
     protected function _getHeapTableName()
     {
         // table name must not start with any digit
-        return "tmp_".str_replace( "0", "", md5( $this->getSession()->getId() ) );
+        return "tmp_" . str_replace("0", "", md5($this->getSession()->getId()));
     }
 
     /**
@@ -584,22 +575,23 @@ class DynExportBase extends oxAdminDetails
      *
      * @return string
      */
-    protected function _generateTableCharSet( $sMysqlVersion )
+    protected function _generateTableCharSet($sMysqlVersion)
     {
         $sTableCharset = "";
 
         //if MySQL >= 4.1.0 set charsets and collations
-        if ( version_compare( $sMysqlVersion, '4.1.0', '>=' ) > 0 ) {
-            $oDB = oxDb::getDb( oxDB::FETCH_MODE_ASSOC );
-            $oRs = $oDB->execute( "SHOW FULL COLUMNS FROM `oxarticles` WHERE field like 'OXID'" );
-            if ( isset( $oRs->fields['Collation'] ) && ( $sMysqlCollation = $oRs->fields['Collation'] ) ) {
-                $oRs = $oDB->execute( "SHOW COLLATION LIKE '{$sMysqlCollation}'" );
-                if ( isset( $oRs->fields['Charset'] ) && ( $sMysqlCharacterSet = $oRs->fields['Charset'] ) ) {
+        if (version_compare($sMysqlVersion, '4.1.0', '>=') > 0) {
+            $oDB = oxDb::getDb(oxDB::FETCH_MODE_ASSOC);
+            $oRs = $oDB->execute("SHOW FULL COLUMNS FROM `oxarticles` WHERE field like 'OXID'");
+            if (isset($oRs->fields['Collation']) && ($sMysqlCollation = $oRs->fields['Collation'])) {
+                $oRs = $oDB->execute("SHOW COLLATION LIKE '{$sMysqlCollation}'");
+                if (isset($oRs->fields['Charset']) && ($sMysqlCharacterSet = $oRs->fields['Charset'])) {
                     $sTableCharset = "DEFAULT CHARACTER SET {$sMysqlCharacterSet} COLLATE {$sMysqlCollation}";
                 }
             }
 
         }
+
         return $sTableCharset;
     }
 
@@ -611,15 +603,15 @@ class DynExportBase extends oxAdminDetails
      *
      * @return bool
      */
-    protected function _createHeapTable( $sHeapTable, $sTableCharset )
+    protected function _createHeapTable($sHeapTable, $sTableCharset)
     {
         $blDone = false;
 
         $oDB = oxDb::getDb();
         $sQ = "CREATE TABLE IF NOT EXISTS {$sHeapTable} ( `oxid` CHAR(32) NOT NULL default '' ) ENGINE=InnoDB {$sTableCharset}";
-        if ( ( $oDB->execute( $sQ ) ) !== false ) {
+        if (($oDB->execute($sQ)) !== false) {
             $blDone = true;
-            $oDB->execute( "TRUNCATE TABLE {$sHeapTable}" );
+            $oDB->execute("TRUNCATE TABLE {$sHeapTable}");
         }
 
         return $blDone;
@@ -632,22 +624,23 @@ class DynExportBase extends oxAdminDetails
      *
      * @return string
      */
-    protected function _getCatAdd( $aChosenCat )
+    protected function _getCatAdd($aChosenCat)
     {
         $sCatAdd = null;
-        if ( is_array( $aChosenCat ) && count( $aChosenCat ) ) {
+        if (is_array($aChosenCat) && count($aChosenCat)) {
             $oDB = oxDb::getDb();
             $sCatAdd = " and ( ";
             $blSep = false;
-            foreach ( $aChosenCat as $sCat ) {
-                if ( $blSep ) {
+            foreach ($aChosenCat as $sCat) {
+                if ($blSep) {
                     $sCatAdd .= " or ";
                 }
-                $sCatAdd .= "oxobject2category.oxcatnid = ".$oDB->quote( $sCat );
+                $sCatAdd .= "oxobject2category.oxcatnid = " . $oDB->quote($sCat);
                 $blSep = true;
             }
             $sCatAdd .= ")";
         }
+
         return $sCatAdd;
     }
 
@@ -659,67 +652,65 @@ class DynExportBase extends oxAdminDetails
      *
      * @return bool
      */
-    protected function _insertArticles( $sHeapTable, $sCatAdd )
+    protected function _insertArticles($sHeapTable, $sCatAdd)
     {
         $oDB = oxDb::getDb();
 
-        $iExpLang = oxConfig::getParameter( "iExportLanguage" );
+        $iExpLang = oxRegistry::getConfig()->getRequestParameter("iExportLanguage");
         if (!isset($iExpLang)) {
-            $iExpLang = oxSession::getVar( "iExportLanguage" );
+            $iExpLang = oxRegistry::getSession()->getVariable("iExportLanguage");
         }
 
-        $oArticle = oxNew( 'oxarticle' );
-        $oArticle->setLanguage( $iExpLang );
+        $oArticle = oxNew('oxarticle');
+        $oArticle->setLanguage($iExpLang);
 
-        $sO2CView = getViewName( 'oxobject2category', $iExpLang );
-        $sArticleTable = getViewName( "oxarticles", $iExpLang );
+        $sO2CView = getViewName('oxobject2category', $iExpLang);
+        $sArticleTable = getViewName("oxarticles", $iExpLang);
 
-        $sSelect  = "insert into {$sHeapTable} select {$sArticleTable}.oxid from {$sArticleTable}, {$sO2CView} as oxobject2category where ";
+        $sSelect = "insert into {$sHeapTable} select {$sArticleTable}.oxid from {$sArticleTable}, {$sO2CView} as oxobject2category where ";
         $sSelect .= $oArticle->getSqlActiveSnippet();
 
-        if ( ! oxConfig::getParameter( "blExportVars" ) ) {
+        if (!oxRegistry::getConfig()->getRequestParameter("blExportVars")) {
             $sSelect .= " and {$sArticleTable}.oxid = oxobject2category.oxobjectid and {$sArticleTable}.oxparentid = '' ";
         } else {
             $sSelect .= " and ( {$sArticleTable}.oxid = oxobject2category.oxobjectid or {$sArticleTable}.oxparentid = oxobject2category.oxobjectid ) ";
         }
 
-        $sSearchString = oxConfig::getParameter( "search" );
-        if ( isset( $sSearchString ) ) {
-            $sSelect .= "and ( {$sArticleTable}.OXTITLE like ".$oDB->quote( "%{$sSearchString}%" );
-            $sSelect .= " or {$sArticleTable}.OXSHORTDESC like ".$oDB->quote( "%$sSearchString%" );
-            $sSelect .= " or {$sArticleTable}.oxsearchkeys like ".$oDB->quote( "%$sSearchString%" ) ." ) ";
+        $sSearchString = oxRegistry::getConfig()->getRequestParameter("search");
+        if (isset($sSearchString)) {
+            $sSelect .= "and ( {$sArticleTable}.OXTITLE like " . $oDB->quote("%{$sSearchString}%");
+            $sSelect .= " or {$sArticleTable}.OXSHORTDESC like " . $oDB->quote("%$sSearchString%");
+            $sSelect .= " or {$sArticleTable}.oxsearchkeys like " . $oDB->quote("%$sSearchString%") . " ) ";
         }
 
-        if ( $sCatAdd ) {
+        if ($sCatAdd) {
             $sSelect .= $sCatAdd;
         }
 
-            if ( !$sCatAdd ) {
-                $sShopID = $this->getConfig()->getShopId();
-                $sSelect .= " and {$sArticleTable}.oxshopid = '$sShopID' ";
-            }
+        if (!$sCatAdd) {
+            $sShopID = $this->getConfig()->getShopId();
+            $sSelect .= " and {$sArticleTable}.oxshopid = '$sShopID' ";
+        }
 
         // add minimum stock value
-        if ( $this->getConfig()->getConfigParam( 'blUseStock' ) && ( $dMinStock = oxConfig::getParameter( "sExportMinStock" ) ) ) {
-            $dMinStock = str_replace( array( ";", " ", "/", "'"), "", $dMinStock );
-            $sSelect .= " and {$sArticleTable}.oxstock >= ".$oDB->quote( $dMinStock );
+        if ($this->getConfig()->getConfigParam('blUseStock') && ($dMinStock = oxRegistry::getConfig()->getRequestParameter("sExportMinStock"))) {
+            $dMinStock = str_replace(array(";", " ", "/", "'"), "", $dMinStock);
+            $sSelect .= " and {$sArticleTable}.oxstock >= " . $oDB->quote($dMinStock);
         }
 
         $sSelect .= " group by {$sArticleTable}.oxid";
 
-        return $oDB->execute( $sSelect ) ? true : false;
+        return $oDB->execute($sSelect) ? true : false;
     }
 
     /**
      * removes parent articles so that we only have variants itself
      *
      * @param string $sHeapTable table name
-     *
-     * @return null
      */
-    protected function _removeParentArticles( $sHeapTable )
+    protected function _removeParentArticles($sHeapTable)
     {
-        if ( !( oxConfig::getParameter( "blExportMainVars" ) ) ) {
+        if (!(oxRegistry::getConfig()->getRequestParameter("blExportMainVars"))) {
 
             $oDB = oxDb::getDb();
             $sArticleTable = getViewName('oxarticles');
@@ -728,71 +719,68 @@ class DynExportBase extends oxAdminDetails
             $sQ = "select $sHeapTable.oxid from $sHeapTable, $sArticleTable where
                           $sHeapTable.oxid = $sArticleTable.oxparentid group by $sHeapTable.oxid";
 
-            $oRs = $oDB->execute( $sQ );
+            $oRs = $oDB->execute($sQ);
             $sDel = "delete from $sHeapTable where oxid in ( ";
             $blSep = false;
             if ($oRs != false && $oRs->recordCount() > 0) {
-                while ( !$oRs->EOF ) {
-                    if ( $blSep ) {
+                while (!$oRs->EOF) {
+                    if ($blSep) {
                         $sDel .= ",";
                     }
-                    $sDel .= $oDB->quote( $oRs->fields[0] );
+                    $sDel .= $oDB->quote($oRs->fields[0]);
                     $blSep = true;
                     $oRs->moveNext();
                 }
             }
             $sDel .= " )";
-            $oDB->execute( $sDel );
+            $oDB->execute($sDel);
         }
     }
 
     /**
      * stores some info in session
-     *
-     * @return null
-     *
      */
     protected function _setSessionParams()
     {
         // reset it from session
-        oxSession::deleteVar( "sExportDelCost" );
-        $dDelCost = oxConfig::getParameter( "sExportDelCost");
-        if ( isset( $dDelCost ) ) {
-            $dDelCost = str_replace( array( ";", " ", "/", "'"), "", $dDelCost );
-            $dDelCost = str_replace( ",", ".", $dDelCost );
-            oxSession::setVar( "sExportDelCost", $dDelCost );
+        oxRegistry::getSession()->deleteVariable("sExportDelCost");
+        $dDelCost = oxRegistry::getConfig()->getRequestParameter("sExportDelCost");
+        if (isset($dDelCost)) {
+            $dDelCost = str_replace(array(";", " ", "/", "'"), "", $dDelCost);
+            $dDelCost = str_replace(",", ".", $dDelCost);
+            oxRegistry::getSession()->setVariable("sExportDelCost", $dDelCost);
         }
 
-        oxSession::deleteVar( "sExportMinPrice" );
-        $dMinPrice = oxConfig::getParameter( "sExportMinPrice" );
-        if ( isset( $dMinPrice ) ) {
-            $dMinPrice = str_replace( array( ";", " ", "/", "'"), "", $dMinPrice);
-            $dMinPrice = str_replace( ",", ".", $dMinPrice);
-            oxSession::setVar( "sExportMinPrice", $dMinPrice);
+        oxRegistry::getSession()->deleteVariable("sExportMinPrice");
+        $dMinPrice = oxRegistry::getConfig()->getRequestParameter("sExportMinPrice");
+        if (isset($dMinPrice)) {
+            $dMinPrice = str_replace(array(";", " ", "/", "'"), "", $dMinPrice);
+            $dMinPrice = str_replace(",", ".", $dMinPrice);
+            oxRegistry::getSession()->setVariable("sExportMinPrice", $dMinPrice);
         }
 
         // #827
-        oxSession::deleteVar( "sExportCampaign" );
-        $sCampaign = oxConfig::getParameter( "sExportCampaign" );
-        if ( isset( $sCampaign ) ) {
-            $sCampaign = str_replace( array( ";", " ", "/", "'"), "", $sCampaign );
-            oxSession::setVar( "sExportCampaign", $sCampaign );
+        oxRegistry::getSession()->deleteVariable("sExportCampaign");
+        $sCampaign = oxRegistry::getConfig()->getRequestParameter("sExportCampaign");
+        if (isset($sCampaign)) {
+            $sCampaign = str_replace(array(";", " ", "/", "'"), "", $sCampaign);
+            oxRegistry::getSession()->setVariable("sExportCampaign", $sCampaign);
         }
 
         // reset it from session
-        oxSession::deleteVar("blAppendCatToCampaign" );
+        oxRegistry::getSession()->deleteVariable("blAppendCatToCampaign");
         // now retrieve it from get or post.
-        $blAppendCatToCampaign = oxConfig::getParameter( "blAppendCatToCampaign" );
-        if ( $blAppendCatToCampaign ) {
-            oxSession::setVar( "blAppendCatToCampaign", $blAppendCatToCampaign );
+        $blAppendCatToCampaign = oxRegistry::getConfig()->getRequestParameter("blAppendCatToCampaign");
+        if ($blAppendCatToCampaign) {
+            oxRegistry::getSession()->setVariable("blAppendCatToCampaign", $blAppendCatToCampaign);
         }
 
         // reset it from session
-        oxSession::deleteVar("iExportLanguage" );
-        oxSession::setVar( "iExportLanguage", oxConfig::getParameter( "iExportLanguage" ) );
+        oxRegistry::getSession()->deleteVariable("iExportLanguage");
+        oxRegistry::getSession()->setVariable("iExportLanguage", oxRegistry::getConfig()->getRequestParameter("iExportLanguage"));
 
         //setting the custom header
-        oxSession::setVar("sExportCustomHeader", oxConfig::getParameter( "sExportCustomHeader" ));
+        oxRegistry::getSession()->setVariable("sExportCustomHeader", oxRegistry::getConfig()->getRequestParameter("sExportCustomHeader"));
     }
 
     /**
@@ -802,7 +790,7 @@ class DynExportBase extends oxAdminDetails
      */
     protected function _loadRootCats()
     {
-        if ( $this->_aCatLvlCache === null ) {
+        if ($this->_aCatLvlCache === null) {
             $this->_aCatLvlCache = array();
 
             $sCatView = getViewName('oxcategories');
@@ -810,25 +798,25 @@ class DynExportBase extends oxAdminDetails
 
             // Load all root cat's == all trees
             $sSQL = "select oxid from $sCatView where oxparentid = 'oxrootid'";
-            $oRs = $oDb->execute( $sSQL);
-            if ( $oRs != false && $oRs->recordCount() > 0 ) {
-                while ( !$oRs->EOF ) {
+            $oRs = $oDb->execute($sSQL);
+            if ($oRs != false && $oRs->recordCount() > 0) {
+                while (!$oRs->EOF) {
                     // now load each tree
                     $sSQL = "SELECT s.oxid, s.oxtitle,
                              s.oxparentid, count( * ) AS LEVEL FROM $sCatView v,
-                             $sCatView s WHERE s.oxrootid = '".$oRs->fields[0]."' and
-                             v.oxrootid='".$oRs->fields[0]."' and s.oxleft BETWEEN
+                             $sCatView s WHERE s.oxrootid = '" . $oRs->fields[0] . "' and
+                             v.oxrootid='" . $oRs->fields[0] . "' and s.oxleft BETWEEN
                              v.oxleft AND v.oxright AND s.oxhidden = '0' GROUP BY s.oxleft order by level";
 
-                    $oRs2 = $oDb->Execute( $sSQL );
-                    if ( $oRs2 != false && $oRs2->recordCount() > 0 ) {
-                        while ( !$oRs2->EOF ) {
+                    $oRs2 = $oDb->Execute($sSQL);
+                    if ($oRs2 != false && $oRs2->recordCount() > 0) {
+                        while (!$oRs2->EOF) {
                             // store it
                             $oCat = new stdClass();
-                            $oCat->_sOXID     = $oRs2->fields[0];
-                            $oCat->oxtitle    = $oRs2->fields[1];
+                            $oCat->_sOXID = $oRs2->fields[0];
+                            $oCat->oxtitle = $oRs2->fields[1];
                             $oCat->oxparentid = $oRs2->fields[2];
-                            $oCat->ilevel     = $oRs2->fields[3];
+                            $oCat->ilevel = $oRs2->fields[3];
                             $this->_aCatLvlCache[$oCat->_sOXID] = $oCat;
 
                             $oRs2->moveNext();
@@ -849,34 +837,35 @@ class DynExportBase extends oxAdminDetails
      *
      * @return string
      */
-    protected function _findDeepestCatPath( $oArticle )
+    protected function _findDeepestCatPath($oArticle)
     {
         $sRet = "";
 
         // find deepest
         $aIds = $oArticle->getCategoryIds();
-        if ( is_array( $aIds ) && count( $aIds ) ) {
-            if ( $aCatLvlCache = $this->_loadRootCats() ) {
-                $sIdMax  = null;
+        if (is_array($aIds) && count($aIds)) {
+            if ($aCatLvlCache = $this->_loadRootCats()) {
+                $sIdMax = null;
                 $dMaxLvl = 0;
-                foreach ( $aIds as $sCatId ) {
-                    if ( $dMaxLvl < $aCatLvlCache[$sCatId]->ilevel ) {
+                foreach ($aIds as $sCatId) {
+                    if ($dMaxLvl < $aCatLvlCache[$sCatId]->ilevel) {
                         $dMaxLvl = $aCatLvlCache[$sCatId]->ilevel;
-                        $sIdMax  = $sCatId;
-                        $sRet    = $aCatLvlCache[$sCatId]->oxtitle;
+                        $sIdMax = $sCatId;
+                        $sRet = $aCatLvlCache[$sCatId]->oxtitle;
                     }
                 }
 
                 // endless
-                for ( ;; ) {
-                    if ( !isset( $aCatLvlCache[$sIdMax]->oxparentid ) || $aCatLvlCache[$sIdMax]->oxparentid == "oxrootid" ) {
+                while (true) {
+                    if (!isset($aCatLvlCache[$sIdMax]->oxparentid) || $aCatLvlCache[$sIdMax]->oxparentid == "oxrootid") {
                         break;
                     }
                     $sIdMax = $aCatLvlCache[$sIdMax]->oxparentid;
-                    $sRet = $aCatLvlCache[$sIdMax]->oxtitle."/".$sRet;
+                    $sRet = $aCatLvlCache[$sIdMax]->oxtitle . "/" . $sRet;
                 }
             }
         }
+
         return $sRet;
     }
 
@@ -889,27 +878,27 @@ class DynExportBase extends oxAdminDetails
      *
      * @return object
      */
-    protected function _initArticle( $sHeapTable, $iCnt, & $blContinue )
+    protected function _initArticle($sHeapTable, $iCnt, & $blContinue)
     {
 
 
-        $oRs = oxDb::getDb()->selectLimit( "select oxid from $sHeapTable", 1, $iCnt );
-        if ( $oRs != false && $oRs->recordCount() > 0 ) {
-            $oArticle = oxNew( 'oxarticle' );
-            $oArticle->setLoadParentData( true );
+        $oRs = oxDb::getDb()->selectLimit("select oxid from $sHeapTable", 1, $iCnt);
+        if ($oRs != false && $oRs->recordCount() > 0) {
+            $oArticle = oxNew('oxarticle');
+            $oArticle->setLoadParentData(true);
 
-            $oArticle->setLanguage( oxSession::getVar( "iExportLanguage" ) );
+            $oArticle->setLanguage(oxRegistry::getSession()->getVariable("iExportLanguage"));
 
-            if ( $oArticle->load( $oRs->fields[0] ) ) {
+            if ($oArticle->load($oRs->fields[0])) {
                 // if article exists, do not stop export
                 $blContinue = true;
                 // check price
-                $dMinPrice = oxConfig::getParameter( "sExportMinPrice" );
-                if ( !isset( $dMinPrice ) || ( isset( $dMinPrice ) && ( $oArticle->getPrice()->getBruttoPrice() >= $dMinPrice ) ) ) {
+                $dMinPrice = oxRegistry::getConfig()->getRequestParameter("sExportMinPrice");
+                if (!isset($dMinPrice) || (isset($dMinPrice) && ($oArticle->getPrice()->getBruttoPrice() >= $dMinPrice))) {
 
                     //Saulius: variant title added
-                    $sTitle = $oArticle->oxarticles__oxvarselect->value ? " " .$oArticle->oxarticles__oxvarselect->value : "";
-                    $oArticle->oxarticles__oxtitle->setValue( $oArticle->oxarticles__oxtitle->value . $sTitle );
+                    $sTitle = $oArticle->oxarticles__oxvarselect->value ? " " . $oArticle->oxarticles__oxvarselect->value : "";
+                    $oArticle->oxarticles__oxtitle->setValue($oArticle->oxarticles__oxtitle->value . $sTitle);
 
 
                     return $oArticle;
@@ -925,19 +914,21 @@ class DynExportBase extends oxAdminDetails
      *
      * @return oxarticle
      */
-    protected function _setCampaignDetailLink( $oArticle )
+    protected function _setCampaignDetailLink($oArticle)
     {
         // #827
-        if ( $sCampaign = oxConfig::getParameter( "sExportCampaign" ) ) {
+        if ($sCampaign = oxRegistry::getConfig()->getRequestParameter("sExportCampaign")) {
             // modify detaillink
             //#1166R - pangora - campaign
-            $oArticle->appendLink( "campaign={$sCampaign}" );
+            $oArticle->appendLink("campaign={$sCampaign}");
 
-            if ( oxConfig::getParameter( "blAppendCatToCampaign") &&
-                 ( $sCat = $this->getCategoryString( $oArticle ) ) ) {
-                $oArticle->appendLink( "/$sCat" );
+            if (oxRegistry::getConfig()->getRequestParameter("blAppendCatToCampaign") &&
+                ($sCat = $this->getCategoryString($oArticle))
+            ) {
+                $oArticle->appendLink("/$sCat");
             }
         }
+
         return $oArticle;
     }
 
@@ -951,4 +942,3 @@ class DynExportBase extends oxAdminDetails
         return 'dyn_interface';
     }
 }
-

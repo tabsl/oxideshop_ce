@@ -1,34 +1,32 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   admin
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: genexport_do.php 28929 2010-07-23 07:06:06Z vilma $
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
  * Voucher Serie generator class
  *
- * @package admin
  */
 class VoucherSerie_Generate extends VoucherSerie_Main
 {
+
     /**
      * Voucher generator class name
      *
@@ -71,9 +69,9 @@ class VoucherSerie_Generate extends VoucherSerie_Main
      *
      * @return bool
      */
-    public function nextTick( $iCnt )
+    public function nextTick($iCnt)
     {
-        if ( $iGeneratedItems = $this->generateVoucher( $iCnt ) ) {
+        if ($iGeneratedItems = $this->generateVoucher($iCnt)) {
             return $iGeneratedItems;
         }
 
@@ -87,23 +85,23 @@ class VoucherSerie_Generate extends VoucherSerie_Main
      *
      * @return int saved record count
      */
-    public function generateVoucher( $iCnt )
+    public function generateVoucher($iCnt)
     {
-        $iAmount = abs( (int) oxSession::getVar( "voucherAmount" ) );
+        $iAmount = abs((int) oxRegistry::getSession()->getVariable("voucherAmount"));
 
         // creating new vouchers
-        if ( $iCnt < $iAmount && ( $oVoucherSerie = $this->_getVoucherSerie() ) ) {
+        if ($iCnt < $iAmount && ($oVoucherSerie = $this->_getVoucherSerie())) {
 
-            if ( !$this->_iGenerated ) {
+            if (!$this->_iGenerated) {
                 $this->_iGenerated = $iCnt;
             }
 
-            $blRandomNr = ( bool ) oxSession::getVar( "randomVoucherNr" );
-            $sVoucherNr = $blRandomNr ? oxUtilsObject::getInstance()->generateUID() : oxSession::getVar( "voucherNr" );
+            $blRandomNr = ( bool ) oxRegistry::getSession()->getVariable("randomVoucherNr");
+            $sVoucherNr = $blRandomNr ? oxUtilsObject::getInstance()->generateUID() : oxRegistry::getSession()->getVariable("voucherNr");
 
-            $oNewVoucher = oxNew( "oxvoucher" );
-            $oNewVoucher->oxvouchers__oxvoucherserieid = new oxField( $oVoucherSerie->getId() );
-            $oNewVoucher->oxvouchers__oxvouchernr = new oxField( $sVoucherNr );
+            $oNewVoucher = oxNew("oxvoucher");
+            $oNewVoucher->oxvouchers__oxvoucherserieid = new oxField($oVoucherSerie->getId());
+            $oNewVoucher->oxvouchers__oxvouchernr = new oxField($sVoucherNr);
             $oNewVoucher->save();
 
             $this->_iGenerated++;
@@ -114,8 +112,6 @@ class VoucherSerie_Generate extends VoucherSerie_Main
 
     /**
      * Runs voucher generation
-     *
-     * @return null
      */
     public function run()
     {
@@ -123,21 +119,21 @@ class VoucherSerie_Generate extends VoucherSerie_Main
         $iExportedItems = 0;
 
         // file is open
-        $iStart = oxConfig::getParameter("iStart");
+        $iStart = oxRegistry::getConfig()->getRequestParameter("iStart");
 
-        for ( $i = $iStart; $i < $iStart + $this->iGeneratePerTick; $i++) {
-            if ( ( $iExportedItems = $this->nextTick( $i ) ) === false ) {
+        for ($i = $iStart; $i < $iStart + $this->iGeneratePerTick; $i++) {
+            if (($iExportedItems = $this->nextTick($i)) === false) {
                 // end reached
-                $this->stop( ERR_SUCCESS );
+                $this->stop(ERR_SUCCESS);
                 $blContinue = false;
                 break;
             }
         }
 
-        if ( $blContinue) {
+        if ($blContinue) {
             // make ticker continue
             $this->_aViewData['refresh'] = 0;
-            $this->_aViewData['iStart']  = $i;
+            $this->_aViewData['iStart'] = $i;
             $this->_aViewData['iExpItems'] = $iExportedItems;
         }
     }

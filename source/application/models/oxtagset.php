@@ -1,34 +1,31 @@
 <?php
-    /**
- *    This file is part of OXID eShop Community Edition.
+/**
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
-     *
-     * @link      http://www.oxid-esales.com
-     * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: oxtags.php 53105 2012-12-18 15:03:40Z aurimas.gladutis $
-     */
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @link      http://www.oxid-esales.com
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
+ */
 
 
-    /**
-     * Class dedicated to article tags handling.
-     * Is responsible for saving, returning and adding tags for given article.
-     *
-     * @package model
-     */
+/**
+ * Class dedicated to article tags handling.
+ * Is responsible for saving, returning and adding tags for given article.
+ *
+ */
 class oxTagSet extends oxSuperCfg implements Iterator
 {
 
@@ -40,14 +37,14 @@ class oxTagSet extends oxSuperCfg implements Iterator
     protected $_sSeparator = ',';
 
     /**
-     * oxtag objects array
+     * oxTag objects array
      *
      * @var array
      */
     protected $_aTags = array();
 
     /**
-     * Stores invald tags
+     * Stores invalid tags
      *
      * @var array
      */
@@ -57,10 +54,8 @@ class oxTagSet extends oxSuperCfg implements Iterator
      * Sets tag separator
      *
      * @param string $sSeparator tags separator character
-     *
-     * @return mixed
      */
-    public function setSeparator( $sSeparator )
+    public function setSeparator($sSeparator)
     {
         $this->_sSeparator = $sSeparator;
     }
@@ -80,13 +75,11 @@ class oxTagSet extends oxSuperCfg implements Iterator
      *
      * @param string $sTags     article tag
      * @param bool   $blPrepare if false, separate tags will not be parsed and stored as is
-     *
-     * @return null
      */
-    public function set( $sTags, $blPrepare = true )
+    public function set($sTags, $blPrepare = true)
     {
         $this->clear();
-        $this->add( $sTags, $blPrepare );
+        $this->add($sTags, $blPrepare);
     }
 
     /**
@@ -114,14 +107,12 @@ class oxTagSet extends oxSuperCfg implements Iterator
      *
      * @param string $sTags     tags to add to list
      * @param bool   $blPrepare if false, separate tags will not be parsed and stored as is
-     *
-     * @return bool
      */
-    public function add( $sTags, $blPrepare = true )
+    public function add($sTags, $blPrepare = true)
     {
-        $aTags = explode( $this->getSeparator(), $sTags );
-        foreach ( $aTags as $sTag ) {
-            $this->addTag( $sTag, $blPrepare );
+        $aTags = explode($this->getSeparator(), $sTags);
+        foreach ($aTags as $sTag) {
+            $this->addTag($sTag, $blPrepare);
         }
     }
 
@@ -133,28 +124,28 @@ class oxTagSet extends oxSuperCfg implements Iterator
      *
      * @return bool
      */
-    public function addTag( $mTag, $blPrepare = true )
+    public function addTag($mTag, $blPrepare = true)
     {
-        $oTag = $this->_formTag( $mTag, $blPrepare );
+        $oTag = $this->_formTag($mTag, $blPrepare);
         $sTagName = $oTag->get();
-        if ( !$oTag->isValid() ) {
-            if ( $sTagName !== "" ) {
+        if (!$oTag->isValid()) {
+            if ($sTagName !== "") {
                 $this->_aInvalidTags[$sTagName] = $oTag;
             }
+
             return false;
         }
-        if ( $this->_aTags[$sTagName] === null ) {
+        if ($this->_aTags[$sTagName] === null) {
             $this->_aTags[$sTagName] = $oTag;
         } else {
             $this->_aTags[$sTagName]->increaseHitCount();
         }
+
         return true;
     }
 
     /**
      * Clears tags set
-     *
-     * @return null
      */
     public function clear()
     {
@@ -170,9 +161,10 @@ class oxTagSet extends oxSuperCfg implements Iterator
     {
         $aTags = array();
         foreach ($this->get() as $oTag) {
-            $aTags = array_merge($aTags, array_fill(0, $oTag->getHitCount(), $oTag->get() ) );
+            $aTags = array_merge($aTags, array_fill(0, $oTag->getHitCount(), $oTag->get()));
         }
-        return implode($this->getSeparator(), $aTags );
+
+        return implode($this->getSeparator(), $aTags);
     }
 
     /**
@@ -193,31 +185,28 @@ class oxTagSet extends oxSuperCfg implements Iterator
      *
      * @return array
      */
-    public function slice( $offset, $length )
+    public function slice($offset, $length)
     {
-        $this->_aTags = array_slice( $this->get(), $offset, $length, true );
+        $this->_aTags = array_slice($this->get(), $offset, $length, true);
+
         return $this->_aTags;
     }
 
     /**
      * Sorts current tag set
-     *
-     * @return array
      */
     public function sort()
     {
         $oStr = getStr();
-        uksort( $this->_aTags, array($oStr, 'strrcmp') );
+        uksort($this->_aTags, array($oStr, 'strrcmp'));
     }
 
     /**
      * Sorts current tag set
-     *
-     * @return array
      */
     public function sortByHitCount()
     {
-        uasort( $this->_aTags, array($this, '_tagHitsCmp') );
+        uasort($this->_aTags, array($this, '_tagHitsCmp'));
     }
 
     /**
@@ -227,17 +216,15 @@ class oxTagSet extends oxSuperCfg implements Iterator
      */
     public function current()
     {
-        return current( $this->_aTags );
+        return current($this->_aTags);
     }
 
     /**
      * Return the key of the current element
-     *
-     * @return void
      */
     public function next()
     {
-        next( $this->_aTags );
+        next($this->_aTags);
     }
 
     /**
@@ -247,7 +234,7 @@ class oxTagSet extends oxSuperCfg implements Iterator
      */
     public function key()
     {
-        return key( $this->_aTags );
+        return key($this->_aTags);
     }
 
     /**
@@ -257,17 +244,15 @@ class oxTagSet extends oxSuperCfg implements Iterator
      */
     public function valid()
     {
-        return isset( $this->_aTags[ $this->key() ] );
+        return isset($this->_aTags[$this->key()]);
     }
 
     /**
      * Rewind the Iterator to the first element
-     *
-     * @return void
      */
     public function rewind()
     {
-        reset( $this->_aTags );
+        reset($this->_aTags);
     }
 
     /**
@@ -278,26 +263,27 @@ class oxTagSet extends oxSuperCfg implements Iterator
      *
      * @return oxTag
      */
-    protected function _formTag( $mTag, $blPrepare = true )
+    protected function _formTag($mTag, $blPrepare = true)
     {
-        if ( $mTag instanceof oxTag ) {
+        if ($mTag instanceof oxTag) {
             $oTag = $mTag;
         } else {
-            $oTag = oxNew( "oxTag" );
-            $oTag->set( $mTag, $blPrepare );
+            $oTag = oxNew("oxTag");
+            $oTag->set($mTag, $blPrepare);
         }
+
         return $oTag;
     }
 
     /**
-     * Compares two tags by hitcount
+     * Compares two tags by hit count
      *
      * @param oxTag $oTag1 tag to compare
      * @param oxTag $oTag2 tag to compare
      *
      * @return int < 0 if tag1 is less than tag2; > 0 if tag1 is greater than tag2, and 0 if they are equal.
      */
-    protected function _tagHitsCmp( $oTag1, $oTag2 )
+    protected function _tagHitsCmp($oTag1, $oTag2)
     {
         return $oTag2->getHitCount() - $oTag1->getHitCount();
     }

@@ -1,29 +1,24 @@
 <?php
-    /**
- *    This file is part of OXID eShop Community Edition.
+/**
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
-     *
-     * @link      http://www.oxid-esales.com
-     * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: oxtagTest.php 26841 2012-12-21 13:58:15Z aurimas.gladutis $
-     */
-
-    require_once realpath( "." ).'/unit/OxidTestCase.php';
-    require_once realpath( "." ).'/unit/test_config.inc.php';
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @link      http://www.oxid-esales.com
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
+ */
 
 class Unit_Core_oxtagTest extends OxidTestCase
 {
@@ -50,14 +45,14 @@ class Unit_Core_oxtagTest extends OxidTestCase
     {
         $oTag = new oxTag();
 
-        $iNewMaxLength = $oTag->getMaxLength()+10;
+        $iNewMaxLength = $oTag->getMaxLength() + 10;
         $oTag->setMaxLength($iNewMaxLength);
 
-        $sRandomString = str_repeat( "a", $iNewMaxLength+10 );
+        $sRandomString = str_repeat("a", $iNewMaxLength + 10);
         $oTag->set($sRandomString);
 
-        $this->assertEquals( $iNewMaxLength, strlen( $oTag->get() ) );
-        $this->assertEquals( $iNewMaxLength, $oTag->getMaxLength() );
+        $this->assertEquals($iNewMaxLength, strlen($oTag->get()));
+        $this->assertEquals($iNewMaxLength, $oTag->getMaxLength());
     }
 
     /**
@@ -66,8 +61,8 @@ class Unit_Core_oxtagTest extends OxidTestCase
     public function testSetGetHitCount()
     {
         $oTag = new oxTag();
-        $oTag->setHitCount( 5 );
-        $this->assertEquals( 5, $oTag->getHitCount() );
+        $oTag->setHitCount(5);
+        $this->assertEquals(5, $oTag->getHitCount());
     }
 
     /**
@@ -76,7 +71,7 @@ class Unit_Core_oxtagTest extends OxidTestCase
     public function testGetHitCount()
     {
         $oTag = new oxTag();
-        $this->assertEquals( 1, $oTag->getHitCount() );
+        $this->assertEquals(1, $oTag->getHitCount());
     }
 
     /**
@@ -86,7 +81,7 @@ class Unit_Core_oxtagTest extends OxidTestCase
     {
         $oTag = new oxTag();
         $oTag->increaseHitCount();
-        $this->assertEquals( 2, $oTag->getHitCount() );
+        $this->assertEquals(2, $oTag->getHitCount());
     }
 
     /**
@@ -95,9 +90,9 @@ class Unit_Core_oxtagTest extends OxidTestCase
     public function testIncreaseHitCountOnNotDefaultValue()
     {
         $oTag = new oxTag();
-        $oTag->setHitCount( 5 );
+        $oTag->setHitCount(5);
         $oTag->increaseHitCount();
-        $this->assertEquals( 6, $oTag->getHitCount() );
+        $this->assertEquals(6, $oTag->getHitCount());
     }
 
     /**
@@ -123,48 +118,48 @@ class Unit_Core_oxtagTest extends OxidTestCase
         $oTag = new oxTag();
 
         $oTag->set("");
-        $this->assertFalse( $oTag->isValid() );
+        $this->assertFalse($oTag->isValid());
 
         // admin should be in forbidden words list
         $oTag->set("admin");
-        $this->assertFalse( $oTag->isValid() );
+        $this->assertFalse($oTag->isValid());
 
         $oTag->set("testas");
-        $this->assertTrue( $oTag->isValid() );
+        $this->assertTrue($oTag->isValid());
     }
 
     /**
-    * Test tag link generation, when SEO is on
-    *
-    * @return null
-    */
+     * Test tag link generation, when SEO is on
+     *
+     * @return null
+     */
     public function testGetTagLinkSeoOn()
     {
-        modConfig::getInstance()->setConfigParam( 'blSeoMode', true );
+        modConfig::getInstance()->setConfigParam('blSeoMode', true);
 
         $oTag = new oxTag();
 
 
-        $oTag->set( "zauber" );
-        $this->assertEquals( oxConfig::getInstance()->getConfigParam("sShopURL")."tag/zauber/", $oTag->getLink() );
+        $oTag->set("zauber");
+        $this->assertEquals(oxRegistry::getConfig()->getConfigParam("sShopURL") . "tag/zauber/", $oTag->getLink());
 
-        $oTag->set( "testTag" );
-        $this->assertEquals( oxConfig::getInstance()->getConfigParam("sShopURL")."tag/testtag/", $oTag->getLink() );
+        $oTag->set("testTag");
+        $this->assertEquals(oxRegistry::getConfig()->getConfigParam("sShopURL") . "tag/testtag/", $oTag->getLink());
     }
 
     /**
      * Test tag link generation, when SEO is off
-    *
-    * @return null
-    */
+     *
+     * @return null
+     */
     public function testGetTagLinkSeoOff()
     {
-        modConfig::getInstance()->setConfigParam( 'blSeoMode', false );
+        modConfig::getInstance()->setConfigParam('blSeoMode', false);
 
         $oTag = new oxTag();
 
-        $oTag->set( "testTag" );
-        $this->assertEquals( oxConfig::getInstance()->getConfigParam("sShopURL")."index.php?cl=tag&amp;searchtag=testtag&amp;lang=0", $oTag->getLink() );
+        $oTag->set("testTag");
+        $this->assertEquals(oxRegistry::getConfig()->getConfigParam("sShopURL") . "index.php?cl=tag&amp;searchtag=testtag&amp;lang=0", $oTag->getLink());
     }
 
     /**
@@ -176,11 +171,11 @@ class Unit_Core_oxtagTest extends OxidTestCase
     {
         $oTag = new oxTag();
 
-        $oTag->set( "testTag" );
-        $this->assertEquals( "testtag", $oTag->getTitle() );
+        $oTag->set("testTag");
+        $this->assertEquals("testtag", $oTag->getTitle());
 
-        $oTag->set( "test&Tag" );
-        $this->assertEquals( "test tag", $oTag->getTitle() );
+        $oTag->set("test&Tag");
+        $this->assertEquals("test tag", $oTag->getTitle());
     }
 
     /**
@@ -191,9 +186,9 @@ class Unit_Core_oxtagTest extends OxidTestCase
     public function testUsingTagAsString()
     {
         $oTag = new oxTag("test1");
-        $sTag = "tag: ".$oTag;
+        $sTag = "tag: " . $oTag;
 
-        $this->assertEquals( "tag: test1", $sTag );
+        $this->assertEquals("tag: test1", $sTag);
     }
 
     /**
@@ -204,39 +199,39 @@ class Unit_Core_oxtagTest extends OxidTestCase
     public static function testStripMetaChars_dataProvider()
     {
         return array(
-            array( 'a b', 'a+-><()~*"\\b' ),
-            array( 'a b', 'a+b' ),
-            array( 'a b', 'a-b' ),
-            array( 'a b', 'a>b' ),
-            array( 'a b', 'a<b' ),
-            array( 'a b', 'a(b' ),
-            array( 'a b', 'a)b' ),
-            array( 'a b', 'a~b' ),
-            array( 'a b', 'a*b' ),
-            array( 'a b', 'a"b' ),
-            array( 'a b', 'a\'b' ),
-            array( 'a b', 'a\\b' ),
-            array( 'a b', 'a[]{};:./|!@#$%^&?=`b' ),
-            array( 'a b', 'a[b' ),
-            array( 'a b', 'a]b' ),
-            array( 'a b', 'a{b' ),
-            array( 'a b', 'a{b' ),
-            array( 'a b', 'a}b' ),
-            array( 'a b', 'a;b' ),
-            array( 'a b', 'a:b' ),
-            array( 'a b', 'a.b' ),
-            array( 'a b', 'a/b' ),
-            array( 'a b', 'a|b' ),
-            array( 'a b', 'a!b' ),
-            array( 'a b', 'a@b' ),
-            array( 'a b', 'a#b' ),
-            array( 'a b', 'a$b' ),
-            array( 'a b', 'a%b' ),
-            array( 'a b', 'a^b' ),
-            array( 'a b', 'a&b' ),
-            array( 'a b', 'a?b' ),
-            array( 'a b', 'a=b' ),
-            array( 'a b', 'a`b' ),
+            array('a b', 'a+-><()~*"\\b'),
+            array('a b', 'a+b'),
+            array('a b', 'a-b'),
+            array('a b', 'a>b'),
+            array('a b', 'a<b'),
+            array('a b', 'a(b'),
+            array('a b', 'a)b'),
+            array('a b', 'a~b'),
+            array('a b', 'a*b'),
+            array('a b', 'a"b'),
+            array('a b', 'a\'b'),
+            array('a b', 'a\\b'),
+            array('a b', 'a[]{};:./|!@#$%^&?=`b'),
+            array('a b', 'a[b'),
+            array('a b', 'a]b'),
+            array('a b', 'a{b'),
+            array('a b', 'a{b'),
+            array('a b', 'a}b'),
+            array('a b', 'a;b'),
+            array('a b', 'a:b'),
+            array('a b', 'a.b'),
+            array('a b', 'a/b'),
+            array('a b', 'a|b'),
+            array('a b', 'a!b'),
+            array('a b', 'a@b'),
+            array('a b', 'a#b'),
+            array('a b', 'a$b'),
+            array('a b', 'a%b'),
+            array('a b', 'a^b'),
+            array('a b', 'a&b'),
+            array('a b', 'a?b'),
+            array('a b', 'a=b'),
+            array('a b', 'a`b'),
         );
     }
 
@@ -247,13 +242,14 @@ class Unit_Core_oxtagTest extends OxidTestCase
      *
      * @param string $data
      * @param string $result
+     *
      * @return null
      */
-    public function testStripMetaChars( $result, $data )
+    public function testStripMetaChars($result, $data)
     {
         $oTag = new oxTag();
 
-        $this->assertEquals( $result, $oTag->stripMetaChars( $data ) );
+        $this->assertEquals($result, $oTag->stripMetaChars($data));
     }
 
     /**
@@ -265,10 +261,10 @@ class Unit_Core_oxtagTest extends OxidTestCase
     {
         $oTag = new oxTag();
 
-        $this->assertEquals( 'a b', $oTag->prepare('a[]{};:./|!@#$%^&?=`b') );
+        $this->assertEquals('a b', $oTag->prepare('a[]{};:./|!@#$%^&?=`b'));
 
-        $sRandomString = str_repeat( "a", $oTag->getMaxLength() );
-        $this->assertEquals( $sRandomString, $oTag->prepare($sRandomString.'should_be_cut') );
+        $sRandomString = str_repeat("a", $oTag->getMaxLength());
+        $this->assertEquals($sRandomString, $oTag->prepare($sRandomString . 'should_be_cut'));
     }
 
     /**
@@ -279,14 +275,14 @@ class Unit_Core_oxtagTest extends OxidTestCase
     public static function testAddRemoveUnderscores_dataProvider()
     {
         return array(
-            array( 'a', 'a___' ),
-            array( 'ab', 'ab__' ),
-            array( 'abc', 'abc_' ),
-            array( 'abcd', 'abcd' ),
-            array( 'abcde', 'abcde' ),
-            array( 'ab_cde', 'ab_cde' ),
-            array( 'ab cde', 'ab__ cde_' ),
-            array( 'ab abc a abcd abcde', 'ab__ abc_ a___ abcd abcde' ),
+            array('a', 'a___'),
+            array('ab', 'ab__'),
+            array('abc', 'abc_'),
+            array('abcd', 'abcd'),
+            array('abcde', 'abcde'),
+            array('ab_cde', 'ab_cde'),
+            array('ab cde', 'ab__ cde_'),
+            array('ab abc a abcd abcde', 'ab__ abc_ a___ abcd abcde'),
         );
     }
 
@@ -295,18 +291,18 @@ class Unit_Core_oxtagTest extends OxidTestCase
      *
      * @dataProvider testAddRemoveUnderscores_dataProvider
      *
-     * @param string $sTag tag to test
+     * @param string $sTag    tag to test
      * @param string $sResult expected result
      */
-    public function testAddRemoveUnderscores( $sTag, $sResult )
+    public function testAddRemoveUnderscores($sTag, $sResult)
     {
-        $oTag = new oxTag( $sTag );
+        $oTag = new oxTag($sTag);
 
         $oTag->addUnderscores();
-        $this->assertEquals( $sResult, $oTag->get() );
+        $this->assertEquals($sResult, $oTag->get());
 
         $oTag->removeUnderscores();
-        $this->assertEquals( $sTag, $oTag->get() );
+        $this->assertEquals($sTag, $oTag->get());
     }
 
     /**
@@ -314,15 +310,15 @@ class Unit_Core_oxtagTest extends OxidTestCase
      *
      * @dataProvider testAddRemoveUnderscores_dataProvider
      *
-     * @param string $sTag tag to test
+     * @param string $sTag    tag to test
      * @param string $sResult expected result
      */
-    public function testRemoveUnderscoresSplitByDashes( $sTag, $sResult )
+    public function testRemoveUnderscoresSplitByDashes($sTag, $sResult)
     {
         $oTag = new oxTag();
-        $oTag->set( str_replace( ' ', '-', $sResult ), false );
+        $oTag->set(str_replace(' ', '-', $sResult), false);
 
         $oTag->removeUnderscores();
-        $this->assertEquals( str_replace( ' ', '-', $sTag ), $oTag->get() );
+        $this->assertEquals(str_replace(' ', '-', $sTag), $oTag->get());
     }
 }

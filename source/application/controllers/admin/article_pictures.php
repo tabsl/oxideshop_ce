@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   admin
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -27,10 +25,10 @@
  * Collects information about article's used pictures, there is posibility to
  * upload any other picture, etc.
  * Admin Menu: Manage Products -> Articles -> Pictures.
- * @package admin
  */
 class Article_Pictures extends oxAdminDetails
 {
+
     /**
      * Loads article information - pictures, passes data to Smarty
      * engine, returns name of template file "article_pictures.tpl".
@@ -41,24 +39,24 @@ class Article_Pictures extends oxAdminDetails
     {
         parent::render();
 
-        $this->_aViewData["edit"] = $oArticle = oxNew( "oxarticle");
+        $this->_aViewData["edit"] = $oArticle = oxNew("oxarticle");
 
         $soxId = $this->getEditObjectId();
-        if ( $soxId != "-1" && isset( $soxId ) ) {
+        if ($soxId != "-1" && isset($soxId)) {
             // load object
-            $oArticle->load( $soxId);
+            $oArticle->load($soxId);
 
 
             // variant handling
-            if ( $oArticle->oxarticles__oxparentid->value) {
-                $oParentArticle = oxNew( "oxarticle");
-                $oParentArticle->load( $oArticle->oxarticles__oxparentid->value);
-                $this->_aViewData["parentarticle"] =  $oParentArticle;
-                $this->_aViewData["oxparentid"] =  $oArticle->oxarticles__oxparentid->value;
+            if ($oArticle->oxarticles__oxparentid->value) {
+                $oParentArticle = oxNew("oxarticle");
+                $oParentArticle->load($oArticle->oxarticles__oxparentid->value);
+                $this->_aViewData["parentarticle"] = $oParentArticle;
+                $this->_aViewData["oxparentid"] = $oArticle->oxarticles__oxparentid->value;
             }
         }
 
-        $this->_aViewData["iPicCount"] =  $this->getConfig()->getConfigParam( 'iPicCount' );
+        $this->_aViewData["iPicCount"] = $this->getConfig()->getConfigParam('iPicCount');
 
         return "article_pictures.tpl";
     }
@@ -72,27 +70,27 @@ class Article_Pictures extends oxAdminDetails
     {
         $myConfig = $this->getConfig();
 
-        if ( $myConfig->isDemoShop() ) {
+        if ($myConfig->isDemoShop()) {
             // disabling uploading pictures if this is demo shop
-            $oEx = oxNew( "oxExceptionToDisplay" );
-            $oEx->setMessage( 'ARTICLE_PICTURES_UPLOADISDISABLED' );
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay( $oEx, false );
+            $oEx = oxNew("oxExceptionToDisplay");
+            $oEx->setMessage('ARTICLE_PICTURES_UPLOADISDISABLED');
+            oxRegistry::get("oxUtilsView")->addErrorToDisplay($oEx, false);
 
             return;
         }
 
         parent::save();
 
-        $oArticle = oxNew( "oxarticle");
-        if ( $oArticle->load( $this->getEditObjectId() ) ) {
-            $oArticle->assign( oxConfig::getParameter( "editval") );
-            oxRegistry::get("oxUtilsFile")->processFiles( $oArticle );
+        $oArticle = oxNew("oxarticle");
+        if ($oArticle->load($this->getEditObjectId())) {
+            $oArticle->assign(oxRegistry::getConfig()->getRequestParameter("editval"));
+            oxRegistry::get("oxUtilsFile")->processFiles($oArticle);
 
             // Show that no new image added
-            if ( oxRegistry::get("oxUtilsFile")->getNewFilesCounter() == 0 ) {
-                $oEx = oxNew( "oxExceptionToDisplay" );
-                $oEx->setMessage( 'NO_PICTURES_CHANGES' );
-                oxRegistry::get("oxUtilsView")->addErrorToDisplay( $oEx, false );
+            if (oxRegistry::get("oxUtilsFile")->getNewFilesCounter() == 0) {
+                $oEx = oxNew("oxExceptionToDisplay");
+                $oEx->setMessage('NO_PICTURES_CHANGES');
+                oxRegistry::get("oxUtilsView")->addErrorToDisplay($oEx, false);
             }
 
             $oArticle->save();
@@ -110,32 +108,32 @@ class Article_Pictures extends oxAdminDetails
     {
         $myConfig = $this->getConfig();
 
-        if ( $myConfig->isDemoShop() ) {
+        if ($myConfig->isDemoShop()) {
             // disabling uploading pictures if this is demo shop
-            $oEx = oxNew( "oxExceptionToDisplay" );
-            $oEx->setMessage( 'ARTICLE_PICTURES_UPLOADISDISABLED' );
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay( $oEx, false );
+            $oEx = oxNew("oxExceptionToDisplay");
+            $oEx->setMessage('ARTICLE_PICTURES_UPLOADISDISABLED');
+            oxRegistry::get("oxUtilsView")->addErrorToDisplay($oEx, false);
 
             return;
         }
 
         $sOxId = $this->getEditObjectId();
-        $iIndex = oxConfig::getParameter( "masterPicIndex" );
+        $iIndex = oxRegistry::getConfig()->getRequestParameter("masterPicIndex");
 
-        $oArticle = oxNew( "oxarticle" );
-        $oArticle->load( $sOxId );
+        $oArticle = oxNew("oxarticle");
+        $oArticle->load($sOxId);
 
-        if ( $iIndex == "ICO" ) {
+        if ($iIndex == "ICO") {
             // deleting main icon
-            $this->_deleteMainIcon( $oArticle );
-        } elseif ( $iIndex == "TH" ) {
+            $this->_deleteMainIcon($oArticle);
+        } elseif ($iIndex == "TH") {
             // deleting thumbnail
-            $this->_deleteThumbnail( $oArticle );
+            $this->_deleteThumbnail($oArticle);
         } else {
             $iIndex = (int) $iIndex;
-            if ( $iIndex > 0 ) {
+            if ($iIndex > 0) {
                 // deleting master picture
-                $this->_resetMasterPicture( $oArticle, $iIndex, true );
+                $this->_resetMasterPicture($oArticle, $iIndex, true);
             }
         }
 
@@ -152,27 +150,27 @@ class Article_Pictures extends oxAdminDetails
      *
      * @return null
      */
-    protected function _resetMasterPicture( $oArticle, $iIndex, $blDeleteMaster = false )
+    protected function _resetMasterPicture($oArticle, $iIndex, $blDeleteMaster = false)
     {
-        if ( $oArticle->{"oxarticles__oxpic".$iIndex}->value ) {
+        if ($oArticle->{"oxarticles__oxpic" . $iIndex}->value) {
 
-            if ( !$oArticle->isDerived() ) {
+            if (!$oArticle->isDerived()) {
                 $oPicHandler = oxRegistry::get("oxPictureHandler");
-                $oPicHandler->deleteArticleMasterPicture( $oArticle, $iIndex, $blDeleteMaster );
+                $oPicHandler->deleteArticleMasterPicture($oArticle, $iIndex, $blDeleteMaster);
             }
 
-            if ( $blDeleteMaster ) {
+            if ($blDeleteMaster) {
                 //reseting master picture field
-                $oArticle->{"oxarticles__oxpic".$iIndex} = new oxField();
+                $oArticle->{"oxarticles__oxpic" . $iIndex} = new oxField();
             }
 
             // cleaning oxzoom fields
-            if ( isset( $oArticle->{"oxarticles__oxzoom".$iIndex} ) ) {
-                $oArticle->{"oxarticles__oxzoom".$iIndex} = new oxField();
+            if (isset($oArticle->{"oxarticles__oxzoom" . $iIndex})) {
+                $oArticle->{"oxarticles__oxzoom" . $iIndex} = new oxField();
             }
 
-            if ( $iIndex == 1 ) {
-                $this->_cleanupCustomFields( $oArticle );
+            if ($iIndex == 1) {
+                $this->_cleanupCustomFields($oArticle);
             }
         }
     }
@@ -184,13 +182,13 @@ class Article_Pictures extends oxAdminDetails
      *
      * @return null
      */
-    protected function _deleteMainIcon( $oArticle )
+    protected function _deleteMainIcon($oArticle)
     {
-        if ( $oArticle->oxarticles__oxicon->value ) {
+        if ($oArticle->oxarticles__oxicon->value) {
 
-            if ( !$oArticle->isDerived() ) {
+            if (!$oArticle->isDerived()) {
                 $oPicHandler = oxRegistry::get("oxPictureHandler");
-                $oPicHandler->deleteMainIcon( $oArticle );
+                $oPicHandler->deleteMainIcon($oArticle);
             }
 
             //reseting field
@@ -205,13 +203,13 @@ class Article_Pictures extends oxAdminDetails
      *
      * @return null
      */
-    protected function _deleteThumbnail( $oArticle )
+    protected function _deleteThumbnail($oArticle)
     {
-        if ( $oArticle->oxarticles__oxthumb->value ) {
+        if ($oArticle->oxarticles__oxthumb->value) {
 
-            if ( !$oArticle->isDerived() ) {
+            if (!$oArticle->isDerived()) {
                 $oPicHandler = oxRegistry::get("oxPictureHandler");
-                $oPicHandler->deleteThumbnail( $oArticle );
+                $oPicHandler->deleteThumbnail($oArticle);
             }
 
             //reseting field
@@ -224,21 +222,19 @@ class Article_Pictures extends oxAdminDetails
      * icon or thumb picture, leaves records untouched.
      *
      * @param oxArticle $oArticle article object
-     *
-     * @return null
      */
-    protected function _cleanupCustomFields( $oArticle )
+    protected function _cleanupCustomFields($oArticle)
     {
-        $myConfig  = $this->getConfig();
+        $myConfig = $this->getConfig();
 
-        $sIcon  = $oArticle->oxarticles__oxicon->value;
+        $sIcon = $oArticle->oxarticles__oxicon->value;
         $sThumb = $oArticle->oxarticles__oxthumb->value;
 
-        if ( $sIcon == "nopic.jpg" ) {
+        if ($sIcon == "nopic.jpg") {
             $oArticle->oxarticles__oxicon = new oxField();
         }
 
-        if ( $sThumb == "nopic.jpg" ) {
+        if ($sThumb == "nopic.jpg") {
             $oArticle->oxarticles__oxthumb = new oxField();
         }
     }

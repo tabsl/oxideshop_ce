@@ -23,7 +23,7 @@
 [{/if}]
     <li>
         <label [{if $oView->isFieldRequired(oxuser__oxsal)}]class="req"[{/if}]>[{ oxmultilang ident="TITLE" suffix="COLON" }]</label>
-        [{include file="form/fieldset/salutation.tpl" name="invadr[oxuser__oxsal]" value=$oxcmp_user->oxuser__oxsal->value }]
+        [{include file="form/fieldset/salutation.tpl" name="invadr[oxuser__oxsal]" value=$oxcmp_user->oxuser__oxsal->value value2=$invadr.oxuser__oxsal }]
     </li>
     <li [{if $aErrors.oxuser__oxfname}]class="oxInValid"[{/if}]>
         <label [{if $oView->isFieldRequired(oxuser__oxfname) }]class="req"[{/if}]>[{ oxmultilang ident="FIRST_NAME" suffix="COLON" }]</label>
@@ -203,7 +203,19 @@
 
     <li class="formNote">[{ oxmultilang ident="COMPLETE_MARKED_FIELDS" }]</li>
     [{if !$noFormSubmit}]
-    <li class="formSubmit">
-        <button id="accUserSaveTop" type="submit" name="save" class="submitButton">[{ oxmultilang ident="SAVE" }]</button>
-    </li>
+        <li class="formSubmit">
+            <button id="accUserSaveTop" type="submit" name="save" class="submitButton">[{ oxmultilang ident="SAVE" }]</button>
+        </li>
     [{/if}]
+
+
+[{oxscript add="
+    $( document ).ready(function() {
+        oForm = $('#addressForm');
+        $( '.js-oxValidate_notEmpty', oForm).each( function(index) {
+            if (this.name != 'user_password' && this.value == '') {
+                $('#userChangeAddress').click();
+            }
+        } );
+    });
+"}]

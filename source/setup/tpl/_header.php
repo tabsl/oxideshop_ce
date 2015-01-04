@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   setup
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: lang.php 25584 2010-02-03 12:11:40Z arvydas $
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -40,17 +38,17 @@
         }
     }
 
-    function update_dynpages_checkbox()
-    {
-        sValue = document.forms[0].location_lang.value;
-        if ( sValue == '' ) {
-            document.getElementById('use_dynamic_pages_ckbox').style.display = 'none';
-            document.getElementById('use_dynamic_pages_desc').style.display = 'none';
-        } else {
-            document.getElementById('use_dynamic_pages_ckbox').style.display = '';
-            document.getElementById('use_dynamic_pages_desc').style.display = '';
-        }
+function update_dynpages_checkbox()
+{
+    sValue = document.forms[0].location_lang.value;
+    if ( sValue == '' ) {
+        document.getElementById('use_dynamic_pages_ckbox').style.display = 'none';
+        document.getElementById('use_dynamic_pages_desc').style.display = 'none';
+    } else {
+        document.getElementById('use_dynamic_pages_ckbox').style.display = '';
+        document.getElementById('use_dynamic_pages_desc').style.display = '';
     }
+}
     /**
      * Replaces password type field into plain and vice versa
      */
@@ -80,8 +78,8 @@
     <?php
         $iTabWidth = 147;
         $iSepWidth = 3;
-            $iTabCount = 6;
-            $sHColor = '#ff3600';
+        $iTabCount = 6;
+        $sHColor = '#ff3600';
         $iDocWidth = ($iTabWidth + $iSepWidth)*$iTabCount;
     ?>
         body, p , form {margin:0; }
@@ -106,13 +104,13 @@
         dl.tab.act dd a{color: #000;}
 
         ul.req {padding:0 5px;border:1px solid #888;margin:5px 0;clear:both;display:block;}
-        ul.req li{list-style:none;margin:5px 0;border-left:14px solid gray;padding-left:.5em;}
-        ul.req li.pass{border-color:green;}
-        ul.req li.pmin{border-color:orange;}
-        ul.req li.fail{border-color:red;}
-        ul.req li.null{border-color:gray;}
+        ul.req li{list-style:none;margin:5px 0;padding-left:1.5em;}
+        ul.req li.pass{background-image:url('./out/src/img/pass.png');background-repeat: no-repeat;}
+        ul.req li.pmin{background-image:url('./out/src/img/pmin.png');background-repeat: no-repeat;}
+        ul.req li.fail{background-image:url('./out/src/img/fail.png');background-repeat: no-repeat;}
+        ul.req li.null{background-image:url('./out/src/img/null.png');background-repeat: no-repeat;}
         ul.req ul{padding:0;margin:0;}
-        ul.req li.group {border:none;float:left;font-weight:bold;width:32%;}
+        ul.req li.group {border:none;float:left;font-weight:bold;width:28%;}
         ul.req li.clear{clear:left;diplay:none;border:none;visibility:collapse;height:0px;padding:0;margin:0;display:block;line-height: 0;}
     </style>
 
@@ -126,7 +124,7 @@
 <body>
 
 <div id="page">
-    <a href="index.php?istep=<?php $this->getSetupStep('STEP_SYSTEMREQ' ); ?>&sid=<?php $this->getSid(); ?>"><img src="<?php echo $this->getImageDir(); ?>/setup_logo.gif" alt="OXID eSales" hspace="5" vspace="5" border="0"></a>
+    <a href="index.php?istep=<?php $this->getSetupStep('STEP_SYSTEMREQ' ); ?>&sid=<?php $this->getSid(); ?>"><img src="<?php echo $this->getImageDir(); ?>/setup_logo.png" alt="OXID eSales" hspace="5" vspace="5" border="0"></a>
     <div id="header">
         <?php
         $iCntr = 0;

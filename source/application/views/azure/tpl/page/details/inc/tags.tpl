@@ -11,8 +11,9 @@
         [{if $oCloudManager->getCloudArray()|count < 0}]
             [{oxmultilang ident="NO_TAGS"}]
         [{/if}]
-        [{foreach from=$oCloudManager->getCloudArray() item=iCount key=sTagTitle}]
-            <a class="tagitem_[{$oCloudManager->getTagSize($sTagTitle)}]" href="[{$oCloudManager->getTagLink($sTagTitle)}]">[{$oCloudManager->getTagTitle($sTagTitle)}]</a>
+        [{assign var="oTagSet" value=$oCloudManager->getCloudArray() }]
+        [{foreach from=$oTagSet item=oTag }]
+            <a class="tagitem_[{ $oCloudManager->getTagSize($oTag->getTitle()) }]" href="[{ $oTag->getLink() }]">[{ $oTag->getTitle() }]</a>
         [{/foreach}]
     </p>
     [{if $oDetailsProduct && $oView->canChangeTags()}]
@@ -20,7 +21,7 @@
         <div>
           [{$oViewConf->getHiddenSid()}]
           [{$oViewConf->getNavFormParams()}]
-          <input type="hidden" name="cl" value="[{$oViewConf->getActiveClassName()}]">
+          <input type="hidden" name="cl" value="[{$oViewConf->getTopActiveClassName()}]">
           <input type="hidden" name="aid" value="[{$oDetailsProduct->oxarticles__oxid->value}]">
           <input type="hidden" name="anid" value="[{$oDetailsProduct->oxarticles__oxnid->value}]">
           <input type="hidden" name="fnc" value="editTags">

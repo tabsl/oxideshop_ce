@@ -1,33 +1,32 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
  * UserBasketItem class, responsible for storing most important fields
  *
- * @package model
  */
 class oxBasketItem extends oxSuperCfg
 {
+
     /**
      * Product ID
      *
@@ -94,7 +93,7 @@ class oxBasketItem extends oxSuperCfg
     /**
      * Basket item select lists
      *
-     * @var string
+     * @var array
      */
     protected $_aSelList = array();
 
@@ -180,7 +179,7 @@ class oxBasketItem extends oxSuperCfg
      *
      * @var string
      */
-     protected $_sWishId = null;
+    protected $_sWishId = null;
 
     /**
      * Wish article Id
@@ -219,7 +218,7 @@ class oxBasketItem extends oxSuperCfg
     protected $_sIconUrl = null;
 
 
-     /**
+    /**
      * Regular Item unit price - price without basket item discounts
      *
      * @var oxPrice
@@ -241,10 +240,8 @@ class oxBasketItem extends oxSuperCfg
      * Set regular unit price
      *
      * @param oxPrice $oRegularUnitPrice regular price
-     *
-     * @return null
      */
-    public function setRegularUnitPrice( $oRegularUnitPrice )
+    public function setRegularUnitPrice($oRegularUnitPrice)
     {
         $this->_oRegularUnitPrice = $oRegularUnitPrice;
     }
@@ -265,17 +262,15 @@ class oxBasketItem extends oxSuperCfg
      * @param bool   $blBundle   bundle
      *
      * @throws oxNoArticleException, oxOutOfStockException, oxArticleInputException
-     *
-     * @return null
      */
-    public function init( $sProductID, $dAmount, $aSel = null, $aPersParam = null, $blBundle = null )
+    public function init($sProductID, $dAmount, $aSel = null, $aPersParam = null, $blBundle = null)
     {
-        $this->_setArticle( $sProductID );
-        $this->setAmount( $dAmount );
-        $this->_setSelectList( $aSel );
-        $this->setPersParams( $aPersParam );
-        $this->setBundle( $blBundle );
-        $this->setLanguageId( oxRegistry::getLang()->getBaseLanguage() );
+        $this->_setArticle($sProductID);
+        $this->setAmount($dAmount);
+        $this->_setSelectList($aSel);
+        $this->setPersParams($aPersParam);
+        $this->setBundle($blBundle);
+        $this->setLanguageId(oxRegistry::getLang()->getBaseLanguage());
     }
 
     /**
@@ -288,26 +283,22 @@ class oxBasketItem extends oxSuperCfg
      *  - oxbasketitem::setPersParams().
      *
      * @param oxorderarticle $oOrderArticle order article to load info from
-     *
-     * @return null
      */
-    public function initFromOrderArticle( $oOrderArticle )
+    public function initFromOrderArticle($oOrderArticle)
     {
-        $this->_setFromOrderArticle( $oOrderArticle );
-        $this->setAmount( $oOrderArticle->oxorderarticles__oxamount->value );
-        $this->_setSelectList( $oOrderArticle->getOrderArticleSelectList() );
-        $this->setPersParams( $oOrderArticle->getPersParams() );
-        $this->setBundle( $oOrderArticle->isBundle() );
+        $this->_setFromOrderArticle($oOrderArticle);
+        $this->setAmount($oOrderArticle->oxorderarticles__oxamount->value);
+        $this->_setSelectList($oOrderArticle->getOrderArticleSelectList());
+        $this->setPersParams($oOrderArticle->getPersParams());
+        $this->setBundle($oOrderArticle->isBundle());
     }
 
     /**
      * Marks if item is discount bundle ( oxbasketitem::_blIsDiscountArticle )
      *
      * @param bool $blIsDiscountArticle if item is discount bundle
-     *
-     * @return null
      */
-    public function setAsDiscountArticle( $blIsDiscountArticle )
+    public function setAsDiscountArticle($blIsDiscountArticle)
     {
         $this->_blIsDiscountArticle = $blIsDiscountArticle;
     }
@@ -316,10 +307,8 @@ class oxBasketItem extends oxSuperCfg
      * Sets stock control mode
      *
      * @param bool $blStatus stock control mode
-     *
-     * @return null
      */
-    public function setStockCheckStatus( $blStatus )
+    public function setStockCheckStatus($blStatus)
     {
         $this->_blCheckArticleStock = $blStatus;
     }
@@ -339,43 +328,42 @@ class oxBasketItem extends oxSuperCfg
      * ( oxbasketitem::dAmount, oxbasketitem::dWeight )
      *
      * @param double $dAmount    amount
-     * @param bool   $blOverride overide current amoutn or not
+     * @param bool   $blOverride Whether to override current amount.
      * @param string $sItemKey   item key
      *
-     * @throws oxOutOfStockException, oxArticleInputException
-     *
-     * @return null
+     * @throws oxArticleInputException
+     * @throws oxOutOfStockException
      */
-    public function setAmount( $dAmount, $blOverride = true, $sItemKey = null )
+    public function setAmount($dAmount, $blOverride = true, $sItemKey = null)
     {
         try {
             //validating amount
-            $dAmount = oxRegistry::get("oxInputValidator")->validateBasketAmount( $dAmount );
-        } catch( oxArticleInputException $oEx ) {
-            $oEx->setArticleNr( $this->getProductId() );
-            $oEx->setProductId( $this->getProductId() );
-            // setting additional information for excp and then rethrowing
+            $dAmount = oxRegistry::get("oxInputValidator")->validateBasketAmount($dAmount);
+        } catch (oxArticleInputException $oEx) {
+            $oEx->setArticleNr($this->getProductId());
+            $oEx->setProductId($this->getProductId());
+            // setting additional information for exception and then rethrowing
             throw $oEx;
         }
 
-        $oArticle = $this->getArticle( true );
+        $oArticle = $this->getArticle(true);
 
 
         // setting default
         $iOnStock = true;
 
-        if ( $blOverride ) {
-            $this->_dAmount  = $dAmount;
+        if ($blOverride) {
+            $this->_dAmount = $dAmount;
         } else {
             $this->_dAmount += $dAmount;
         }
 
         // checking for stock
-        if ( $this->getStockCheckStatus() == true ) {
-            $dArtStockAmount = $this->getSession()->getBasket()->getArtStockInBasket( $oArticle->getId(), $sItemKey );
-            $iOnStock = $oArticle->checkForStock( $this->_dAmount, $dArtStockAmount );
-            if ( $iOnStock !== true ) {
-                if ( $iOnStock === false ) {
+        if ($this->getStockCheckStatus() == true) {
+            $dArtStockAmount = $this->getSession()->getBasket()->getArtStockInBasket($oArticle->getId(), $sItemKey);
+            $iOnStock = $oArticle->checkForStock($this->_dAmount, $dArtStockAmount);
+            if ($iOnStock !== true) {
+                if ($iOnStock === false) {
                     // no stock !
                     $this->_dAmount = 0;
                 } else {
@@ -389,13 +377,14 @@ class oxBasketItem extends oxSuperCfg
         // calculating general weight
         $this->_dWeight = $oArticle->oxarticles__oxweight->value * $this->_dAmount;
 
-        if ( $iOnStock !== true ) {
-            $oEx = oxNew( 'oxOutOfStockException' );
-            $oEx->setMessage( 'EXCEPTION_OUTOFSTOCK_OUTOFSTOCK' );
-            $oEx->setArticleNr( $oArticle->oxarticles__oxartnum->value );
-            $oEx->setProductId( $oArticle->getProductId() );
-            $oEx->setRemainingAmount( $this->_dAmount );
-            $oEx->setBasketIndex( $sItemKey );
+        if ($iOnStock !== true) {
+            /** @var oxOutOfStockException $oEx */
+            $oEx = oxNew('oxOutOfStockException');
+            $oEx->setMessage('ERROR_MESSAGE_OUTOFSTOCK_OUTOFSTOCK');
+            $oEx->setArticleNr($oArticle->oxarticles__oxartnum->value);
+            $oEx->setProductId($oArticle->getProductId());
+            $oEx->setRemainingAmount($this->_dAmount);
+            $oEx->setBasketIndex($sItemKey);
             throw $oEx;
         }
     }
@@ -404,15 +393,13 @@ class oxBasketItem extends oxSuperCfg
      * Sets $this->_oPrice
      *
      * @param object $oPrice price
-     *
-     * @return null
      */
-    public function setPrice( $oPrice )
+    public function setPrice($oPrice)
     {
         $this->_oUnitPrice = clone $oPrice;
 
         $this->_oPrice = clone $oPrice;
-        $this->_oPrice->multiply( $this->getAmount() );
+        $this->_oPrice->multiply($this->getAmount());
     }
 
     /**
@@ -423,14 +410,15 @@ class oxBasketItem extends oxSuperCfg
     public function getIconUrl()
     {
         // icon url must be (re)loaded in case icon is not set or shop was switched between ssl/nonssl
-        if ( $this->_sIconUrl === null || $this->_blSsl != $this->getConfig()->isSsl() ) {
+        if ($this->_sIconUrl === null || $this->_blSsl != $this->getConfig()->isSsl()) {
             $this->_sIconUrl = $this->getArticle()->getIconUrl();
         }
+
         return $this->_sIconUrl;
     }
 
     /**
-     * Retrieves the article .Throws an execption if article does not exist,
+     * Retrieves the article .Throws an exception if article does not exist,
      * is not buyable or visible.
      *
      * @param bool   $blCheckProduct       checks if product is buyable and visible
@@ -441,20 +429,21 @@ class oxBasketItem extends oxSuperCfg
      *
      * @return oxarticle
      */
-    public function getArticle( $blCheckProduct = false, $sProductId = null, $blDisableLazyLoading = false )
+    public function getArticle($blCheckProduct = false, $sProductId = null, $blDisableLazyLoading = false)
     {
-        if ( $this->_oArticle === null || ( !$this->_oArticle->isOrderArticle() && $blDisableLazyLoading ) ) {
+        if ($this->_oArticle === null || (!$this->_oArticle->isOrderArticle() && $blDisableLazyLoading)) {
             $sProductId = $sProductId ? $sProductId : $this->_sProductId;
-            if ( !$sProductId ) {
-                //this excpetion may not be caught, anyhow this is a critical exception
-                $oEx = oxNew( 'oxArticleException' );
-                $oEx->setMessage( 'EXCEPTION_ARTICLE_NOPRODUCTID' );
+            if (!$sProductId) {
+                //this exception may not be caught, anyhow this is a critical exception
+                /** @var oxArticleException $oEx */
+                $oEx = oxNew('oxArticleException');
+                $oEx->setMessage('EXCEPTION_ARTICLE_NOPRODUCTID');
                 throw $oEx;
             }
 
-            $this->_oArticle = oxNew( 'oxarticle' );
+            $this->_oArticle = oxNew('oxarticle');
             // #M773 Do not use article lazy loading on order save
-            if ( $blDisableLazyLoading ) {
+            if ($blDisableLazyLoading) {
                 $this->_oArticle->modifyCacheKey('_allviews');
                 $this->_oArticle->disableLazyLoading();
             }
@@ -463,33 +452,36 @@ class oxBasketItem extends oxSuperCfg
             // - skipping variants loading
             // - skipping 'ab' price info
             // - load parent field
-            $this->_oArticle->setNoVariantLoading( true );
-            $this->_oArticle->setLoadParentData( true );
-            if ( !$this->_oArticle->load( $sProductId ) ) {
-                $oEx = oxNew( 'oxNoArticleException' );
+            $this->_oArticle->setNoVariantLoading(true);
+            $this->_oArticle->setLoadParentData(true);
+            if (!$this->_oArticle->load($sProductId)) {
+                /** @var oxNoArticleException $oEx */
+                $oEx = oxNew('oxNoArticleException');
                 $oLang = oxRegistry::getLang();
-                $oEx->setMessage( sprintf($oLang->translateString( 'ERROR_MESSAGE_ARTICLE_ARTICLE_DOES_NOT_EXIST', $oLang->getBaseLanguage() ), $sProductId) );
-                $oEx->setArticleNr( $sProductId );
-                $oEx->setProductId( $sProductId );
+                $oEx->setMessage(sprintf($oLang->translateString('ERROR_MESSAGE_ARTICLE_ARTICLE_DOES_NOT_EXIST', $oLang->getBaseLanguage()), $sProductId));
+                $oEx->setArticleNr($sProductId);
+                $oEx->setProductId($sProductId);
                 throw $oEx;
             }
 
             // cant put not visible product to basket (M:1286)
-            if ( $blCheckProduct && !$this->_oArticle->isVisible() ) {
-                $oEx = oxNew( 'oxNoArticleException' );
+            if ($blCheckProduct && !$this->_oArticle->isVisible()) {
+                /** @var oxNoArticleException $oEx */
+                $oEx = oxNew('oxNoArticleException');
                 $oLang = oxRegistry::getLang();
-                $oEx->setMessage( sprintf($oLang->translateString( 'ERROR_MESSAGE_ARTICLE_ARTICLE_DOES_NOT_EXIST', $oLang->getBaseLanguage() ), $this->_oArticle->oxarticles__oxartnum->value) );
-                $oEx->setArticleNr( $sProductId );
-                $oEx->setProductId( $sProductId );
+                $oEx->setMessage(sprintf($oLang->translateString('ERROR_MESSAGE_ARTICLE_ARTICLE_DOES_NOT_EXIST', $oLang->getBaseLanguage()), $this->_oArticle->oxarticles__oxartnum->value));
+                $oEx->setArticleNr($sProductId);
+                $oEx->setProductId($sProductId);
                 throw $oEx;
             }
 
             // cant put not buyable product to basket
-            if ( $blCheckProduct && !$this->_oArticle->isBuyable() ) {
-                $oEx = oxNew( 'oxArticleInputException' );
-                $oEx->setMessage( 'ERROR_MESSAGE_ARTICLE_ARTICLE_NOT_BUYABLE' );
-                $oEx->setArticleNr( $sProductId );
-                $oEx->setProductId( $sProductId );
+            if ($blCheckProduct && !$this->_oArticle->isBuyable()) {
+                /** @var oxArticleInputException $oEx */
+                $oEx = oxNew('oxArticleInputException');
+                $oEx->setMessage('ERROR_MESSAGE_ARTICLE_ARTICLE_NOT_BUYABLE');
+                $oEx->setArticleNr($sProductId);
+                $oEx->setProductId($sProductId);
                 throw $oEx;
             }
         }
@@ -504,7 +496,7 @@ class oxBasketItem extends oxSuperCfg
      */
     public function getdBundledAmount()
     {
-        return $this->isBundle()?$this->_dAmount:0;
+        return $this->isBundle() ? $this->_dAmount : 0;
     }
 
     /**
@@ -554,13 +546,13 @@ class oxBasketItem extends oxSuperCfg
      */
     public function getTitle()
     {
-        if ( $this->_sTitle === null || $this->getLanguageId() != oxRegistry::getLang()->getBaseLanguage() ) {
+        if ($this->_sTitle === null || $this->getLanguageId() != oxRegistry::getLang()->getBaseLanguage()) {
 
-            $oArticle = $this->getArticle( );
+            $oArticle = $this->getArticle();
             $this->_sTitle = $oArticle->oxarticles__oxtitle->value;
 
-            if ( $oArticle->oxarticles__oxvarselect->value ) {
-                $this->_sTitle = $this->_sTitle. ', ' . $this->getVarSelect();
+            if ($oArticle->oxarticles__oxvarselect->value) {
+                $this->_sTitle = $this->_sTitle . ', ' . $this->getVarSelect();
             }
         }
 
@@ -574,11 +566,11 @@ class oxBasketItem extends oxSuperCfg
      */
     public function getLink()
     {
-        if ( $this->_sLink === null || $this->getLanguageId() != oxRegistry::getLang()->getBaseLanguage() ) {
-            $this->_sLink = oxRegistry::get("oxUtilsUrl")->cleanUrl( $this->getArticle()->getLink(), array( 'force_sid' ) );
+        if ($this->_sLink === null || $this->getLanguageId() != oxRegistry::getLang()->getBaseLanguage()) {
+            $this->_sLink = oxRegistry::get("oxUtilsUrl")->cleanUrl($this->getArticle()->getLink(), array('force_sid'));
         }
 
-        return $this->getSession()->processUrl( $this->_sLink );
+        return $this->getSession()->processUrl($this->_sLink);
     }
 
     /**
@@ -641,7 +633,7 @@ class oxBasketItem extends oxSuperCfg
         return $this->_blSkipDiscounts;
     }
 
-     /**
+    /**
      * Special getter function for backwards compatibility.
      * Executes methods by rule "get".$sVariableName and returns
      * result processed by executed function.
@@ -650,9 +642,9 @@ class oxBasketItem extends oxSuperCfg
      *
      * @return mixed
      */
-    public function __get( $sName )
+    public function __get($sName)
     {
-        if ( $sName == 'oProduct' ) {
+        if ($sName == 'oProduct') {
             return $this->getArticle();
         }
     }
@@ -665,11 +657,12 @@ class oxBasketItem extends oxSuperCfg
     public function __sleep()
     {
         $aRet = array();
-        foreach ( get_object_vars( $this ) as $sKey => $sVar ) {
-            if ( $sKey != '_oArticle' ) {
+        foreach (get_object_vars($this) as $sKey => $sVar) {
+            if ($sKey != '_oArticle') {
                 $aRet[] = $sKey;
             }
         }
+
         return $aRet;
     }
 
@@ -687,13 +680,11 @@ class oxBasketItem extends oxSuperCfg
      * @param string $sProductId product id
      *
      * @throws oxNoArticleException exception
-     *
-     * @return null
      */
-    protected function _setArticle( $sProductId )
+    protected function _setArticle($sProductId)
     {
         $oConfig = $this->getConfig();
-        $oArticle = $this->getArticle( true, $sProductId );
+        $oArticle = $this->getArticle(true, $sProductId);
 
         // product ID
         $this->_sProductId = $sProductId;
@@ -703,20 +694,20 @@ class oxBasketItem extends oxSuperCfg
         $this->getTitle();
 
         // icon and details URL's
-        $this->_sIcon    = $oArticle->oxarticles__oxicon->value;
+        $this->_sIcon = $oArticle->oxarticles__oxicon->value;
         $this->_sIconUrl = $oArticle->getIconUrl();
-        $this->_blSsl    = $oConfig->isSsl();
+        $this->_blSsl = $oConfig->isSsl();
 
         // removing force_sid from the link (in case it'll change)
-        $this->_sLink    = oxRegistry::get("oxUtilsUrl")->cleanUrl( $oArticle->getLink(), array( 'force_sid' ) );
+        $this->_sLink = oxRegistry::get("oxUtilsUrl")->cleanUrl($oArticle->getLink(), array('force_sid'));
 
         // shop Ids
-        $this->_sShopId       = $oConfig->getShopId();
+        $this->_sShopId = $oConfig->getShopId();
         $this->_sNativeShopId = $oArticle->oxarticles__oxshopid->value;
 
         // SSL/NON SSL image paths
         $this->_sDimageDirNoSsl = $oArticle->nossl_dimagedir;
-        $this->_sDimageDirSsl   = $oArticle->ssl_dimagedir;
+        $this->_sDimageDirSsl = $oArticle->ssl_dimagedir;
     }
 
     /**
@@ -727,10 +718,8 @@ class oxBasketItem extends oxSuperCfg
      *  - sNativeShopId  - article shop ID;
      *
      * @param oxorderarticle $oOrderArticle order article
-     *
-     * @return null
      */
-    protected function _setFromOrderArticle( $oOrderArticle )
+    protected function _setFromOrderArticle($oOrderArticle)
     {
         // overriding whole article
         $this->_oArticle = $oOrderArticle;
@@ -742,7 +731,7 @@ class oxBasketItem extends oxSuperCfg
         $this->_sTitle = $oOrderArticle->oxarticles__oxtitle->value;
 
         // shop Ids
-        $this->_sShopId       = $this->getConfig()->getShopId();
+        $this->_sShopId = $this->getConfig()->getShopId();
         $this->_sNativeShopId = $oOrderArticle->oxarticles__oxshopid->value;
     }
 
@@ -750,26 +739,24 @@ class oxBasketItem extends oxSuperCfg
      * Stores item select lists ( oxbasketitem::aSelList )
      *
      * @param array $aSelList item select lists
-     *
-     * @return null
      */
-    protected function _setSelectList( $aSelList )
+    protected function _setSelectList($aSelList)
     {
         // checking for default select list
         $aSelectLists = $this->getArticle()->getSelectLists();
-        if ( !$aSelList || is_array($aSelList) && count($aSelList) == 0 ) {
-            if ( $iSelCnt = count( $aSelectLists ) ) {
-                $aSelList = array_fill( 0, $iSelCnt, '0' );
+        if (!$aSelList || is_array($aSelList) && count($aSelList) == 0) {
+            if ($iSelCnt = count($aSelectLists)) {
+                $aSelList = array_fill(0, $iSelCnt, '0');
             }
         }
 
         $this->_aSelList = $aSelList;
 
         //
-        if ( count( $this->_aSelList ) && is_array($this->_aSelList) ) {
-            foreach ( $this->_aSelList as $conkey => $iSel ) {
+        if (count($this->_aSelList) && is_array($this->_aSelList)) {
+            foreach ($this->_aSelList as $conkey => $iSel) {
                 $this->_aChosenSelectlist[$conkey] = new stdClass();
-                $this->_aChosenSelectlist[$conkey]->name  = $aSelectLists[$conkey]['name'];
+                $this->_aChosenSelectlist[$conkey]->name = $aSelectLists[$conkey]['name'];
                 $this->_aChosenSelectlist[$conkey]->value = $aSelectLists[$conkey][$iSel]->name;
             }
         }
@@ -789,10 +776,8 @@ class oxBasketItem extends oxSuperCfg
      * Stores items persistent parameters ( oxbasketitem::_aPersistentParameters )
      *
      * @param array $aPersParam items persistent parameters
-     *
-     * @return null
      */
-    public function setPersParams( $aPersParam )
+    public function setPersParams($aPersParam)
     {
         $this->_aPersistentParameters = $aPersParam;
     }
@@ -801,10 +786,8 @@ class oxBasketItem extends oxSuperCfg
      * Marks if item is bundle ( oxbasketitem::blBundle )
      *
      * @param bool $blBundle if item is bundle
-     *
-     * @return null
      */
-    public function setBundle( $blBundle )
+    public function setBundle($blBundle)
     {
         $this->_blBundle = $blBundle;
     }
@@ -813,10 +796,8 @@ class oxBasketItem extends oxSuperCfg
      * Used to set "skip discounts" status for basket item
      *
      * @param bool $blSkip set true to skip discounts
-     *
-     * @return null
      */
-    public function setSkipDiscounts( $blSkip )
+    public function setSkipDiscounts($blSkip)
     {
         $this->_blSkipDiscounts = $blSkip;
     }
@@ -835,10 +816,8 @@ class oxBasketItem extends oxSuperCfg
      * Product wrapping paper id setter
      *
      * @param string $sWrapId wrapping paper id
-     *
-     * @return null
      */
-    public function setWrapping( $sWrapId )
+    public function setWrapping($sWrapId)
     {
         $this->_sWrappingId = $sWrapId;
     }
@@ -861,10 +840,11 @@ class oxBasketItem extends oxSuperCfg
     public function getWrapping()
     {
         $oWrap = null;
-        if ( $sWrapId = $this->getWrappingId() ) {
-            $oWrap = oxNew( 'oxwrapping' );
-            $oWrap->load( $sWrapId );
+        if ($sWrapId = $this->getWrappingId()) {
+            $oWrap = oxNew('oxwrapping');
+            $oWrap->load($sWrapId);
         }
+
         return $oWrap;
     }
 
@@ -882,10 +862,8 @@ class oxBasketItem extends oxSuperCfg
      * Wish user id setter
      *
      * @param string $sWishId user id
-     *
-     * @return null
      */
-    public function setWishId( $sWishId )
+    public function setWishId($sWishId)
     {
         $this->_sWishId = $sWishId;
     }
@@ -894,10 +872,8 @@ class oxBasketItem extends oxSuperCfg
      * Wish article Id setter
      *
      * @param string $sArticleId wish article id
-     *
-     * @return null
      */
-    public function setWishArticleId( $sArticleId )
+    public function setWishArticleId($sArticleId)
     {
         $this->_sWishArticleId = $sArticleId;
     }
@@ -915,31 +891,37 @@ class oxBasketItem extends oxSuperCfg
     /**
      * Returns formatted regular unit price
      *
+     * @deprecated in v4.8/5.1 on 2013-10-08; use oxPrice smarty formatter
+     *
      * @return string
      */
     public function getFRegularUnitPrice()
     {
-        return oxRegistry::getLang()->formatCurrency( $this->getRegularUnitPrice()->getPrice() );
+        return oxRegistry::getLang()->formatCurrency($this->getRegularUnitPrice()->getPrice());
     }
 
     /**
      * Returns formatted unit price
      *
+     * @deprecated in v4.8/5.1 on 2013-10-08; use oxPrice smarty formatter
+     *
      * @return string
      */
     public function getFUnitPrice()
     {
-        return oxRegistry::getLang()->formatCurrency( $this->getUnitPrice()->getPrice() );
+        return oxRegistry::getLang()->formatCurrency($this->getUnitPrice()->getPrice());
     }
 
     /**
      * Returns formatted total price
      *
+     * @deprecated in v4.8/5.1 on 2013-10-08; use oxPrice smarty formatter
+     *
      * @return string
      */
     public function getFTotalPrice()
     {
-        return oxRegistry::getLang()->formatCurrency( $this->getPrice()->getPrice() );
+        return oxRegistry::getLang()->formatCurrency($this->getPrice()->getPrice());
     }
 
     /**
@@ -949,7 +931,7 @@ class oxBasketItem extends oxSuperCfg
      */
     public function getVatPercent()
     {
-        return oxRegistry::getLang()->formatVat( $this->getPrice()->getVat() );
+        return oxRegistry::getLang()->formatVat($this->getPrice()->getVat());
     }
 
     /**
@@ -959,8 +941,8 @@ class oxBasketItem extends oxSuperCfg
      */
     public function getVarSelect()
     {
-        if ( $this->_sVarSelect === null || $this->getLanguageId() != oxRegistry::getLang()->getBaseLanguage() ) {
-            $oArticle = $this->getArticle( );
+        if ($this->_sVarSelect === null || $this->getLanguageId() != oxRegistry::getLang()->getBaseLanguage()) {
+            $oArticle = $this->getArticle();
             $this->_sVarSelect = $oArticle->oxarticles__oxvarselect->value ? $oArticle->oxarticles__oxvarselect->value : '';
         }
 
@@ -981,17 +963,21 @@ class oxBasketItem extends oxSuperCfg
      * Set language Id, reload basket content on language change.
      *
      * @param integer $iLanguageId language id
-     *
-     * @return none
      */
-    public function setLanguageId( $iLanguageId )
+    public function setLanguageId($iLanguageId)
     {
         $iOldLang = $this->_iLanguageId;
         $this->_iLanguageId = $iLanguageId;
 
         // #0003777: reload content on language change
         if ($iOldLang !== null && $iOldLang != $iLanguageId) {
-            $this->_setArticle($this->getProductId());
+            try {
+                $this->_setArticle($this->getProductId());
+            } catch (oxNoArticleException $oEx) {
+                oxRegistry::get("oxUtilsView")->addErrorToDisplay($oEx);
+            } catch (oxArticleInputException $oEx) {
+                oxRegistry::get("oxUtilsView")->addErrorToDisplay($oEx);
+            }
         }
     }
 }

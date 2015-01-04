@@ -39,8 +39,10 @@
             </form>
         </table>
         <br><br>
+         [{ assign var='oxGetEcondaModule' value=$oViewConf->getBaseDir() }]
+         [{ assign var='oxGetEcondaModule' value="`$oxGetEcondaModule`modules/econda/out/" }]
          [{ oxmultilang ident="DYN_ECONDA_ATTENTION" }]<br>
-         [{ oxmultilang ident="DYN_ECONDA_FILETO" }][{ $oViewConf->getBaseDir() }]modules/econda/out/ [{ oxmultilang ident="DYN_ECONDA_COPY" }].
+         [{ oxmultilang ident="DYN_ECONDA_COPY_FILE" args=$oxGetEcondaModule }]
 
 
 [{include file="bottomnaviitem.tpl" }]

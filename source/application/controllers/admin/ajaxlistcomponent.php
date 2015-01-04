@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   admin
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: oxajax.php 48428 2012-08-09 12:37:46Z linas.kukulskis $
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 
@@ -28,12 +26,13 @@
  */
 class ajaxListComponent extends oxSuperCfg
 {
+
     /**
      * Possible sort keys
      *
      * @var array
      */
-    protected $_aPosDir = array( 'asc', 'desc' );
+    protected $_aPosDir = array('asc', 'desc');
 
     /**
      * Array of DB table columns which are loaded from DB
@@ -69,14 +68,12 @@ class ajaxListComponent extends oxSuperCfg
      *
      * @param array $aColumns Array of DB table columns which are loaded from DB.
      *
-     * @deprecated must be replaced with setColumns if needed
-     *
-     * @return null
+     * @deprecated since v5.1.1 (2013.10.24); must be replaced with setColumns if needed
      */
-    public function init( $aColumns = null )
+    public function init($aColumns = null)
     {
-        if ( !is_null( $aColumns ) ) {
-            $this->setColumns( $aColumns );
+        if (!is_null($aColumns)) {
+            $this->setColumns($aColumns);
         }
     }
 
@@ -94,10 +91,8 @@ class ajaxListComponent extends oxSuperCfg
      * Sets columns array.
      *
      * @param array $aColumns columns array
-     *
-     * @return null
      */
-    public function setColumns( $aColumns )
+    public function setColumns($aColumns)
     {
         $this->_aColumns = $aColumns;
     }
@@ -111,12 +106,12 @@ class ajaxListComponent extends oxSuperCfg
      *
      * @return array
      */
-    protected function _getActionIds( $sId )
+    protected function _getActionIds($sId)
     {
         $aColumns = $this->_getColNames();
-        foreach ( $aColumns as $iPos => $aCol ) {
-            if ( isset($aCol[4]) && $aCol[4] == 1 && $sId == $aCol[1].'.'.$aCol[0] ) {
-                return oxConfig::getParameter( '_'.$iPos );
+        foreach ($aColumns as $iPos => $aCol) {
+            if (isset($aCol[4]) && $aCol[4] == 1 && $sId == $aCol[1] . '.' . $aCol[0]) {
+                return oxRegistry::getConfig()->getRequestParameter('_' . $iPos);
             }
         }
     }
@@ -125,10 +120,8 @@ class ajaxListComponent extends oxSuperCfg
      * AJAX container name setter
      *
      * @param string $sName name of container
-     *
-     * @return null
      */
-    public function setName( $sName )
+    public function setName($sName)
     {
         $this->_sContainer = $sName;
     }
@@ -150,7 +143,7 @@ class ajaxListComponent extends oxSuperCfg
      *
      * @return string
      */
-    protected function _getDataQuery( $sQ )
+    protected function _getDataQuery($sQ)
     {
         return 'select ' . $this->_getQueryCols() . $sQ;
     }
@@ -162,7 +155,7 @@ class ajaxListComponent extends oxSuperCfg
      *
      * @return string
      */
-    protected function _getCountQuery( $sQ )
+    protected function _getCountQuery($sQ)
     {
         return 'select count( * ) ' . $sQ;
     }
@@ -171,12 +164,10 @@ class ajaxListComponent extends oxSuperCfg
      * AJAX call processor function
      *
      * @param string $sFunction name of action to execute (optional)
-     *
-     * @return null
      */
-    public function processRequest( $sFunction = null )
+    public function processRequest($sFunction = null)
     {
-        if ( $sFunction ) {
+        if ($sFunction) {
             $this->$sFunction();
 
 
@@ -184,10 +175,10 @@ class ajaxListComponent extends oxSuperCfg
             $sQAdd = $this->_getQuery();
 
             // formatting SQL queries
-            $sQ      = $this->_getDataQuery( $sQAdd );
-            $sCountQ = $this->_getCountQuery( $sQAdd );
+            $sQ = $this->_getDataQuery($sQAdd);
+            $sCountQ = $this->_getCountQuery($sQAdd);
 
-            $this->_outputResponse( $this->_getData( $sCountQ, $sQ ) );
+            $this->_outputResponse($this->_getData($sCountQ, $sQ));
         }
     }
 
@@ -199,9 +190,9 @@ class ajaxListComponent extends oxSuperCfg
     protected function _getSortCol()
     {
         $aVisibleNames = $this->_getVisibleColNames();
-        $iCol = oxConfig::getParameter( 'sort' );
-        $iCol = $iCol?( ( int ) str_replace( '_', '', $iCol )):0;
-        $iCol = ( !isset( $aVisibleNames[$iCol] ) )?0:$iCol;
+        $iCol = oxRegistry::getConfig()->getRequestParameter('sort');
+        $iCol = $iCol ? (( int ) str_replace('_', '', $iCol)) : 0;
+        $iCol = (!isset($aVisibleNames[$iCol])) ? 0 : $iCol;
 
         return $iCol;
     }
@@ -215,13 +206,13 @@ class ajaxListComponent extends oxSuperCfg
      *
      * @return array
      */
-    protected function _getColNames( $sId = null )
+    protected function _getColNames($sId = null)
     {
-        if ( $sId === null ) {
-            $sId = oxConfig::getParameter( 'cmpid' );
+        if ($sId === null) {
+            $sId = oxRegistry::getConfig()->getRequestParameter('cmpid');
         }
 
-        if ( $sId && isset( $this->_aColumns[$sId] ) ) {
+        if ($sId && isset($this->_aColumns[$sId])) {
             return $this->_aColumns[$sId];
         }
 
@@ -238,10 +229,13 @@ class ajaxListComponent extends oxSuperCfg
     {
         $aColNames = $this->_getColNames();
         $aCols = array();
-        foreach ( $aColNames as $iKey =>  $aCol ) {
-            if ( $aCol[4] ) // ident ?
+        foreach ($aColNames as $iKey => $aCol) {
+            // ident ?
+            if ($aCol[4]) {
                 $aCols[$iKey] = $aCol;
+            }
         }
+
         return $aCols;
     }
 
@@ -253,24 +247,26 @@ class ajaxListComponent extends oxSuperCfg
     protected function _getVisibleColNames()
     {
         $aColNames = $this->_getColNames();
-        $aUserCols = oxConfig::getParameter( 'aCols' );
+        $aUserCols = oxRegistry::getConfig()->getRequestParameter('aCols');
         $aVisibleCols = array();
 
         // user defined some cols to load ?
-        if ( is_array( $aUserCols ) ) {
-            foreach ( $aUserCols as $iKey => $sCol ) {
-                $iCol = ( int ) str_replace( '_', '', $sCol );
-                if ( isset( $aColNames[$iCol] ) && !$aColNames[$iCol][4] ) {
+        if (is_array($aUserCols)) {
+            foreach ($aUserCols as $iKey => $sCol) {
+                $iCol = ( int ) str_replace('_', '', $sCol);
+                if (isset($aColNames[$iCol]) && !$aColNames[$iCol][4]) {
                     $aVisibleCols[$iCol] = $aColNames[$iCol];
                 }
             }
         }
 
         // no user defined valid cols ? setting defauls ..
-        if ( !count( $aVisibleCols ) ) {
-            foreach ( $aColNames as $sName => $aCol ) {
-                if ( $aCol[1] && !$aColNames[$sName][4]  ) // visible ?
+        if (!count($aVisibleCols)) {
+            foreach ($aColNames as $sName => $aCol) {
+                // visible ?
+                if ($aCol[1] && !$aColNames[$sName][4]) {
                     $aVisibleCols[$sName] = $aCol;
+                }
             }
         }
 
@@ -285,8 +281,8 @@ class ajaxListComponent extends oxSuperCfg
      */
     protected function _getQueryCols()
     {
-        $sQ  = $this->_buildColsQuery( $this->_getVisibleColNames(), false ).", ";
-        $sQ .= $this->_buildColsQuery( $this->_getIdentColNames() );
+        $sQ = $this->_buildColsQuery($this->_getVisibleColNames(), false) . ", ";
+        $sQ .= $this->_buildColsQuery($this->_getIdentColNames());
 
         return " $sQ ";
     }
@@ -299,19 +295,19 @@ class ajaxListComponent extends oxSuperCfg
      *
      * @return string
      */
-    protected function _buildColsQuery( $aIdentCols, $blIdentCols = true )
+    protected function _buildColsQuery($aIdentCols, $blIdentCols = true)
     {
         $sQ = '';
-        foreach ( $aIdentCols as $iCnt => $aCol ) {
-            if ( $sQ ) {
+        foreach ($aIdentCols as $iCnt => $aCol) {
+            if ($sQ) {
                 $sQ .= ', ';
             }
 
-            $sViewTable = $this->_getViewName( $aCol[1] );
-            if ( !$blIdentCols && $this->_isExtendedColumn( $aCol[0] ) ) {
-                $sQ .= $this->_getExtendedColQuery( $sViewTable, $aCol[0], $iCnt );
+            $sViewTable = $this->_getViewName($aCol[1]);
+            if (!$blIdentCols && $this->_isExtendedColumn($aCol[0])) {
+                $sQ .= $this->_getExtendedColQuery($sViewTable, $aCol[0], $iCnt);
             } else {
-                $sQ .=  $sViewTable. '.' . $aCol[0] . ' as _' . $iCnt;
+                $sQ .= $sViewTable . '.' . $aCol[0] . ' as _' . $iCnt;
             }
         }
 
@@ -326,10 +322,11 @@ class ajaxListComponent extends oxSuperCfg
      *
      * @return bool
      */
-    protected function _isExtendedColumn( $sColumn )
+    protected function _isExtendedColumn($sColumn)
     {
         $blBuild = false;
-        if ( $this->_blAllowExtColumns && oxRegistry::getConfig()->getConfigParam( 'blVariantsSelection' ) && $sColumn == 'oxtitle' ) {
+        $blVariantsSelectionParameter = oxRegistry::getConfig()->getConfigParam('blVariantsSelection');
+        if ($this->_blAllowExtColumns && $blVariantsSelectionParameter && $sColumn == 'oxtitle') {
             $blBuild = true;
         }
 
@@ -346,11 +343,16 @@ class ajaxListComponent extends oxSuperCfg
      *
      * @return string
      */
-    protected function _getExtendedColQuery( $sViewTable, $sColumn, $iCnt )
+    protected function _getExtendedColQuery($sViewTable, $sColumn, $iCnt)
     {
         // multilanguage
         $sVarSelect = "$sViewTable.oxvarselect";
-        return " IF( {$sViewTable}.{$sColumn} != '', {$sViewTable}.{$sColumn}, CONCAT((select oxart.{$sColumn} from {$sViewTable} as oxart where oxart.oxid = {$sViewTable}.oxparentid),', ',{$sVarSelect})) as _{$iCnt}";
+
+        $sSql = " IF( {$sViewTable}.{$sColumn} != '', {$sViewTable}.{$sColumn}, CONCAT((select oxart.{$sColumn} " .
+                "from {$sViewTable} as oxart " .
+                "where oxart.oxid = {$sViewTable}.oxparentid),', ',{$sVarSelect})) as _{$iCnt}";
+
+        return $sSql;
     }
 
     /**
@@ -360,7 +362,7 @@ class ajaxListComponent extends oxSuperCfg
      */
     protected function _getSorting()
     {
-        return ' order by _' . $this->_getSortCol() . ' '.$this->_getSortDir().' ';
+        return ' order by _' . $this->_getSortCol() . ' ' . $this->_getSortDir() . ' ';
     }
 
     /**
@@ -370,10 +372,10 @@ class ajaxListComponent extends oxSuperCfg
      *
      * @return string
      */
-    protected function _getLimit( $iStart )
+    protected function _getLimit($iStart)
     {
-        $iLimit = (int) oxConfig::getParameter("results");
-        $iLimit = $iLimit?$iLimit:$this->_iSqlLimit;
+        $iLimit = (int) oxRegistry::getConfig()->getRequestParameter("results");
+        $iLimit = $iLimit ? $iLimit : $this->_iSqlLimit;
 
         return " limit $iStart, $iLimit ";
     }
@@ -386,45 +388,47 @@ class ajaxListComponent extends oxSuperCfg
     protected function _getFilter()
     {
         $sQ = '';
-        $aFilter = oxConfig::getParameter( 'aFilter' );
-        if ( is_array( $aFilter ) && count( $aFilter ) ) {
+        $oConfig = $this->getConfig();
+        $aFilter = $oConfig->getRequestParameter('aFilter');
+        if (is_array($aFilter) && count($aFilter)) {
             $aCols = $this->_getVisibleColNames();
-            $blSep = false;
             $oDb = oxDb::getDb();
             $oLang = oxRegistry::getLang();
             $oStr = getStr();
 
-            $blIsUtf  = $this->getConfig()->isUtf();
-            $sCharset = $oLang->translateString( "charset" );
+            $blIsUtf = $oConfig->isUtf();
+            $sCharset = $oLang->translateString("charset");
 
-            foreach ( $aFilter as $sCol => $sValue ) {
+            foreach ($aFilter as $sCol => $sValue) {
 
                 // skipping empty filters
-                if ( !$sValue ) {
+                if ($sValue === '') {
                     continue;
                 }
 
-                $iCol = (int) str_replace( '_', '', $sCol );
-                if ( isset( $aCols[ $iCol ] ) ) {
-                    if ( $sQ )
+                $iCol = (int) str_replace('_', '', $sCol);
+                if (isset($aCols[$iCol])) {
+                    if ($sQ) {
                         $sQ .= ' and ';
+                    }
 
-                    if ( !$blIsUtf ) {
-                        $sValue = iconv( 'UTF-8', $sCharset, $sValue );
+                    if (!$blIsUtf) {
+                        $sValue = iconv('UTF-8', $sCharset, $sValue);
                     }
 
                     // escaping special characters
-                    $sValue = str_replace( array( '%', '_' ), array( '\%', '\_' ), $sValue );
+                    $sValue = str_replace(array('%', '_'), array('\%', '\_'), $sValue);
 
                     // possibility to search in the middle ..
-                    $sValue = $oStr->preg_replace( '/^\*/', '%', $sValue );
+                    $sValue = $oStr->preg_replace('/^\*/', '%', $sValue);
 
-                    $sQ .= $this->_getViewName( $aCols[ $iCol ][1] ) . '.' . $aCols[ $iCol ][0];
-                    $sQ .= ' like ' . $oDb->Quote( $sValue . '%' ). ' ';
+                    $sQ .= $this->_getViewName($aCols[$iCol][1]) . '.' . $aCols[$iCol][0];
+                    $sQ .= ' like ' . $oDb->Quote($sValue . '%') . ' ';
                 }
 
             }
         }
+
         return $sQ;
     }
 
@@ -435,11 +439,12 @@ class ajaxListComponent extends oxSuperCfg
      *
      * @return string
      */
-    protected function _addFilter( $sQ )
+    protected function _addFilter($sQ)
     {
-        if ( $sQ && ( $sFilter = $this->_getFilter() ) ) {
-            $sQ .= ( ( stristr( $sQ, 'where' ) === false )?'where':' and ' ) . $sFilter;
+        if ($sQ && ($sFilter = $this->_getFilter())) {
+            $sQ .= ((stristr($sQ, 'where') === false) ? 'where' : ' and ') . $sFilter;
         }
+
         return $sQ;
     }
 
@@ -450,16 +455,17 @@ class ajaxListComponent extends oxSuperCfg
      *
      * @return array
      */
-    protected function _getAll( $sQ )
+    protected function _getAll($sQ)
     {
         $aReturn = array();
-        $rs = oxDb::getDb()->execute( $sQ );
+        $rs = oxDb::getDb()->execute($sQ);
         if ($rs != false && $rs->recordCount() > 0) {
             while (!$rs->EOF) {
                 $aReturn[] = $rs->fields[0];
                 $rs->moveNext();
             }
         }
+
         return $aReturn;
     }
 
@@ -470,8 +476,8 @@ class ajaxListComponent extends oxSuperCfg
      */
     protected function _getSortDir()
     {
-        $sDir = oxConfig::getParameter( 'dir' );
-        if ( !in_array( $sDir, $this->_aPosDir ) ) {
+        $sDir = oxRegistry::getConfig()->getRequestParameter('dir');
+        if (!in_array($sDir, $this->_aPosDir)) {
             $sDir = $this->_aPosDir[0];
         }
 
@@ -485,7 +491,7 @@ class ajaxListComponent extends oxSuperCfg
      */
     protected function _getStartIndex()
     {
-        return (int) oxConfig::getParameter( 'startIndex' );
+        return (int) oxRegistry::getConfig()->getRequestParameter('startIndex');
     }
 
     /**
@@ -495,7 +501,7 @@ class ajaxListComponent extends oxSuperCfg
      *
      * @return int
      */
-    protected function _getTotalCount( $sQ )
+    protected function _getTotalCount($sQ)
     {
         // TODO: implement caching here
 
@@ -503,7 +509,7 @@ class ajaxListComponent extends oxSuperCfg
 
         // $sCountCacheKey = md5( $sQ );
 
-        return (int) oxDb::getDb()->getOne( $sQ, false, false );
+        return (int) oxDb::getDb()->getOne($sQ, false, false);
     }
 
     /**
@@ -513,59 +519,56 @@ class ajaxListComponent extends oxSuperCfg
      *
      * @return array
      */
-    protected function _getDataFields( $sQ )
+    protected function _getDataFields($sQ)
     {
-        return oxDb::getDb( oxDB::FETCH_MODE_ASSOC )->getArray( $sQ, false, false );
+        return oxDb::getDb(oxDB::FETCH_MODE_ASSOC)->getArray($sQ, false, false);
     }
 
     /**
      * Outputs JSON encoded data
      *
      * @param array $aData data to output
-     *
-     * @return null
      */
-    protected function _outputResponse( $aData )
+    protected function _outputResponse($aData)
     {
-        if ( !$this->getConfig()->isUtf() ) {
+        if (!$this->getConfig()->isUtf()) {
             // TODO: improve this
-            if ( is_array( $aData['records'] ) && ( $iRecSize = count( $aData['records'] ) ) ) {
-                $aKeys = array_keys( current( $aData['records'] ) );
-                $iKeySize = count( $aKeys );
+            if (is_array($aData['records']) && ($iRecSize = count($aData['records']))) {
+                $aKeys = array_keys(current($aData['records']));
+                $iKeySize = count($aKeys);
                 $sCharset = oxRegistry::getLang()->translateString("charset");
-                for ( $i = 0; $i < $iRecSize; $i++ ) {
-                    for ( $c = 0; $c < $iKeySize; $c++ ) {
-                        $aData['records'][$i][$aKeys[$c]] = iconv( $sCharset, "UTF-8", $aData['records'][$i][$aKeys[$c]] );
+                for ($i = 0; $i < $iRecSize; $i++) {
+                    for ($c = 0; $c < $iKeySize; $c++) {
+                        $aData['records'][$i][$aKeys[$c]] =
+                                                        iconv($sCharset, "UTF-8", $aData['records'][$i][$aKeys[$c]]);
                     }
                 }
             }
         }
 
-        $this->_output( json_encode( $aData ) );
+        $this->_output(json_encode($aData));
     }
 
     /**
      * Echoes given string
      *
      * @param string $sOut string to echo
-     *
-     * @return null
      */
-    protected function _output( $sOut )
+    protected function _output($sOut)
     {
         echo $sOut;
     }
 
-     /**
+    /**
      * Return the view name of the given table if a view exists, otherwise the table name itself
      *
      * @param string $sTable table name
      *
      * @return string
      */
-    protected function _getViewName( $sTable )
+    protected function _getViewName($sTable)
     {
-        return getViewName( $sTable, oxConfig::getParameter('editlanguage'));
+        return getViewName($sTable, oxRegistry::getConfig()->getRequestParameter('editlanguage'));
     }
 
     /**
@@ -576,32 +579,32 @@ class ajaxListComponent extends oxSuperCfg
      *
      * @return array
      */
-    protected function _getData( $sCountQ, $sQ )
+    protected function _getData($sCountQ, $sQ)
     {
-        $sQ = $this->_addFilter( $sQ );
-        $sCountQ = $this->_addFilter( $sCountQ );
+        $sQ = $this->_addFilter($sQ);
+        $sCountQ = $this->_addFilter($sCountQ);
 
         $aResponse['startIndex'] = $iStart = $this->_getStartIndex();
         $aResponse['sort'] = '_' . $this->_getSortCol();
-        $aResponse['dir']  = $this->_getSortDir();
+        $aResponse['dir'] = $this->_getSortDir();
 
-        $iDebug = $this->getConfig()->getConfigParam( 'iDebug' );
-        if ( $iDebug ) {
+        $iDebug = $this->getConfig()->getConfigParam('iDebug');
+        if ($iDebug) {
             $aResponse['countsql'] = $sCountQ;
         }
 
         $aResponse['records'] = array();
 
         // skip further execution if no records were found ...
-        if ( ( $iTotal = $this->_getTotalCount( $sCountQ ) ) ) {
+        if (($iTotal = $this->_getTotalCount($sCountQ))) {
             $sQ .= $this->_getSorting();
-            $sQ .= $this->_getLimit( $iStart );
+            $sQ .= $this->_getLimit($iStart);
 
-            if ( $iDebug ) {
+            if ($iDebug) {
                 $aResponse['datasql'] = $sQ;
             }
 
-            $aResponse['records'] = $this->_getDataFields( $sQ );
+            $aResponse['records'] = $this->_getDataFields($sQ);
         }
 
         $aResponse['totalRecords'] = $iTotal;
@@ -617,50 +620,49 @@ class ajaxListComponent extends oxSuperCfg
      *
      * @return null
      */
-    public function resetArtSeoUrl( $aArtIds, $aCatIds = null )
+    public function resetArtSeoUrl($aArtIds, $aCatIds = null)
     {
-        if ( empty( $aArtIds ) ) {
+        if (empty($aArtIds)) {
             return;
         }
 
-        if ( !is_array( $aArtIds ) ) {
-            $aArtIds = array( $aArtIds );
+        if (!is_array($aArtIds)) {
+            $aArtIds = array($aArtIds);
         }
 
         $blCleanCats = false;
-        if ( $aCatIds ) {
-            if ( !is_array( $aCatIds ) ) {
-                $aCatIds = array( $aCatIds );
+        if ($aCatIds) {
+            if (!is_array($aCatIds)) {
+                $aCatIds = array($aCatIds);
             }
             $sShopId = $this->getConfig()->getShopId();
+            $sCategoryIds = implode(",", oxDb::getInstance()->quoteArray($aCatIds));
             $sQ = "delete from oxseo where oxtype='oxarticle' and oxobjectid='%s' and
-                   oxshopid='{$sShopId}' and oxparams in (" . implode( ",", oxDb::getInstance()->quoteArray( $aCatIds ) ) . ")";
+                   oxshopid='{$sShopId}' and oxparams in (" . $sCategoryIds . ")";
             $oDb = oxDb::getDb();
             $blCleanCats = true;
         }
 
         $sShopId = $this->getConfig()->getShopId();
-        foreach ( $aArtIds as $sArtId ) {
-            oxRegistry::get("oxSeoEncoder")->markAsExpired( $sArtId, $sShopId, 1, null, "oxtype='oxarticle'" );
-            if ( $blCleanCats ) {
-                $oDb->execute( sprintf( $sQ, $sArtId ) );
+        foreach ($aArtIds as $sArtId) {
+            oxRegistry::get("oxSeoEncoder")->markAsExpired($sArtId, $sShopId, 1, null, "oxtype='oxarticle'");
+            if ($blCleanCats) {
+                $oDb->execute(sprintf($sQ, $sArtId));
             }
         }
     }
 
     /**
      * Reset output cache
-     *
-     * @return null
      */
     public function resetContentCache()
     {
-        $blDeleteCacheOnLogout = $this->getConfig()->getConfigParam( 'blClearCacheOnLogout' );
+        $blDeleteCacheOnLogout = $this->getConfig()->getConfigParam('blClearCacheOnLogout');
 
 
-            if ( !$blDeleteCacheOnLogout ) {
-                oxRegistry::getUtils()->oxResetFileCache();
-            }
+        if (!$blDeleteCacheOnLogout) {
+            oxRegistry::getUtils()->oxResetFileCache();
+        }
     }
 
     /**
@@ -669,30 +671,36 @@ class ajaxListComponent extends oxSuperCfg
      *
      * @param string $sCounterType counter type
      * @param string $sValue       reset value
-     *
-     * @return null
      */
-    public function resetCounter( $sCounterType, $sValue = null )
+    public function resetCounter($sCounterType, $sValue = null)
     {
-        $blDeleteCacheOnLogout = $this->getConfig()->getConfigParam( 'blClearCacheOnLogout' );
+        $blDeleteCacheOnLogout = $this->getConfig()->getConfigParam('blClearCacheOnLogout');
 
-        if ( !$blDeleteCacheOnLogout ) {
+        if (!$blDeleteCacheOnLogout) {
             $myUtilsCount = oxRegistry::get("oxUtilsCount");
-            switch ( $sCounterType ) {
+            switch ($sCounterType) {
                 case 'priceCatArticle':
-                    $myUtilsCount->resetPriceCatArticleCount( $sValue );
+                    $myUtilsCount->resetPriceCatArticleCount($sValue);
                     break;
                 case 'catArticle':
-                    $myUtilsCount->resetCatArticleCount( $sValue );
+                    $myUtilsCount->resetCatArticleCount($sValue);
                     break;
                 case 'vendorArticle':
-                    $myUtilsCount->resetVendorArticleCount( $sValue );
+                    $myUtilsCount->resetVendorArticleCount($sValue);
                     break;
                 case 'manufacturerArticle':
-                    $myUtilsCount->resetManufacturerArticleCount( $sValue );
+                    $myUtilsCount->resetManufacturerArticleCount($sValue);
                     break;
             }
+
+            $this->_resetContentCache();
         }
     }
 
+    /**
+     * Resets cache.
+     */
+    protected function _resetContentCache()
+    {
+    }
 }

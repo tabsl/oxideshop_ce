@@ -1,35 +1,31 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
-
-require_once realpath( "." ).'/unit/OxidTestCase.php';
-require_once realpath( "." ).'/unit/test_config.inc.php';
 
 /**
  * Tests for Article_Extend class
  */
 class Unit_Admin_ArticleExtendTest extends OxidTestCase
 {
+
     /**
      * Tear down the fixture.
      *
@@ -37,7 +33,7 @@ class Unit_Admin_ArticleExtendTest extends OxidTestCase
      */
     protected function tearDown()
     {
-        oxDb::getDb()->execute( "delete from oxmediaurls" );
+        oxDb::getDb()->execute("delete from oxmediaurls");
         parent::tearDown();
     }
 
@@ -49,7 +45,7 @@ class Unit_Admin_ArticleExtendTest extends OxidTestCase
     public function testRender()
     {
         oxTestModules::addFunction('oxarticle', 'isDerived', '{ return true; }');
-        modConfig::setParameter( "oxid", oxDb::getDb()->getOne( "select oxid from oxarticles where oxparentid !='' " ) );
+        $this->getConfig()->setRequestParameter("oxid", oxDb::getDb()->getOne("select oxid from oxarticles where oxparentid !='' "));
 
         // testing..
         $oView = new Article_Extend();
@@ -57,11 +53,11 @@ class Unit_Admin_ArticleExtendTest extends OxidTestCase
 
         // testing view data
         $aViewData = $oView->getViewData();
-        $this->assertTrue( $aViewData["edit"] instanceof oxArticle );
-        $this->assertTrue( $aViewData["artcattree"] instanceof oxCategoryList );
-        $this->assertTrue( $aViewData["aMediaUrls"] instanceof oxList );
+        $this->assertTrue($aViewData["edit"] instanceof oxArticle);
+        $this->assertTrue($aViewData["artcattree"] instanceof oxCategoryList);
+        $this->assertTrue($aViewData["aMediaUrls"] instanceof oxList);
 
-        $this->assertEquals( 'article_extend.tpl', $sTplName );
+        $this->assertEquals('article_extend.tpl', $sTplName);
     }
 
     /**
@@ -72,18 +68,19 @@ class Unit_Admin_ArticleExtendTest extends OxidTestCase
     public function testSave()
     {
         // testing..
-        oxTestModules::addFunction( 'oxarticle', 'save', '{ throw new Exception( "save" ); }');
-        modConfig::setParameter( "editval", array( "oxarticles__oxtprice" => -1 ) );
+        oxTestModules::addFunction('oxarticle', 'save', '{ throw new Exception( "save" ); }');
+        $this->getConfig()->setRequestParameter("editval", array("oxarticles__oxtprice" => -1));
 
         // testing..
         try {
             $oView = new Article_Extend();
             $oView->save();
-        } catch ( Exception $oExcp ) {
-            $this->assertEquals( "save", $oExcp->getMessage(), "error in Article_Extend::save()" );
+        } catch (Exception $oExcp) {
+            $this->assertEquals("save", $oExcp->getMessage(), "error in Article_Extend::save()");
+
             return;
         }
-        $this->fail( "error in Article_Extend::save()" );
+        $this->fail("error in Article_Extend::save()");
     }
 
     /**
@@ -94,14 +91,14 @@ class Unit_Admin_ArticleExtendTest extends OxidTestCase
     public function testSaveMissingMediaDescription()
     {
         // testing..
-        oxTestModules::addFunction( 'oxarticle', 'save', '{}');
-        oxTestModules::addFunction( 'oxUtilsView', 'addErrorToDisplay', '{return "EXCEPTION_NODESCRIPTIONADDED";}');
-        modConfig::setParameter( "mediaUrl", "testUrl" );
-        modConfig::setParameter( "mediaDesc", null );
+        oxTestModules::addFunction('oxarticle', 'save', '{}');
+        oxTestModules::addFunction('oxUtilsView', 'addErrorToDisplay', '{return "EXCEPTION_NODESCRIPTIONADDED";}');
+        $this->getConfig()->setRequestParameter("mediaUrl", "testUrl");
+        $this->getConfig()->setRequestParameter("mediaDesc", null);
 
         // testing..
         $oView = new Article_Extend();
-        $this->assertEquals( "EXCEPTION_NODESCRIPTIONADDED", $oView->save() );
+        $this->assertEquals("EXCEPTION_NODESCRIPTIONADDED", $oView->save());
     }
 
     /**
@@ -112,16 +109,16 @@ class Unit_Admin_ArticleExtendTest extends OxidTestCase
     public function testSaveMissingMediaUrlAndFile()
     {
         // testing..
-        oxTestModules::addFunction( 'oxarticle', 'save', '{}');
-        oxTestModules::addFunction( 'oxUtilsView', 'addErrorToDisplay', '{return "EXCEPTION_NOMEDIAADDED";}');
-        oxTestModules::addFunction( 'oxConfig', 'getUploadedFile', '{return array( "name" => false );}');
+        oxTestModules::addFunction('oxarticle', 'save', '{}');
+        oxTestModules::addFunction('oxUtilsView', 'addErrorToDisplay', '{return "EXCEPTION_NOMEDIAADDED";}');
+        oxTestModules::addFunction('oxConfig', 'getUploadedFile', '{return array( "name" => false );}');
 
-        modConfig::setParameter( "mediaUrl", null );
-        modConfig::setParameter( "mediaDesc", "testDesc" );
+        $this->getConfig()->setRequestParameter("mediaUrl", null);
+        $this->getConfig()->setRequestParameter("mediaDesc", "testDesc");
 
         // testing..
         $oView = new Article_Extend();
-        $this->assertEquals( "EXCEPTION_NOMEDIAADDED", $oView->save() );
+        $this->assertEquals("EXCEPTION_NOMEDIAADDED", $oView->save());
     }
 
     /**
@@ -132,22 +129,22 @@ class Unit_Admin_ArticleExtendTest extends OxidTestCase
     public function testSaveUnableToMoveUploadedFile()
     {
         // testing..
-        oxTestModules::addFunction( 'oxarticle', 'save', '{}');
-        oxTestModules::addFunction( 'oxUtilsView', 'addErrorToDisplay', '{ return $aA[0]; }');
-        oxTestModules::addFunction( 'oxUtilsFile', 'processFile', '{ throw new Exception("handleUploadedFile"); }');
+        oxTestModules::addFunction('oxarticle', 'save', '{}');
+        oxTestModules::addFunction('oxUtilsView', 'addErrorToDisplay', '{ return $aA[0]; }');
+        oxTestModules::addFunction('oxUtilsFile', 'processFile', '{ throw new Exception("handleUploadedFile"); }');
 
-        modConfig::setParameter( "mediaUrl", "testUrl" );
-        modConfig::setParameter( "mediaDesc", "testDesc" );
+        $this->getConfig()->setRequestParameter("mediaUrl", "testUrl");
+        $this->getConfig()->setRequestParameter("mediaDesc", "testDesc");
 
-        $oConfig = $this->getMock( "oxConfig", array( "getUploadedFile" ,"isDemoShop" ) );
-        $oConfig->expects( $this->exactly(2) )->method( 'getUploadedFile' )->will( $this->returnValue( array( "name" => "testName" ) ) );
-        $oConfig->expects( $this->once() )->method( 'isDemoShop' )->will( $this->returnValue( false ) );
+        $oConfig = $this->getMock("oxConfig", array("getUploadedFile", "isDemoShop"));
+        $oConfig->expects($this->exactly(2))->method('getUploadedFile')->will($this->returnValue(array("name" => "testName")));
+        $oConfig->expects($this->once())->method('isDemoShop')->will($this->returnValue(false));
 
         // testing..
-        $oView = $this->getMock( "Article_Extend", array( "getConfig", "resetContentCache" ), array(), '', false );
-        $oView->expects( $this->any() )->method( 'getConfig' )->will( $this->returnValue( $oConfig ) );
-        $oView->expects( $this->any() )->method( 'resetContentCache' );
-        $this->assertEquals( "handleUploadedFile", $oView->save() );
+        $oView = $this->getMock("Article_Extend", array("getConfig", "resetContentCache"), array(), '', false);
+        $oView->expects($this->any())->method('getConfig')->will($this->returnValue($oConfig));
+        $oView->expects($this->any())->method('resetContentCache');
+        $this->assertEquals("handleUploadedFile", $oView->save());
     }
 
     /**
@@ -158,76 +155,80 @@ class Unit_Admin_ArticleExtendTest extends OxidTestCase
     public function testSaveMediaFileUpload()
     {
         // testing..
-        oxTestModules::addFunction( 'oxarticle', 'save', '{}');
-        oxTestModules::addFunction( 'oxmediaurl', 'save', '{ throw new Exception( "oxmediaurl.save" ); }');
-        oxTestModules::addFunction( 'oxUtilsFile', 'processFile', '{}');
+        oxTestModules::addFunction('oxarticle', 'save', '{}');
+        oxTestModules::addFunction('oxmediaurl', 'save', '{ throw new Exception( "oxmediaurl.save" ); }');
+        oxTestModules::addFunction('oxUtilsFile', 'processFile', '{}');
 
-        modConfig::setParameter( "mediaUrl", "testUrl" );
-        modConfig::setParameter( "mediaDesc", "testDesc" );
+        $this->getConfig()->setRequestParameter("mediaUrl", "testUrl");
+        $this->getConfig()->setRequestParameter("mediaDesc", "testDesc");
 
-        $oConfig = $this->getMock( "oxConfig", array( "getUploadedFile", "isDemoShop" ) );
-        $oConfig->expects( $this->exactly(2) )->method( 'getUploadedFile' )->will( $this->returnValue( array( "name" => "testName" ) ) );
-        $oConfig->expects( $this->once() )->method( 'isDemoShop' )->will( $this->returnValue( false ) );
+        $oConfig = $this->getMock("oxConfig", array("getUploadedFile", "isDemoShop"));
+        $oConfig->expects($this->exactly(2))->method('getUploadedFile')->will($this->returnValue(array("name" => "testName")));
+        $oConfig->expects($this->once())->method('isDemoShop')->will($this->returnValue(false));
 
         // testing..
-        $oView = $this->getMock( "Article_Extend", array( "getConfig", "resetContentCache" ), array(), '', false );
-        $oView->expects( $this->any() )->method( 'getConfig' )->will( $this->returnValue( $oConfig ) );
-        $oView->expects( $this->any() )->method( 'resetContentCache' );
+        $oView = $this->getMock("Article_Extend", array("getConfig", "resetContentCache"), array(), '', false);
+        $oView->expects($this->any())->method('getConfig')->will($this->returnValue($oConfig));
+        $oView->expects($this->any())->method('resetContentCache');
 
 
         // testing..
         try {
             $oView->save();
-        } catch ( Exception $oExcp ) {
-            $this->assertEquals( "oxmediaurl.save", $oExcp->getMessage(), "error in Article_Extend::save()" );
+        } catch (Exception $oExcp) {
+            $this->assertEquals("oxmediaurl.save", $oExcp->getMessage(), "error in Article_Extend::save()");
+
             return;
         }
-        $this->fail( "error in Article_Extend::save()" );
+        $this->fail("error in Article_Extend::save()");
     }
 
- /**
+    /**
      * Article_Extend::Save() test case when demoShop = true and upload file
      *
      * @return null
      */
     public function testSaveDemoShopFileUpload()
     {
-        $oConfig = $this->getMock( "oxConfig", array( "getUploadedFile", "isDemoShop" ) );
-        $oConfig->expects( $this->once() )->method( 'isDemoShop' )->will( $this->returnValue( true ) );
-        $oConfig->expects( $this->exactly(2) )->method( 'getUploadedFile' )->will( $this->onConsecutiveCalls(
-            array( "name" => array('FL@oxarticles__oxfile' => "testFile") ), array( "name" => "testName") ) );
+        $oConfig = $this->getMock("oxConfig", array("getUploadedFile", "isDemoShop"));
+        $oConfig->expects($this->once())->method('isDemoShop')->will($this->returnValue(true));
+        $oConfig->expects($this->exactly(2))->method('getUploadedFile')->will(
+            $this->onConsecutiveCalls(
+                array("name" => array('FL@oxarticles__oxfile' => "testFile")), array("name" => "testName")
+            )
+        );
         // testing..
-        $oView = $this->getMock( "Article_Extend", array( "getConfig", "resetContentCache" ), array(), '', false );
-        $oView->expects( $this->any() )->method( 'getConfig' )->will( $this->returnValue( $oConfig ) );
-        $oView->expects( $this->any() )->method( 'resetContentCache' );
+        $oView = $this->getMock("Article_Extend", array("getConfig", "resetContentCache"), array(), '', false);
+        $oView->expects($this->any())->method('getConfig')->will($this->returnValue($oConfig));
+        $oView->expects($this->any())->method('resetContentCache');
         $oView->save();
         // testing..
-        $aErr = oxSession::getVar( 'Errors' );
+        $aErr = $this->getSession()->getVar('Errors');
         $oErr = unserialize($aErr['default'][0]);
-        $this->assertEquals( 'ARTICLE_EXTEND_UPLOADISDISABLED', $oErr->getOxMessage());
+        $this->assertEquals('ARTICLE_EXTEND_UPLOADISDISABLED', $oErr->getOxMessage());
     }
 
     /**
-     * Article_Extend::Deletemedia() test case
+     * Article_Extend::DeleteMedia() test case
      *
      * @return null
      */
-    public function testDeletemedia()
+    public function testDeleteMedia()
     {
         $oMediaUrl = oxNew("oxMediaUrl");
-        $oMediaUrl->setId( "testMediaId" );
+        $oMediaUrl->setId("testMediaId");
         $oMediaUrl->save();
 
-        $this->assertTrue( (bool) oxDb::getDb()->getOne( "select 1 from oxmediaurls where oxid = 'testMediaId'" ) );
+        $this->assertTrue((bool) oxDb::getDb()->getOne("select 1 from oxmediaurls where oxid = 'testMediaId'"));
 
-        modConfig::setParameter( "oxid", "testId" );
-        modConfig::setParameter( "mediaid", "testMediaId" );
+        $this->getConfig()->setRequestParameter("oxid", "testId");
+        $this->getConfig()->setRequestParameter("mediaid", "testMediaId");
 
         // testing..
         $oView = new Article_Extend();
         $oView->deletemedia();
 
-        $this->assertFalse( oxDb::getDb()->getOne( "select 1 from oxmediaurls where oxid = 'testMediaId'" ) );
+        $this->assertFalse(oxDb::getDb()->getOne("select 1 from oxmediaurls where oxid = 'testMediaId'"));
     }
 
     /**
@@ -239,9 +240,9 @@ class Unit_Admin_ArticleExtendTest extends OxidTestCase
     {
         $aParams['oxarticles__oxexturl'] = "http://www.delfi.lt";
         $oView = new Article_Extend();
-        $aParams = $oView->addDefaultValues( $aParams );
+        $aParams = $oView->addDefaultValues($aParams);
 
-        $this->assertEquals( "www.delfi.lt", $aParams['oxarticles__oxexturl'] );
+        $this->assertEquals("www.delfi.lt", $aParams['oxarticles__oxexturl']);
     }
 
     /**
@@ -252,16 +253,16 @@ class Unit_Admin_ArticleExtendTest extends OxidTestCase
     public function testUpdateMedia()
     {
         $oMediaUrl = oxNew("oxMediaUrl");
-        $oMediaUrl->setId( "testMediaId" );
+        $oMediaUrl->setId("testMediaId");
         $oMediaUrl->save();
 
-        $aValue = array( "testMediaId" => array( "oxmediaurls__oxurl" => "testUrl", "oxmediaurls__oxdesc" => "testDesc" ) );
-        modConfig::setParameter( "aMediaUrls", $aValue );
+        $aValue = array("testMediaId" => array("oxmediaurls__oxurl" => "testUrl", "oxmediaurls__oxdesc" => "testDesc"));
+        $this->getConfig()->setRequestParameter("aMediaUrls", $aValue);
 
         $oView = new Article_Extend();
         $oView->updateMedia();
 
-        $this->assertTrue( (bool) oxDb::getDb()->getOne( "select 1 from oxmediaurls where oxurl = 'testUrl' and oxdesc='testDesc' ") );
+        $this->assertTrue((bool) oxDb::getDb()->getOne("select 1 from oxmediaurls where oxurl = 'testUrl' and oxdesc='testDesc' "));
     }
 
     /**
@@ -271,9 +272,9 @@ class Unit_Admin_ArticleExtendTest extends OxidTestCase
      */
     public function testGetUnitsArray()
     {
-        $aArray = oxLang::getInstance()->getSimilarByKey( "_UNIT_", 0, false );
+        $aArray = oxRegistry::getLang()->getSimilarByKey("_UNIT_", 0, false);
         $oView = new Article_Extend();
 
-        $this->assertEquals( $aArray, $oView->getUnitsArray() );
+        $this->assertEquals($aArray, $oView->getUnitsArray());
     }
 }

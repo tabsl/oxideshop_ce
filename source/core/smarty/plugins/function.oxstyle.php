@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   smarty_plugins
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: function.oxstyle.php 28124 2010-06-03 11:27:00Z alfonsas $
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -46,14 +44,14 @@
 function smarty_function_oxstyle($params, &$smarty)
 {
     $myConfig   = oxRegistry::getConfig();
-    $sSufix     = ($smarty->_tpl_vars["__oxid_include_dynamic"])?'_dynamic':'';
-    $sWidget    = ($params['widget']?$params['widget']:'');
-    $blInWidget = ($params['inWidget']?$params['inWidget']:false);
+    $sSuffix     = !empty($smarty->_tpl_vars["__oxid_include_dynamic"]) ? '_dynamic' : '';
+    $sWidget    = !empty($params['widget']) ? $params['widget' ] : '';
+    $blInWidget = !empty($params['inWidget']) ? $params['inWidget'] : false;
 
-    $sCtyles  = 'conditional_styles'.$sSufix;
-    $sStyles  = 'styles'.$sSufix;
+    $sCStyles  = 'conditional_styles'.$sSuffix;
+    $sStyles  = 'styles'.$sSuffix;
 
-    $aCtyles  = (array) $myConfig->getGlobalParameter($sCtyles);
+    $aCStyles  = (array) $myConfig->getGlobalParameter($sCStyles);
     $aStyles  = (array) $myConfig->getGlobalParameter($sStyles);
 
 
@@ -62,7 +60,7 @@ function smarty_function_oxstyle($params, &$smarty)
     }
 
     $sOutput  = '';
-    if ( $params['include'] ) {
+    if ( !empty($params['include']) ) {
         $sStyle = $params['include'];
         if (!preg_match('#^https?://#', $sStyle)) {
             $sOriginalStyle = $sStyle;
@@ -83,16 +81,16 @@ function smarty_function_oxstyle($params, &$smarty)
         // File not found ?
         if (!$sStyle) {
             if ($myConfig->getConfigParam( 'iDebug' ) != 0) {
-                $sError = "{oxstyle} resource not found: ".htmlspecialchars($params['include']);
+                $sError = "{oxstyle} resource not found: ".getStr()->htmlspecialchars($params['include']);
                 trigger_error($sError, E_USER_WARNING);
             }
             return;
         }
 
         // Conditional comment ?
-        if ($params['if']) {
-            $aCtyles[$sStyle] = $params['if'];
-            $myConfig->setGlobalParameter($sCtyles, $aCtyles);
+        if ( !empty($params['if']) ) {
+            $aCStyles[$sStyle] = $params['if'];
+            $myConfig->setGlobalParameter($sCStyles, $aCStyles);
         } else {
             $aStyles[] = $sStyle;
             $aStyles = array_unique($aStyles);
@@ -102,7 +100,7 @@ function smarty_function_oxstyle($params, &$smarty)
         foreach ($aStyles as $sSrc) {
             $sOutput .= '<link rel="stylesheet" type="text/css" href="'.$sSrc.'" />'.PHP_EOL;
         }
-        foreach ($aCtyles as $sSrc => $sCondition) {
+        foreach ($aCStyles as $sSrc => $sCondition) {
             $sOutput .= '<!--[if '.$sCondition.']><link rel="stylesheet" type="text/css" href="'.$sSrc.'"><![endif]-->'.PHP_EOL;
         }
     }

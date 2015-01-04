@@ -1,3 +1,4 @@
+[{oxscript include="js/widgets/oxajax.js" priority=10 }]
 [{oxscript include="js/widgets/oxcountdown.js" priority=10 }]
 [{oxscript include="js/widgets/oxminibasket.js" priority=10 }]
 [{oxscript include="js/widgets/oxmodalpopup.js" priority=10}]
@@ -10,6 +11,14 @@
 [{/if}]
 
 [{block name="widget_minibasket"}]
+    <form class="js-oxWidgetReload-miniBasket" action="[{$oView->getWidgetLink()}]" method="get">
+        <div>
+            <input type="hidden" name="cl" value="[{$oView->getClassName()}]"/>
+            <input type="hidden" name="nocookie" value="0"/>
+            <input type="hidden" name="force_sid" value="[{$oView->getSidForWidget()}]"/>
+        </div>
+    </form>
+
     <div id="[{$_prefix}]miniBasket" class="basketBox">
 
 
@@ -70,7 +79,7 @@
                                         [{/if}]
                                         [{ $minibasketItemTitle|strip_tags }]
                                     </span>
-                                    <strong class="price">[{$_product->getFTotalPrice()}] [{ $currency->sign}]</strong>
+                                    <strong class="price">[{oxprice price=$_product->getPrice() currency=$currency}]</strong>
                                 </a>
                             </li>
                         [{/block}]

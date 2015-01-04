@@ -1,5 +1,3 @@
-[{assign var='oTagsManager' value=$oView->getTagCloudManager()}]
-
 [{if $oView->getTagCloudManager() }]
 
     [{if $oView->displayInBox() }]
@@ -12,8 +10,10 @@
             <h3>[{ oxmultilang ident="TAGS" }]</h3>
             <div class="categoryTags">
     [{/if}]
-    [{foreach from=$oTagsManager->getCloudArray() item=iCount key=sTagTitle }]
-        <a class="tagitem_[{ $oTagsManager->getTagSize($sTagTitle) }]" href="[{ $oTagsManager->getTagLink($sTagTitle) }]">[{ $oTagsManager->getTagTitle($sTagTitle) }]</a>
+    [{assign var="oCloudManager" value=$oView->getTagCloudManager()}]
+    [{assign var="oTagSet" value=$oCloudManager->getCloudArray() }]
+    [{foreach from=$oTagSet item=oTag }]
+        <a class="tagitem_[{ $oCloudManager->getTagSize($oTag->getTitle()) }]" href="[{ $oTag->getLink() }]">[{ $oTag->getTitle() }]</a>
     [{/foreach}]
     [{if $oView->isMoreTagsVisible()}]
         <br>

@@ -1,29 +1,24 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
-
-require_once realpath( "." ).'/unit/OxidTestCase.php';
-require_once realpath( "." ).'/unit/test_config.inc.php';
 
 /**
  * test for situation:
@@ -33,20 +28,21 @@ require_once realpath( "." ).'/unit/test_config.inc.php';
  */
 class Unit_Maintenance_moduleFileInclusionTest extends OxidTestCase
 {
+
     /**
      * test main scenario
      */
     public function testModuleInclusion()
     {
-        oxUtilsObject::getInstance()->setModuleVar( 'aModules', array('oxarticle'=>'testmod') );
+        oxUtilsObject::getInstance()->setModuleVar('aModules', array('oxarticle' => 'testmod'));
 
-        include_once dirname(__FILE__).'/modules/testmod.php';
+        include_once dirname(__FILE__) . '/modules/testmod.php';
 
         $oTestMod = oxNew('testmod');
         $this->assertEquals("Hi!", $oTestMod->sayHi());
 
         //the folowing line whoich acts as double declaration is not required after #4301 is fixed
-        oxUtilsObject::getInstance()->setModuleVar( 'aModules', array('oxarticle'=>'testmod') );
+        oxUtilsObject::getInstance()->setModuleVar('aModules', array('oxarticle' => 'testmod'));
 
         $oTestArt = oxNew('oxarticle');
         $this->assertEquals("Hi!", $oTestArt->sayHi());
@@ -57,7 +53,7 @@ class Unit_Maintenance_moduleFileInclusionTest extends OxidTestCase
      */
     public function testMissingModuleInChain()
     {
-        oxUtilsObject::getInstance()->setModuleVar( 'aModules', array('oxarticle'=>'testmod2&testmod') );
+        oxUtilsObject::getInstance()->setModuleVar('aModules', array('oxarticle' => 'testmod2&testmod'));
 
         $oTestArt = oxNew('oxarticle');
         $this->assertEquals("Hi!", $oTestArt->sayHi());

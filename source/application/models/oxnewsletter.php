@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -27,10 +25,10 @@
  * Performs creation of newsletter text, assign newsletter to user groups,
  * deletes and etc.
  *
- * @package model
  */
 class oxNewsletter extends oxBase
 {
+
     /**
      * Newsletter HTML format text (default null).
      *
@@ -73,7 +71,7 @@ class oxNewsletter extends oxBase
     public function __construct()
     {
         parent::__construct();
-        $this->init( 'oxnewsletter' );
+        $this->init('oxnewsletter');
     }
 
     /**
@@ -83,21 +81,21 @@ class oxNewsletter extends oxBase
      *
      * @return bool
      */
-    public function delete( $sOxId = null )
+    public function delete($sOxId = null)
     {
-        if ( !$sOxId) {
+        if (!$sOxId) {
             $sOxId = $this->getId();
         }
-        if ( !$sOxId) {
+        if (!$sOxId) {
             return false;
         }
 
-        $blDeleted = parent::delete( $sOxId );
+        $blDeleted = parent::delete($sOxId);
 
-        if ( $blDeleted ) {
+        if ($blDeleted) {
             $oDb = oxDb::getDb();
-            $sDelete = "delete from oxobject2group where oxobject2group.oxshopid = '".$this->getShopId()."' and oxobject2group.oxobjectid = ".$oDb->quote( $sOxId );
-            $oDb->execute( $sDelete );
+            $sDelete = "delete from oxobject2group where oxobject2group.oxshopid = '" . $this->getShopId() . "' and oxobject2group.oxobjectid = " . $oDb->quote($sOxId);
+            $oDb->execute($sDelete);
         }
 
         return $blDeleted;
@@ -110,19 +108,19 @@ class oxNewsletter extends oxBase
      */
     public function getGroups()
     {
-        if ( isset( $this->_oGroups ) ) {
+        if (isset($this->_oGroups)) {
             return $this->_oGroups;
         }
 
         // usergroups
-        $this->_oGroups = oxNew( "oxList", "oxgroups" );
-        $sViewName = getViewName( "oxgroups" );
+        $this->_oGroups = oxNew("oxList", "oxgroups");
+        $sViewName = getViewName("oxgroups");
 
         // performance
         $sSelect = "select {$sViewName}.* from {$sViewName}, oxobject2group
-                    where oxobject2group.oxobjectid='".$this->getId()."'
-                    and oxobject2group.oxgroupsid={$sViewName}.oxid ";
-        $this->_oGroups->selectString( $sSelect );
+                where oxobject2group.oxobjectid='" . $this->getId() . "'
+                and oxobject2group.oxgroupsid={$sViewName}.oxid ";
+        $this->_oGroups->selectString($sSelect);
 
         return $this->_oGroups;
     }
@@ -153,21 +151,19 @@ class oxNewsletter extends oxBase
      *
      * @param string $sUserid          User ID or OBJECT
      * @param bool   $blPerfLoadAktion perform option load actions
-     *
-     * @return null
      */
-    public function prepare( $sUserid, $blPerfLoadAktion = false )
+    public function prepare($sUserid, $blPerfLoadAktion = false)
     {
         // switching off admin
         $blAdmin = $this->isAdmin();
-        $this->setAdminMode( false );
+        $this->setAdminMode(false);
 
         // add currency
-        $this->_setUser( $sUserid );
-        $this->_setParams( $blPerfLoadAktion );
+        $this->_setUser($sUserid);
+        $this->_setParams($blPerfLoadAktion);
 
         // restoring mode ..
-        $this->setAdminMode( $blAdmin );
+        $this->setAdminMode($blAdmin);
     }
 
     /**
@@ -179,8 +175,8 @@ class oxNewsletter extends oxBase
      */
     public function send()
     {
-        $oxEMail = oxNew( 'oxemail' );
-        $blSend = $oxEMail->sendNewsletterMail( $this, $this->_oUser, $this->oxnewsletter__oxsubject->value );
+        $oxEMail = oxNew('oxemail');
+        $blSend = $oxEMail->sendNewsletterMail($this, $this->_oUser, $this->oxnewsletter__oxsubject->value);
 
         return $blSend;
     }
@@ -191,33 +187,31 @@ class oxNewsletter extends oxBase
      * this user, generates HTML and plaintext format newsletters.
      *
      * @param bool $blPerfLoadAktion perform option load actions
-     *
-     * @return null
      */
-    protected function _setParams( $blPerfLoadAktion = false )
+    protected function _setParams($blPerfLoadAktion = false)
     {
         $myConfig = $this->getConfig();
 
-        $oShop = oxNew( 'oxshop' );
-        $oShop->load( $myConfig->getShopId() );
+        $oShop = oxNew('oxshop');
+        $oShop->load($myConfig->getShopId());
 
-        $oView = oxNew( 'oxubase' );
-        $oShop = $oView->addGlobalParams( $oShop );
+        $oView = oxNew('oxubase');
+        $oShop = $oView->addGlobalParams($oShop);
 
-        $oView->addTplParam( 'myshop', $oShop );
-        $oView->addTplParam( 'shop', $oShop );
-        $oView->addTplParam( 'oViewConf', $oShop );
-        $oView->addTplParam( 'oView', $oView );
-        $oView->addTplParam( 'mycurrency', $myConfig->getActShopCurrencyObject() );
-        $oView->addTplParam( 'myuser', $this->_oUser );
+        $oView->addTplParam('myshop', $oShop);
+        $oView->addTplParam('shop', $oShop);
+        $oView->addTplParam('oViewConf', $oShop);
+        $oView->addTplParam('oView', $oView);
+        $oView->addTplParam('mycurrency', $myConfig->getActShopCurrencyObject());
+        $oView->addTplParam('myuser', $this->_oUser);
 
-        $this->_assignProducts( $oView, $blPerfLoadAktion );
+        $this->_assignProducts($oView, $blPerfLoadAktion);
 
-        $aInput[] = array( $this->getId().'html', $this->oxnewsletter__oxtemplate->value );
-        $aInput[] = array( $this->getId().'plain', $this->oxnewsletter__oxplaintemplate->value );
-        $aRes = oxRegistry::get("oxUtilsView")->parseThroughSmarty( $aInput, null, $oView, true );
+        $aInput[] = array($this->getId() . 'html', $this->oxnewsletter__oxtemplate->value);
+        $aInput[] = array($this->getId() . 'plain', $this->oxnewsletter__oxplaintemplate->value);
+        $aRes = oxRegistry::get("oxUtilsView")->parseThroughSmarty($aInput, null, $oView, true);
 
-        $this->_sHtmlText  = $aRes[0];
+        $this->_sHtmlText = $aRes[0];
         $this->_sPlainText = $aRes[1];
     }
 
@@ -225,18 +219,16 @@ class oxNewsletter extends oxBase
      * Creates oxuser object (user ID passed to method),
      *
      * @param string $sUserid User ID or OBJECT
-     *
-     * @return null
      */
-    protected function _setUser( $sUserid )
+    protected function _setUser($sUserid)
     {
-        if ( is_string( $sUserid )) {
-            $oUser = oxNew( 'oxuser' );
-            if ( $oUser->load( $sUserid ) ) {
+        if (is_string($sUserid)) {
+            $oUser = oxNew('oxuser');
+            if ($oUser->load($sUserid)) {
                 $this->_oUser = $oUser;
             }
         } else {
-            $this->_oUser = $sUserid;   // we expect a full and valid user object
+            $this->_oUser = $sUserid; // we expect a full and valid user object
         }
     }
 
@@ -246,34 +238,32 @@ class oxNewsletter extends oxBase
      *
      * @param oxview $oView            view object to store view data
      * @param bool   $blPerfLoadAktion perform option load actions
-     *
-     * @return null
      */
-    protected function _assignProducts( $oView, $blPerfLoadAktion = false )
+    protected function _assignProducts($oView, $blPerfLoadAktion = false)
     {
-        if ( $blPerfLoadAktion ) {
-            $oArtList = oxNew( 'oxarticlelist' );
-            $oArtList->loadActionArticles( 'OXNEWSLETTER' );
-            $oView->addTplParam( 'articlelist', $oArtList );
+        if ($blPerfLoadAktion) {
+            $oArtList = oxNew('oxarticlelist');
+            $oArtList->loadActionArticles('OXNEWSLETTER');
+            $oView->addTplParam('articlelist', $oArtList);
         }
 
-        if ( $this->_oUser->getId() ) {
-            $oArticle = oxNew( 'oxarticle' );
+        if ($this->_oUser->getId()) {
+            $oArticle = oxNew('oxarticle');
             $sArticleTable = $oArticle->getViewName();
 
             // add products which fit to the last order of this user
-            $sSelect  = "select $sArticleTable.* from oxorder left join oxorderarticles on oxorderarticles.oxorderid = oxorder.oxid";
+            $sSelect = "select $sArticleTable.* from oxorder left join oxorderarticles on oxorderarticles.oxorderid = oxorder.oxid";
             $sSelect .= " left join $sArticleTable on oxorderarticles.oxartid = $sArticleTable.oxid";
-            $sSelect .= " where ".$oArticle->getSqlActiveSnippet();
-            $sSelect .= " and oxorder.oxuserid = '".$this->_oUser->getId()."' order by oxorder.oxorderdate desc limit 1";
+            $sSelect .= " where " . $oArticle->getSqlActiveSnippet();
+            $sSelect .= " and oxorder.oxuserid = '" . $this->_oUser->getId() . "' order by oxorder.oxorderdate desc limit 1";
 
-            if ( $oArticle->assignRecord( $sSelect ) ) {
+            if ($oArticle->assignRecord($sSelect)) {
                 $oSimList = $oArticle->getSimilarProducts();
-                if ( $oSimList && $oSimList->count() ) {
-                    $oView->addTplParam( 'simlist', $oSimList );
+                if ($oSimList && $oSimList->count()) {
+                    $oView->addTplParam('simlist', $oSimList);
                     $iCnt = 0;
-                    foreach ( $oSimList as $oArt ) {
-                        $oView->addTplParam( "simarticle$iCnt", $oArt );
+                    foreach ($oSimList as $oArt) {
+                        $oView->addTplParam("simarticle$iCnt", $oArt);
                         $iCnt++;
                     }
                 }
@@ -290,11 +280,12 @@ class oxNewsletter extends oxBase
      *
      * @return null
      */
-    protected function _setFieldData( $sFieldName, $sValue, $iDataType = oxField::T_TEXT )
+    protected function _setFieldData($sFieldName, $sValue, $iDataType = oxField::T_TEXT)
     {
-        if ( 'oxtemplate' === $sFieldName || 'oxplaintemplate' === $sFieldName ) {
+        if ('oxtemplate' === $sFieldName || 'oxplaintemplate' === $sFieldName) {
             $iDataType = oxField::T_RAW;
         }
+
         return parent::_setFieldData($sFieldName, $sValue, $iDataType);
     }
 }

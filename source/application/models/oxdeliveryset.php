@@ -1,35 +1,32 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
- * Order deliverysetset manager.
- * Currently calculates price/costs.
+ * Order delivery set manager.
  *
- * @package model
  */
 class oxDeliverySet extends oxI18n
 {
+
     /**
      * Current object class name
      *
@@ -43,7 +40,7 @@ class oxDeliverySet extends oxI18n
     public function __construct()
     {
         parent::__construct();
-        $this->init( 'oxdeliveryset' );
+        $this->init('oxdeliveryset');
     }
 
     /**
@@ -53,24 +50,24 @@ class oxDeliverySet extends oxI18n
      *
      * @return bool
      */
-    public function delete( $sOxId = null )
+    public function delete($sOxId = null)
     {
-        if ( !$sOxId ) {
+        if (!$sOxId) {
             $sOxId = $this->getId();
         }
-        if ( !$sOxId ) {
+        if (!$sOxId) {
             return false;
         }
 
 
         $oDb = oxDb::getDb();
 
-        $sOxidQuoted = $oDb->quote($sOxId);
-        $oDb->execute( 'delete from oxobject2payment where oxobjectid = '.$sOxidQuoted );
-        $oDb->execute( 'delete from oxobject2delivery where oxdeliveryid = '.$sOxidQuoted);
-        $oDb->execute( 'delete from oxdel2delset where oxdelsetid = '.$sOxidQuoted);
+        $sOxIdQuoted = $oDb->quote($sOxId);
+        $oDb->execute('delete from oxobject2payment where oxobjectid = ' . $sOxIdQuoted);
+        $oDb->execute('delete from oxobject2delivery where oxdeliveryid = ' . $sOxIdQuoted);
+        $oDb->execute('delete from oxdel2delset where oxdelsetid = ' . $sOxIdQuoted);
 
-        return parent::delete( $sOxId );
+        return parent::delete($sOxId);
     }
 
     /**
@@ -80,11 +77,11 @@ class oxDeliverySet extends oxI18n
      *
      * @return string
      */
-    public function getIdByName( $sTitle )
+    public function getIdByName($sTitle)
     {
         $oDb = oxDb::getDb();
-        $sQ = "SELECT `oxid` FROM `" . getViewName( 'oxdeliveryset' ) . "` WHERE  `oxtitle` = " . $oDb->quote( $sTitle );
-        $sId = $oDb->getOne( $sQ );
+        $sQ = "SELECT `oxid` FROM `" . getViewName('oxdeliveryset') . "` WHERE  `oxtitle` = " . $oDb->quote($sTitle);
+        $sId = $oDb->getOne($sQ);
 
         return $sId;
     }

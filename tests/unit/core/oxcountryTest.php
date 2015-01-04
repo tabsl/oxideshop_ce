@@ -1,32 +1,28 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
-
-require_once realpath( "." ).'/unit/OxidTestCase.php';
-require_once realpath( "." ).'/unit/test_config.inc.php';
 
 class Unit_Core_oxCountryTest extends OxidTestCase
 {
+
     public $oObj = null;
 
     /**
@@ -37,14 +33,15 @@ class Unit_Core_oxCountryTest extends OxidTestCase
     protected function setUp()
     {
         parent::setUp();
+
         $oObj = new oxbase();
-        $oObj->init( 'oxcountry' );
+        $oObj->init('oxcountry');
         $oObj->oxcountry__oxtitle = new oxField('oxCountryTestDE', oxField::T_RAW);
         $oObj->oxcountry__oxtitle_1 = new oxField('oxCountryTestENG', oxField::T_RAW);
         $oObj->save();
 
-        $this->oObj = new oxcountry();
-        $this->oObj->load( $oObj->getId() );
+        $this->oObj = new oxCountry();
+        $this->oObj->load($oObj->getId());
     }
 
     /**
@@ -64,17 +61,18 @@ class Unit_Core_oxCountryTest extends OxidTestCase
     // for default lang
     public function testLoadingCountryDefLanguage()
     {
-        $oObj = new oxcountry();
-        $oObj->load( $this->oObj->getId() );
-        $this->assertEquals( 'oxCountryTestDE', $oObj->oxcountry__oxtitle->value );
+        $oObj = new oxCountry();
+        $oObj->load($this->oObj->getId());
+        $this->assertEquals('oxCountryTestDE', $oObj->oxcountry__oxtitle->value);
     }
+
     // for second language
     public function testLoadingCountrySecondLanguage()
     {
-        $oObj = new oxcountry();
-        //$oObj->setLanguage( 1 );
-        $oObj->loadInLang(1, $this->oObj->getId() );
-        $this->assertEquals( 'oxCountryTestENG', $oObj->oxcountry__oxtitle->value );
+        $oObj = new oxCountry();
+        //$this->getConfig()->setLanguage( 1 );
+        $oObj->loadInLang(1, $this->oObj->getId());
+        $this->assertEquals('oxCountryTestENG', $oObj->oxcountry__oxtitle->value);
     }
 
     /**
@@ -82,14 +80,14 @@ class Unit_Core_oxCountryTest extends OxidTestCase
      */
     public function testLoadingNotExistingCountry()
     {
-        $oObj = oxNew( "oxcountry" );
-        $this->assertFalse( $oObj->load( 'noSuchCountry' ) );
+        $oObj = oxNew("oxcountry");
+        $this->assertFalse($oObj->load('noSuchCountry'));
     }
 
     public function testIsForeignCountry()
     {
-        $oObj = new oxcountry();
-        $aHome = oxConfig::getInstance()->getConfigParam( 'aHomeCountry' );
+        $oObj = new oxCountry();
+        $aHome = $this->getConfig()->getConfigParam('aHomeCountry');
         $oObj->setId($aHome[0]);
         $this->assertFalse($oObj->isForeignCountry());
 
@@ -99,13 +97,13 @@ class Unit_Core_oxCountryTest extends OxidTestCase
 
     public function testisInEU()
     {
-            $oObj = new oxcountry();
-            $oObj->setId('test');
-            $oObj->oxcountry__oxvatstatus = new oxField(1, oxField::T_RAW);
-            $this->assertTrue($oObj->isInEU());
+        $oObj = new oxCountry();
+        $oObj->setId('test');
+        $oObj->oxcountry__oxvatstatus = new oxField(1, oxField::T_RAW);
+        $this->assertTrue($oObj->isInEU());
 
-            $oObj->oxcountry__oxvatstatus = new oxField(0, oxField::T_RAW);
-            $this->assertFalse($oObj->isInEU());
+        $oObj->oxcountry__oxvatstatus = new oxField(0, oxField::T_RAW);
+        $this->assertFalse($oObj->isInEU());
     }
 
 
@@ -119,7 +117,23 @@ class Unit_Core_oxCountryTest extends OxidTestCase
         $oSubj = new oxCountry();
         $oSubj->load('8f241f11095649d18.02676059');
         $aStates = $oSubj->getStates();
-        $this->assertEquals(11, count($aStates));
+        $this->assertEquals(13, count($aStates));
+    }
+
+    /**
+     * Tests state getter returned ordered list
+     *
+     * @return null;
+     */
+    public function testGetStatesIsOrdered()
+    {
+        $oSubj = new oxCountry();
+        $oSubj->load('8f241f11096877ac0.98748826');
+        $aStates = $oSubj->getStates();
+        $aKeys = $aStates->arrayKeys();
+        $this->assertEquals('AL', $aKeys[0]);
+        $this->assertEquals('AA', $aKeys[6]);
+        $this->assertEquals('WY', $aKeys[61]);
     }
 
 
@@ -133,8 +147,7 @@ class Unit_Core_oxCountryTest extends OxidTestCase
         $oSubj = new oxCountry();
         $oSubj->load('8f241f11095649d18.02676059');
         $aStates = $oSubj->getStates();
-        $this->assertEquals('Manitoba', $aStates['1']->oxstates__oxtitle->value);
-
+        $this->assertEquals('Manitoba', $aStates['MB']->oxstates__oxtitle->value);
     }
 
     /**
@@ -146,5 +159,30 @@ class Unit_Core_oxCountryTest extends OxidTestCase
     {
         $oSubj = new oxCountry();
         $this->assertEquals('a7c40f631fc920687.20179984', $oSubj->getIdByCode('DE'));
+    }
+
+    public function providerGetVatIdentificationNumberPrefix()
+    {
+        return array(
+            array('a7c40f631fc920687.20179984', 'DE'),
+            // Exceptional country
+            array('a7c40f633114e8fc6.25257477', 'EL'),
+        );
+    }
+
+    /**
+     * Checks if returned vat identification number was returned correctly.
+     *
+     * @param $sCountryId
+     * @param $sPrefix
+     *
+     * @dataProvider providerGetVatIdentificationNumberPrefix
+     */
+    public function testGetVatIdentificationNumberPrefix($sCountryId, $sPrefix)
+    {
+        $oCountry = new oxCountry();
+        $oCountry->load($sCountryId);
+
+        $this->assertEquals($sPrefix, $oCountry->getVATIdentificationNumberPrefix());
     }
 }

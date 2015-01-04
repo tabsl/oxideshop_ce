@@ -1,29 +1,24 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
-
-require_once realpath( "." ).'/unit/OxidTestCase.php';
-require_once realpath( "." ).'/unit/test_config.inc.php';
 
 //require_once 'oxbaseTest.php';
 
@@ -50,9 +45,9 @@ class _oxI18n extends oxI18n
 class Unit_Core_oxi18ntest extends OxidTestCase
 {
 
-    protected  function setUp()
+    protected function setUp()
     {
-        if ( $this->getName() == "testMultilangObjectDeletion" ) {
+        if ($this->getName() == "testMultilangObjectDeletion") {
             $this->_insertTestLanguage();
         }
 
@@ -66,14 +61,14 @@ class Unit_Core_oxi18ntest extends OxidTestCase
      */
     protected function tearDown()
     {
-        if ( $this->getName() == 'testUpdateAndSeoIsOn' ) {
+        if ($this->getName() == 'testUpdateAndSeoIsOn') {
             $oDB = oxDb::getDb();
-            $oDB->execute( "delete from oxseo where oxtype != 'static'" );
-            $oDB->execute( "delete from oxarticles where oxid='testa'" );
-            $oDB->execute( "delete from oxartextends where oxid='testa'" );
+            $oDB->execute("delete from oxseo where oxtype != 'static'");
+            $oDB->execute("delete from oxarticles where oxid='testa'");
+            $oDB->execute("delete from oxartextends where oxid='testa'");
         }
 
-        if ( $this->getName() == "testMultilangObjectDeletion" ) {
+        if ($this->getName() == "testMultilangObjectDeletion") {
             $this->_deleteTestLanguage();
         }
 
@@ -86,16 +81,17 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         oxTestModules::addFunction("oxutils", "seoIsActive", "{return true;}");
 
         $oArticle = new oxarticle();
-        $oArticle->setId( 'testa' );
+        $oArticle->setId('testa');
         $oArticle->save();
         $oArticle->getLink();
 
         $oArticle = new oxArticle();
-        $oArticle->setAdminMode( true );
-        $oArticle->load( 'testa' );
+        $oArticle->setAdminMode(true);
+        $oArticle->load('testa');
+        $oArticle->oxarticles__oxtitle = new oxField('new title');
         $oArticle->save();
 
-        $this->assertTrue( '1' == oxDb::getDb()->getOne( 'select oxexpired from oxseo where oxobjectid = "testa"' ) );
+        $this->assertTrue('1' == oxDb::getDb()->getOne('select oxexpired from oxseo where oxobjectid = "testa"'));
     }
 
     public function testUpdateAndSeoIsOnMock()
@@ -103,33 +99,34 @@ class Unit_Core_oxi18ntest extends OxidTestCase
 
         $oSeo = $this->getMock('oxseoencoder', array('markAsExpired'));
         $oSeo->expects($this->once())->method('markAsExpired')->with(
-                    $this->equalTo('testa'),
-                    $this->equalTo(null),
-                    $this->equalTo(1),
-                    $this->equalTo(0)
-                )->will($this->returnValue(null));
+            $this->equalTo('testa'),
+            $this->equalTo(null),
+            $this->equalTo(1),
+            $this->equalTo(0)
+        )->will($this->returnValue(null));
         oxTestModules::addFunction("oxutils", "seoIsActive", "{return true;}");
 
         $oArticle = new oxarticle();
-        $oArticle->setId( 'testa' );
+        $oArticle->setId('testa');
         $oArticle->save();
         $oArticle->getLink();
 
         oxTestModules::addModuleObject('oxSeoEncoder', $oSeo);
 
         $oArticle = new oxArticle();
-        $oArticle->setAdminMode( true );
-        $oArticle->load( 'testa' );
+        $oArticle->setAdminMode(true);
+        $oArticle->load('testa');
+        $oArticle->oxarticles__oxtitle = new oxField('new title');
         $oArticle->save();
     }
 
     public function testSetLanguage()
     {
         $oObj = new _oxI18n();
-        $oObj->setLanguage( 0 ); // defaults to 0 in demodata
-        $this->assertEquals( 0, $oObj->getClassVar("_iLanguage"));
-        $oObj->setLanguage( 1 );
-        $this->assertEquals( 1, $oObj->getClassVar("_iLanguage"));
+        $oObj->setLanguage(0); // defaults to 0 in demodata
+        $this->assertEquals(0, $oObj->getClassVar("_iLanguage"));
+        $oObj->setLanguage(1);
+        $this->assertEquals(1, $oObj->getClassVar("_iLanguage"));
     }
 
     public function testSetEnableMultilang()
@@ -145,18 +142,18 @@ class Unit_Core_oxi18ntest extends OxidTestCase
     {
         $oi18 = new _oxI18n();
         $oi18->init("oxartextends");
-        $this->assertEquals(array('oxid'=>0, 'oxlongdesc'=>1, 'oxtags'=>1, 'oxtimestamp'=>0), $oi18->getClassVar('_aFieldNames'));
+        $this->assertEquals(array('oxid' => 0, 'oxlongdesc' => 1, 'oxtags' => 1, 'oxtimestamp' => 0), $oi18->getClassVar('_aFieldNames'));
 
         $oi18 = new _oxI18n();
         $oi18->init("oxartextends");
         $oi18->setEnableMultilang(false);
-        $this->assertEquals(array('oxid'=>0, 'oxlongdesc'=>0, 'oxlongdesc_1'=>0, 'oxlongdesc_2'=>0, 'oxlongdesc_3'=>0, 'oxtags'=>0, 'oxtags_1'=>0, 'oxtags_2'=>0, 'oxtags_3'=>0, 'oxtimestamp'=>0), $oi18->getClassVar('_aFieldNames'));
+        $this->assertEquals(array('oxid' => 0, 'oxlongdesc' => 0, 'oxlongdesc_1' => 0, 'oxlongdesc_2' => 0, 'oxlongdesc_3' => 0, 'oxtags' => 0, 'oxtags_1' => 0, 'oxtags_2' => 0, 'oxtags_3' => 0, 'oxtimestamp' => 0), $oi18->getClassVar('_aFieldNames'));
     }
 
     public function testSetEnableMultilanguageCacheTest()
     {
-        $oI18n = $this->getMock( 'oxI18n', array('modifyCacheKey' ));
-        $oI18n->expects( $this->once() )->method( 'modifyCacheKey')->with("_nonml");
+        $oI18n = $this->getMock('oxI18n', array('modifyCacheKey'));
+        $oI18n->expects($this->once())->method('modifyCacheKey')->with("_nonml");
         $oI18n->setEnableMultilang(false);
     }
 
@@ -165,11 +162,11 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         $oObj = new _oxI18n();
         $oObj->init("oxarticles");
 
-        $this->assertTrue($oObj->IsMultilingualField( 'oxtitle'));
-        $this->assertTrue($oObj->IsMultilingualField( 'oxvarselect'));
-        $this->assertFalse($oObj->IsMultilingualField( 'oxid'));
-        $this->assertFalse($oObj->IsMultilingualField( 'non existing'));
-        $this->assertFalse($oObj->IsMultilingualField( 'oxtime'));
+        $this->assertTrue($oObj->IsMultilingualField('oxtitle'));
+        $this->assertTrue($oObj->IsMultilingualField('oxvarselect'));
+        $this->assertFalse($oObj->IsMultilingualField('oxid'));
+        $this->assertFalse($oObj->IsMultilingualField('non existing'));
+        $this->assertFalse($oObj->IsMultilingualField('oxtime'));
     }
 
     public function testIsMultilingualFieldLazyLoad()
@@ -179,7 +176,7 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         $oObj->enableLazyLoading();
         $oObj->init("oxarticles");
 
-        $this->assertTrue($oObj->IsMultilingualField( 'oxtitle'));
+        $this->assertTrue($oObj->IsMultilingualField('oxtitle'));
     }
 
     public function testLoadInLang0()
@@ -228,7 +225,7 @@ class Unit_Core_oxi18ntest extends OxidTestCase
     public function testLazyLoadInLang0()
     {
         $this->cleanTmpDir();
-        oxLang::getInstance()->setBaseLanguage( 0 );
+        oxRegistry::getLang()->setBaseLanguage(0);
 
         $oBase = new _oxI18n();
         $oBase->enableLazyLoading();
@@ -240,7 +237,7 @@ class Unit_Core_oxi18ntest extends OxidTestCase
     public function testLazyLoadInLang1()
     {
         $this->cleanTmpDir();
-        oxLang::getInstance()->setBaseLanguage( 1 );
+        oxRegistry::getLang()->setBaseLanguage(1);
 
         $oBase = new _oxI18n();
         $oBase->enableLazyLoading();
@@ -251,7 +248,7 @@ class Unit_Core_oxi18ntest extends OxidTestCase
 
     public function testLoad()
     {
-        oxLang::getInstance()->setBaseLanguage( 1 );
+        oxRegistry::getLang()->setBaseLanguage(1);
 
         $oObj = new _oxI18n();
         $oObj->init("oxarticles");
@@ -262,7 +259,7 @@ class Unit_Core_oxi18ntest extends OxidTestCase
 
     public function testGetAvailableInLangs()
     {
-        $aLang = array( 'de' => "Deutsch", 'en' => "English", 'lt' => "Lithuanian", 'zb' => "ZuluBumBum" );
+        $aLang = array('de' => "Deutsch", 'en' => "English", 'lt' => "Lithuanian", 'zb' => "ZuluBumBum");
         $aLangParams['de']['baseId'] = 0;
         $aLangParams['de']['abbr'] = 'de';
         $aLangParams['en']['baseId'] = 1;
@@ -272,37 +269,37 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         $aLangParams['zb']['baseId'] = 3;
         $aLangParams['zb']['abbr'] = 'zb';
 
-        modConfig::getInstance()->setConfigParam( 'aLanguageParams', $aLangParams );
-        modConfig::getInstance()->setConfigParam( 'aLanguages', $aLang );
+        modConfig::getInstance()->setConfigParam('aLanguageParams', $aLangParams);
+        modConfig::getInstance()->setConfigParam('aLanguages', $aLang);
 
         $oObj = new _oxI18n();
         $oObj->init("oxwrapping");
         $oObj->load('a6840cc0ec80b3991.74884864');
 
         $aRes = $oObj->getAvailableInLangs();
-        $this->assertEquals( array(0 => "Deutsch", 1 => "English"), $aRes);
+        $this->assertEquals(array(0 => "Deutsch", 1 => "English"), $aRes);
     }
 
     public function testGetAvailableInLangsWithNotLoadedObject()
     {
-        $aLang = array( 0 => "Deutsch", 1 => "English", 2 => "Lithuanian", 3 => "ZuluBumBum" );
-        modConfig::getInstance()->setConfigParam( 'aLanguages', $aLang );
+        $aLang = array(0 => "Deutsch", 1 => "English", 2 => "Lithuanian", 3 => "ZuluBumBum");
+        modConfig::getInstance()->setConfigParam('aLanguages', $aLang);
 
         $oObj = new _oxI18n();
         $oObj->init("oxwrapping");
 
         $aRes = $oObj->getAvailableInLangs();
-        $this->assertEquals( array(), $aRes);
+        $this->assertEquals(array(), $aRes);
 
         $oObj->setId('noSuchId');
         $aRes = $oObj->getAvailableInLangs();
-        $this->assertEquals( array(), $aRes);
+        $this->assertEquals(array(), $aRes);
     }
 
     public function testGetAvailableInLangsObjectWithoutMultilangFields()
     {
-        $aRezLang = array( 0 => "Deutsch", 1 => "English", 2 => "Lithuanian", 3 => "ZuluBumBum" );
-        $aLang = array( 'de' => "Deutsch", 'en' => "English", 'lt' => "Lithuanian", 'zb' => "ZuluBumBum" );
+        $aRezLang = array(0 => "Deutsch", 1 => "English", 2 => "Lithuanian", 3 => "ZuluBumBum");
+        $aLang = array('de' => "Deutsch", 'en' => "English", 'lt' => "Lithuanian", 'zb' => "ZuluBumBum");
         $aLangParams['de']['baseId'] = 0;
         $aLangParams['de']['abbr'] = 'de';
         $aLangParams['en']['baseId'] = 1;
@@ -312,24 +309,24 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         $aLangParams['zb']['baseId'] = 3;
         $aLangParams['zb']['abbr'] = 'zb';
 
-        modConfig::getInstance()->setConfigParam( 'aLanguageParams', $aLangParams );
-        modConfig::getInstance()->setConfigParam( 'aLanguages', $aLang );
-        modConfig::getInstance()->setConfigParam( 'aLanguages', $aLang );
+        modConfig::getInstance()->setConfigParam('aLanguageParams', $aLangParams);
+        modConfig::getInstance()->setConfigParam('aLanguages', $aLang);
+        modConfig::getInstance()->setConfigParam('aLanguages', $aLang);
 
         $oObj = new _oxI18n();
         $oObj->init("oxvouchers");
 
         $aRes = $oObj->getAvailableInLangs();
-        $this->assertEquals( $aRezLang, $aRes);
+        $this->assertEquals($aRezLang, $aRes);
     }
 
     public function testGetFieldLang()
     {
         $oObj = new _oxI18n();
-        $this->assertEquals("12", $oObj->UNITgetFieldLang( 'oxtitle_12'));
-        $this->assertEquals("1", $oObj->UNITgetFieldLang( 'oxtitle_1'));
-        $this->assertEquals("0", $oObj->UNITgetFieldLang( 'oxtitle'));
-        $this->assertEquals("0", $oObj->UNITgetFieldLang( 'oxtitle_555'));
+        $this->assertEquals("12", $oObj->UNITgetFieldLang('oxtitle_12'));
+        $this->assertEquals("1", $oObj->UNITgetFieldLang('oxtitle_1'));
+        $this->assertEquals("0", $oObj->UNITgetFieldLang('oxtitle'));
+        $this->assertEquals("0", $oObj->UNITgetFieldLang('oxtitle_555'));
     }
 
     public function testAddFieldNormal()
@@ -366,7 +363,7 @@ class Unit_Core_oxi18ntest extends OxidTestCase
 
         $aFieldNames = $oObj->getClassVar("_aFieldNames");
 
-        $this->assertEquals(array('oxid'=>0, 'oxtestfield_1' => 1), $aFieldNames);
+        $this->assertEquals(array('oxid' => 0, 'oxtestfield_1' => 1), $aFieldNames);
         $this->assertFalse(isset($oObj->oxtesttable__oxtestfield));
         $this->assertTrue(isset($oObj->oxtesttable__oxtestfield_1));
     }
@@ -379,7 +376,7 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         $oObj->setLanguage(0);
 
 
-            $sExpRes = "oxid = '',oxshopid = '',oxtitle = '',oxpos = '9999',oxdisplayinbasket = '0'";
+        $sExpRes = "oxid = '',oxshopid = '',oxtitle = '',oxpos = '9999',oxdisplayinbasket = '0'";
 
         $this->assertEquals($sExpRes, $oObj->UNITgetUpdateFields());
 
@@ -393,7 +390,7 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         $sTable = $oObj->getViewName();
 
 
-            $sExpRes = "`$sTable`.`oxid`, `$sTable`.`oxshopid`, `$sTable`.`oxtitle`, `$sTable`.`oxpos`, `$sTable`.`oxtimestamp`, `$sTable`.`oxdisplayinbasket`";
+        $sExpRes = "`$sTable`.`oxid`, `$sTable`.`oxshopid`, `$sTable`.`oxtitle`, `$sTable`.`oxpos`, `$sTable`.`oxtimestamp`, `$sTable`.`oxdisplayinbasket`";
 
         $this->assertEquals($sExpRes, $oObj->getSelectFields());
     }
@@ -405,7 +402,7 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         $oObj->setLanguage(1);
 
 
-            $sExpRes = "oxid = '',oxshopid = '',oxtitle_1 = '',oxpos = '9999',oxdisplayinbasket = '0'";
+        $sExpRes = "oxid = '',oxshopid = '',oxtitle_1 = '',oxpos = '9999',oxdisplayinbasket = '0'";
 
         $this->assertEquals($sExpRes, $oObj->UNITgetUpdateFields());
     }
@@ -418,7 +415,7 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         $sTable = $oObj->getViewName();
 
 
-            $sExpRes = "`$sTable`.`oxid`, `$sTable`.`oxshopid`, `$sTable`.`oxtitle`, `$sTable`.`oxpos`, `$sTable`.`oxtimestamp`, `$sTable`.`oxdisplayinbasket`";
+        $sExpRes = "`$sTable`.`oxid`, `$sTable`.`oxshopid`, `$sTable`.`oxtitle`, `$sTable`.`oxpos`, `$sTable`.`oxtimestamp`, `$sTable`.`oxdisplayinbasket`";
 
         $this->assertEquals($sExpRes, $oObj->getSelectFields());
     }
@@ -431,7 +428,7 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         $oObj->setLanguage(1);
 
 
-            $sExpRes = "oxid = '',oxshopid = '',oxtitle = '',oxtitle_1 = '',oxtitle_2 = '',oxtitle_3 = '',oxpos = '9999',oxdisplayinbasket = '0'";
+        $sExpRes = "oxid = '',oxshopid = '',oxtitle = '',oxtitle_1 = '',oxtitle_2 = '',oxtitle_3 = '',oxpos = '9999',oxdisplayinbasket = '0'";
 
         $this->assertEquals($sExpRes, $oObj->UNITgetUpdateFields());
     }
@@ -445,7 +442,7 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         $sTable = $oObj->getViewName();
 
 
-            $sExpRes = "`$sTable`.`oxid`, `$sTable`.`oxshopid`, `$sTable`.`oxtitle`, `$sTable`.`oxtitle_1`, `$sTable`.`oxtitle_2`, `$sTable`.`oxtitle_3`, `$sTable`.`oxpos`, `$sTable`.`oxtimestamp`, `$sTable`.`oxdisplayinbasket`";
+        $sExpRes = "`$sTable`.`oxid`, `$sTable`.`oxshopid`, `$sTable`.`oxtitle`, `$sTable`.`oxtitle_1`, `$sTable`.`oxtitle_2`, `$sTable`.`oxtitle_3`, `$sTable`.`oxpos`, `$sTable`.`oxtimestamp`, `$sTable`.`oxdisplayinbasket`";
 
         $this->assertEquals($sExpRes, $oObj->getSelectFields());
     }
@@ -453,45 +450,47 @@ class Unit_Core_oxi18ntest extends OxidTestCase
     public function testGetSqlActiveSnippetForceCoreActiveMultilang()
     {
         $iCurrTime = time();
-        oxTestModules::addFunction( "oxUtilsDate", "getTime", "{ return $iCurrTime; }");
+        oxTestModules::addFunction("oxUtilsDate", "getTime", "{ return $iCurrTime; }");
 
-        $oI18n = $this->getMock( 'oxI18n', array( 'getViewName' ) );
-        $oI18n->expects( $this->once() )->method( 'getViewName')->with($this->equalTo(null))->will( $this->returnValue( 'oxi18n' ) );
+        $oI18n = $this->getMock('oxI18n', array('getViewName'));
+        $oI18n->expects($this->once())->method('getViewName')->with($this->equalTo(null))->will($this->returnValue('oxi18n'));
 
-        $oI18n->UNITaddField( 'oxactive', 0 );
-        $oI18n->UNITaddField( 'oxactivefrom', 0 );
-        $oI18n->UNITaddField( 'oxactiveto', 0 );
+        $oI18n->UNITaddField('oxactive', 0);
+        $oI18n->UNITaddField('oxactivefrom', 0);
+        $oI18n->UNITaddField('oxactiveto', 0);
 
 
-        $sDate  = date( 'Y-m-d H:i:s', $iCurrTime );
+        $sDate = date('Y-m-d H:i:s', $iCurrTime);
         $sTable = 'oxi18n';
         $sTemplate = " (   $sTable.oxactive = 1  or  ( $sTable.oxactivefrom < '$sDate' and $sTable.oxactiveto > '$sDate' ) ) ";
 
         $sQ = $oI18n->getSqlActiveSnippet();
-        $this->assertEquals( $sTemplate, $sQ );
+        $this->assertEquals($sTemplate, $sQ);
     }
 
     public function testGetSqlActiveSnippet()
     {
         $iCurrTime = time();
-        oxTestModules::addFunction( "oxUtilsDate", "getTime", "{ return $iCurrTime; }");
+        oxTestModules::addFunction("oxUtilsDate", "getTime", "{ return $iCurrTime; }");
 
-        $oI18n = $this->getMock( 'oxI18n', array( 'getCoreTableName', 'getViewName', 'isMultilingualField', 'getLanguage' ) );
-        $oI18n->expects( $this->never() )->method( 'getCoreTableName');
-        $oI18n->expects( $this->once() )->method( 'getViewName')->will( $this->returnValue( 'oxi18n' ) );
-        $oI18n->expects( $this->never() )->method( 'getLanguage');
-
-        $oI18n->UNITaddField( 'oxactive', 0 );
-        $oI18n->UNITaddField( 'oxactivefrom', 0 );
-        $oI18n->UNITaddField( 'oxactiveto', 0 );
-
-
-        $sDate  = date( 'Y-m-d H:i:s', $iCurrTime );
         $sTable = 'oxi18n';
+
+        /** @var oxI18n|PHPUnit_Framework_MockObject_MockObject $oI18n */
+        $oI18n = $this->getMock('oxI18n', array('getCoreTableName', 'getViewName', 'isMultilingualField', 'getLanguage'));
+        $oI18n->expects($this->any())->method('getCoreTableName')->will($this->returnValue($sTable));
+        $oI18n->expects($this->once())->method('getViewName')->will($this->returnValue('oxi18n'));
+        $oI18n->expects($this->never())->method('getLanguage');
+
+        $oI18n->UNITaddField('oxactive', 0);
+        $oI18n->UNITaddField('oxactivefrom', 0);
+        $oI18n->UNITaddField('oxactiveto', 0);
+
+
+        $sDate = date('Y-m-d H:i:s', $iCurrTime);
         $sTemplate = " (   $sTable.oxactive = 1  or  ( $sTable.oxactivefrom < '$sDate' and $sTable.oxactiveto > '$sDate' ) ) ";
 
         $sQ = $oI18n->getSqlActiveSnippet();
-        $this->assertEquals( $sTemplate, $sQ );
+        $this->assertEquals($sTemplate, $sQ);
     }
 
     /*
@@ -500,7 +499,7 @@ class Unit_Core_oxi18ntest extends OxidTestCase
     public function testIsMultilang()
     {
         $oObj = new oxi18n();
-        $this->assertTrue( $oObj->isMultilang() );
+        $this->assertTrue($oObj->isMultilang());
     }
 
     /*
@@ -508,15 +507,15 @@ class Unit_Core_oxi18ntest extends OxidTestCase
      */
     public function testModifyCacheKey()
     {
-        $oObj = $this->getProxyClass( 'oxi18n' );
-        $oObj->modifyCacheKey( null );
-        $this->assertNull( $oObj->getNonPublicVar("_sCacheKey") );
-        $oObj->modifyCacheKey("_nonml" );
-        $this->assertEquals( "_nonml", $oObj->getNonPublicVar("_sCacheKey") );
-        $oObj->modifyCacheKey("_nonml" );
-        $this->assertEquals( "_nonml_nonml", $oObj->getNonPublicVar("_sCacheKey") );
-        $oObj->modifyCacheKey("_nonml", true );
-        $this->assertEquals( "_nonml|i18n", $oObj->getNonPublicVar("_sCacheKey") );
+        $oObj = $this->getProxyClass('oxi18n');
+        $oObj->modifyCacheKey(null);
+        $this->assertNull($oObj->getNonPublicVar("_sCacheKey"));
+        $oObj->modifyCacheKey("_nonml");
+        $this->assertEquals("_nonml", $oObj->getNonPublicVar("_sCacheKey"));
+        $oObj->modifyCacheKey("_nonml");
+        $this->assertEquals("_nonml_nonml", $oObj->getNonPublicVar("_sCacheKey"));
+        $oObj->modifyCacheKey("_nonml", true);
+        $this->assertEquals("_nonml|i18n", $oObj->getNonPublicVar("_sCacheKey"));
     }
 
     /**
@@ -526,9 +525,8 @@ class Unit_Core_oxi18ntest extends OxidTestCase
     {
         $oObj = $this->getMock('oxi18n', array('isMultilingualField'));
         $oObj->expects($this->exactly(2))->method('isMultilingualField')
-                ->with($this->equalTo('field'))
-                ->will($this->returnValue(true))
-            ;
+            ->with($this->equalTo('field'))
+            ->will($this->returnValue(true));
 
         $oObj->setLanguage(0);
         $this->assertEquals('field', $oObj->getUpdateSqlFieldName('field'));
@@ -545,9 +543,8 @@ class Unit_Core_oxi18ntest extends OxidTestCase
     {
         $oObj = $this->getMock('oxi18n', array('isMultilingualField'));
         $oObj->expects($this->exactly(2))->method('isMultilingualField')
-                ->with($this->equalTo('field'))
-                ->will($this->returnValue(false))
-            ;
+            ->with($this->equalTo('field'))
+            ->will($this->returnValue(false));
 
         $oObj->setLanguage(0);
         $this->assertEquals('field', $oObj->getUpdateSqlFieldName('field'));
@@ -584,18 +581,18 @@ class Unit_Core_oxi18ntest extends OxidTestCase
     public function testGetUpdateFieldsForTableNonMlObject()
     {
         $cl = oxTestModules::addFunction(
-                    oxTestModules::addFunction(
-                        'oxi18n',
-                        '__setFieldNames($fn)',
-                        '{$this->_aFieldNames = $fn;}'
-                    ),
-                    '__getFieldNames',
-                    '{return $this->_aFieldNames;}'
-                );
+            oxTestModules::addFunction(
+                'oxi18n',
+                '__setFieldNames($fn)',
+                '{$this->_aFieldNames = $fn;}'
+            ),
+            '__getFieldNames',
+            '{return $this->_aFieldNames;}'
+        );
         $oObj = new $cl();
         $oObj->setEnableMultilang(false);
         $oObj->init('oxstates');
-        $oObj->__setFieldNames(array_merge($oObj->__getFieldNames(), array('oxtitle_90'=>0)));
+        $oObj->__setFieldNames(array_merge($oObj->__getFieldNames(), array('oxtitle_90' => 0)));
         $oObj->setId('test_a');
         $oObj->oxstates__oxtitle_90 = new oxField('titletest');
 
@@ -617,12 +614,10 @@ class Unit_Core_oxi18ntest extends OxidTestCase
     {
         $oObj = $this->getMock('oxi18n', array('_getUpdateFieldsForTable', 'getCoreTableName'));
         $oObj->expects($this->exactly(1))->method('_getUpdateFieldsForTable')
-                ->with($this->equalTo('coretable'), $this->equalTo('useskipsavefields'))
-                ->will($this->returnValue('returned val'))
-            ;
+            ->with($this->equalTo('coretable'), $this->equalTo('useskipsavefields'))
+            ->will($this->returnValue('returned val'));
         $oObj->expects($this->exactly(1))->method('getCoreTableName')
-                ->will($this->returnValue('coretable'))
-            ;
+            ->will($this->returnValue('coretable'));
 
         $this->assertEquals('returned val', $oObj->UNITgetUpdateFields('useskipsavefields'));
     }
@@ -641,7 +636,7 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         $oObj->setId("test_update");
         $oObj->oxstates__oxtitle = new oxField('test_x');
 
-        $oDb = $this->getMock('stdclass', array('select','execute', 'quote'));
+        $oDb = $this->getMock('stdclass', array('select', 'execute', 'quote'));
         $oDb->expects($this->any())->method('select')->will($this->returnValue(false));
         $oDb->expects($this->any())->method('execute')->will($this->evalFunction('{Unit_Core_oxi18ntest::$aLoggedSqls[] = $args[0];return true;}'));
         $oDb->expects($this->any())->method('quote')->will($this->evalFunction('{return "\'".mysql_real_escape_string($args[0])."\'";}'));
@@ -660,8 +655,8 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         $oObj->UNITupdate();
         $this->assertEquals(
             array(
-                "update oxstates set oxid = 'test_update',oxcountryid = '',oxisoalpha2 = '' where oxstates.oxid = 'test_update'",
-                "insert into oxstates_set11 set oxid = 'test_update',oxtitle_90 = 'test_x' on duplicate key update oxid = 'test_update',oxtitle_90 = 'test_x'",
+                 "update oxstates set oxid = 'test_update',oxcountryid = '',oxisoalpha2 = '' where oxstates.oxid = 'test_update'",
+                 "insert into oxstates_set11 set oxid = 'test_update',oxtitle_90 = 'test_x' on duplicate key update oxid = 'test_update',oxtitle_90 = 'test_x'",
             ),
             array_map('trim', Unit_Core_oxi18ntest::$aLoggedSqls)
         );
@@ -673,25 +668,25 @@ class Unit_Core_oxi18ntest extends OxidTestCase
     public function testUpdate_MLangDisabled()
     {
         $cl = oxTestModules::addFunction(
-                    oxTestModules::addFunction(
-                        'oxi18n',
-                        '__setFieldNames($fn)',
-                        '{$this->_aFieldNames = $fn;}'
-                    ),
-                    '__getFieldNames',
-                    '{return $this->_aFieldNames;}'
-                );
+            oxTestModules::addFunction(
+                'oxi18n',
+                '__setFieldNames($fn)',
+                '{$this->_aFieldNames = $fn;}'
+            ),
+            '__getFieldNames',
+            '{return $this->_aFieldNames;}'
+        );
         $oObj = $this->getMock($cl, array('_getLanguageSetTables'));
         $oObj->expects($this->any())->method('_getLanguageSetTables')->will($this->returnValue(array('oxstates_set11')));
         $oObj->setEnableMultilang(false);
         $oObj->init('oxstates');
-        $oObj->__setFieldNames(array_merge($oObj->__getFieldNames(), array('oxtitle_90'=>0)));
+        $oObj->__setFieldNames(array_merge($oObj->__getFieldNames(), array('oxtitle_90' => 0)));
 
         $oObj->setId("test_update");
         $oObj->oxstates__oxtitle = new oxField('test_x');
         $oObj->oxstates__oxtitle_90 = new oxField('test_y');
 
-        $oDb = $this->getMock('stdclass', array('select','execute', 'quote'));
+        $oDb = $this->getMock('stdclass', array('select', 'execute', 'quote'));
         $oDb->expects($this->any())->method('select')->will($this->returnValue(false));
         $oDb->expects($this->any())->method('execute')->will($this->evalFunction('{Unit_Core_oxi18ntest::$aLoggedSqls[] = $args[0];return true;}'));
         $oDb->expects($this->any())->method('quote')->will($this->evalFunction('{return "\'".mysql_real_escape_string($args[0])."\'";}'));
@@ -702,8 +697,8 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         $oObj->UNITupdate();
         $this->assertEquals(
             array(
-                "update oxstates set oxid = 'test_update',oxcountryid = '',oxtitle = 'test_x',oxisoalpha2 = '',oxtitle_1 = '',oxtitle_2 = '',oxtitle_3 = '' where oxstates.oxid = 'test_update'",
-                "insert into oxstates_set11 set oxid = 'test_update',oxtitle_90 = 'test_y' on duplicate key update oxid = 'test_update',oxtitle_90 = 'test_y'",
+                 "update oxstates set oxid = 'test_update',oxcountryid = '',oxtitle = 'test_x',oxisoalpha2 = '',oxtitle_1 = '',oxtitle_2 = '',oxtitle_3 = '' where oxstates.oxid = 'test_update'",
+                 "insert into oxstates_set11 set oxid = 'test_update',oxtitle_90 = 'test_y' on duplicate key update oxid = 'test_update',oxtitle_90 = 'test_y'",
             ),
             array_map('trim', Unit_Core_oxi18ntest::$aLoggedSqls)
         );
@@ -713,8 +708,8 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         $oObj->UNITupdate();
         $this->assertEquals(
             array(
-                "update oxstates set oxid = 'test_update',oxcountryid = '',oxtitle = 'test_x',oxisoalpha2 = '',oxtitle_1 = '',oxtitle_2 = '',oxtitle_3 = '' where oxstates.oxid = 'test_update'",
-                "insert into oxstates_set11 set oxid = 'test_update',oxtitle_90 = 'test_y' on duplicate key update oxid = 'test_update',oxtitle_90 = 'test_y'",
+                 "update oxstates set oxid = 'test_update',oxcountryid = '',oxtitle = 'test_x',oxisoalpha2 = '',oxtitle_1 = '',oxtitle_2 = '',oxtitle_3 = '' where oxstates.oxid = 'test_update'",
+                 "insert into oxstates_set11 set oxid = 'test_update',oxtitle_90 = 'test_y' on duplicate key update oxid = 'test_update',oxtitle_90 = 'test_y'",
             ),
             array_map('trim', Unit_Core_oxi18ntest::$aLoggedSqls)
         );
@@ -726,19 +721,18 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         $oObj->init('oxstates');
 
         $this->assertEquals(
-            array(
-            ),
+            array(),
             $oObj->UNITgetLanguageSetTables()
         );
 
         $oLang = $this->getMock('oxLang', array('getLanguageIds'));
-        $oLang->expects($this->any())->method('getLanguageIds')->will($this->returnValue(array(0=>'de', 1=>'en', 90=>'lt')));
+        $oLang->expects($this->any())->method('getLanguageIds')->will($this->returnValue(array(0 => 'de', 1 => 'en', 90 => 'lt')));
 
-        oxTestModules::addModuleObject( 'oxLang', $oLang );
+        oxTestModules::addModuleObject('oxLang', $oLang);
 
         $this->assertEquals(
             array(
-                'oxstates_set11'
+                 'oxstates_set11'
             ),
             $oObj->UNITgetLanguageSetTables()
         );
@@ -757,7 +751,7 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         $oObj->setId("test_insert");
         $oObj->oxstates__oxtitle = new oxField('test_x');
 
-        $oDb = $this->getMock('stdclass', array('select','execute', 'quote', 'getOne'));
+        $oDb = $this->getMock('stdclass', array('select', 'execute', 'quote', 'getOne', 'Insert_ID'));
         $oDb->expects($this->any())->method('select')->will($this->returnValue(false));
         $oDb->expects($this->any())->method('execute')->will($this->evalFunction('{Unit_Core_oxi18ntest::$aLoggedSqls[] = $args[0];return true;}'));
         $oDb->expects($this->any())->method('quote')->will($this->evalFunction('{return "\'".mysql_real_escape_string($args[0])."\'";}'));
@@ -770,8 +764,8 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         $oObj->UNITinsert();
         $this->assertEquals(
             array(
-                "Insert into oxstates set oxid = 'test_insert',oxcountryid = '',oxtitle = 'test_x',oxisoalpha2 = ''",
-                "insert into oxstates_set11 set oxid = 'test_insert'",
+                 "Insert into oxstates set oxid = 'test_insert',oxcountryid = '',oxtitle = 'test_x',oxisoalpha2 = ''",
+                 "insert into oxstates_set11 set oxid = 'test_insert'",
             ),
             array_map('trim', Unit_Core_oxi18ntest::$aLoggedSqls)
         );
@@ -781,8 +775,8 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         $oObj->UNITinsert();
         $this->assertEquals(
             array(
-                "Insert into oxstates set oxid = 'test_insert',oxcountryid = '',oxisoalpha2 = ''",
-                "insert into oxstates_set11 set oxid = 'test_insert',oxtitle_90 = 'test_x'",
+                 "Insert into oxstates set oxid = 'test_insert',oxcountryid = '',oxisoalpha2 = ''",
+                 "insert into oxstates_set11 set oxid = 'test_insert',oxtitle_90 = 'test_x'",
             ),
             array_map('trim', Unit_Core_oxi18ntest::$aLoggedSqls)
         );
@@ -797,22 +791,22 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         $oObj = new oxi18n();
         $oObj->init('oxarticles');
 
-        $this->assertEquals(getViewName('oxarticles', 0,  1), $oObj->getViewName());
+        $this->assertEquals(getViewName('oxarticles', 0, 1), $oObj->getViewName());
         $this->assertEquals(getViewName('oxarticles', 0, -1), $oObj->getViewName(1));
-        $this->assertEquals(getViewName('oxarticles', 0,  1), $oObj->getViewName(0));
-        $this->assertEquals(getViewName('oxarticles', 0,  1), $oObj->getViewName());
+        $this->assertEquals(getViewName('oxarticles', 0, 1), $oObj->getViewName(0));
+        $this->assertEquals(getViewName('oxarticles', 0, 1), $oObj->getViewName());
 
         $oObj->setLanguage(1);
-        $this->assertEquals(getViewName('oxarticles', 1,  1), $oObj->getViewName());
+        $this->assertEquals(getViewName('oxarticles', 1, 1), $oObj->getViewName());
         $this->assertEquals(getViewName('oxarticles', 1, -1), $oObj->getViewName(1));
-        $this->assertEquals(getViewName('oxarticles', 1,  1), $oObj->getViewName(0));
-        $this->assertEquals(getViewName('oxarticles', 1,  1), $oObj->getViewName());
+        $this->assertEquals(getViewName('oxarticles', 1, 1), $oObj->getViewName(0));
+        $this->assertEquals(getViewName('oxarticles', 1, 1), $oObj->getViewName());
 
         $oObj->setEnableMultilang(false);
-        $this->assertEquals(getViewName('oxarticles', -1,  1), $oObj->getViewName());
-        $this->assertEquals(getViewName('oxarticles', -1,  1), $oObj->getViewName(0));
+        $this->assertEquals(getViewName('oxarticles', -1, 1), $oObj->getViewName());
+        $this->assertEquals(getViewName('oxarticles', -1, 1), $oObj->getViewName(0));
         $this->assertEquals(getViewName('oxarticles', -1, -1), $oObj->getViewName(1));
-        $this->assertEquals(getViewName('oxarticles', -1,  1), $oObj->getViewName());
+        $this->assertEquals(getViewName('oxarticles', -1, 1), $oObj->getViewName());
 
     }
 
@@ -824,21 +818,18 @@ class Unit_Core_oxi18ntest extends OxidTestCase
     {
         $oObj = $this->getMock('oxi18n', array('_getTableFields', 'getViewName'));
         $oObj->expects($this->exactly(1))->method('_getTableFields')
-                ->with($this->equalTo('view'), $this->equalTo('simeple?'))
-                ->will($this->returnValue('returned val'))
-            ;
+            ->with($this->equalTo('view'), $this->equalTo('simeple?'))
+            ->will($this->returnValue('returned val'));
         $oObj->expects($this->exactly(1))->method('getViewName')
-                ->will($this->returnValue('view'))
-             ;
+            ->will($this->returnValue('view'));
         $oObj->setEnableMultilang(false);
 
         $this->assertEquals('returned val', $oObj->UNITGetAllFields('simeple?'));
 
         $oObj = $this->getMock('oxi18n', array('getViewName'));
         $oObj->expects($this->exactly(1))->method('getViewName')
-                ->will($this->returnValue(''))
-            ;
-         $oObj->setEnableMultilang(false);
+            ->will($this->returnValue(''));
+        $oObj->setEnableMultilang(false);
 
         $this->assertEquals(array(), $oObj->UNITGetAllFields('simeple?'));
 
@@ -852,7 +843,7 @@ class Unit_Core_oxi18ntest extends OxidTestCase
     public function test_getUpdateFieldValue()
     {
         $oObj = new oxI18n();
-        $oObj->init( "oxarticles" );
+        $oObj->init("oxarticles");
         $oObj->setId('test');
         $this->assertSame("'aaa'", $oObj->UNITgetUpdateFieldValue('oxid', new oxField('aaa')));
         $this->assertSame("'aaa\\\"'", $oObj->UNITgetUpdateFieldValue('oxid', new oxField('aaa"')));
@@ -874,9 +865,9 @@ class Unit_Core_oxi18ntest extends OxidTestCase
     public function testIsMultilingualFieldFor0003138()
     {
         $oArticle = new oxArticle();
-        $this->assertTrue( $oArticle->isMultilingualField( "oxtitle" ) );
-        $this->assertTrue( $oArticle->isMultilingualField( "OXTITLE" ) );
-        $this->assertTrue( $oArticle->isMultilingualField( "oXtItLe" ) );
+        $this->assertTrue($oArticle->isMultilingualField("oxtitle"));
+        $this->assertTrue($oArticle->isMultilingualField("OXTITLE"));
+        $this->assertTrue($oArticle->isMultilingualField("oXtItLe"));
     }
 
     protected $_aLangTables = array();
@@ -888,22 +879,22 @@ class Unit_Core_oxi18ntest extends OxidTestCase
      */
     protected function _insertTestLanguage()
     {
-        $oDb = oxDb::getDb( oxDB::FETCH_MODE_ASSOC );
+        $oDb = oxDb::getDb(oxDB::FETCH_MODE_ASSOC);
 
-        $this->_aLangTables["oxactions"]  = "oxactions";
+        $this->_aLangTables["oxactions"] = "oxactions";
         $this->_aLangTables["oxcategory"] = "oxcategories";
-        $this->_aLangTables["oxcontent"]  = "oxcontents";
-        $this->_aLangTables["oxcountry"]  = "oxcountry";
+        $this->_aLangTables["oxcontent"] = "oxcontents";
+        $this->_aLangTables["oxcountry"] = "oxcountry";
         $this->_aLangTables["oxdelivery"] = "oxdelivery";
         $this->_aLangTables["oxdiscount"] = "oxdiscount";
-        $this->_aLangTables["oxgroups"]   = "oxgroups";
-        $this->_aLangTables["oxlinks"]    = "oxlinks";
+        $this->_aLangTables["oxgroups"] = "oxgroups";
+        $this->_aLangTables["oxlinks"] = "oxlinks";
         $this->_aLangTables["oxmediaurl"] = "oxmediaurls";
-        $this->_aLangTables["oxnews"]     = "oxnews";
-        $this->_aLangTables["oxpayment"]  = "oxpayments";
-        $this->_aLangTables["oxreview"]   = "oxreviews";
-        $this->_aLangTables["oxstate"]    = "oxstates";
-        $this->_aLangTables["oxvendor"]   = "oxvendor";
+        $this->_aLangTables["oxnews"] = "oxnews";
+        $this->_aLangTables["oxpayment"] = "oxpayments";
+        $this->_aLangTables["oxreview"] = "oxreviews";
+        $this->_aLangTables["oxstate"] = "oxstates";
+        $this->_aLangTables["oxvendor"] = "oxvendor";
         $this->_aLangTables["oxwrapping"] = "oxwrapping";
         $this->_aLangTables["oxattribute"] = "oxattribute";
         $this->_aLangTables["oxselectlist"] = "oxselectlist";
@@ -911,52 +902,53 @@ class Unit_Core_oxi18ntest extends OxidTestCase
         $this->_aLangTables["oxmanufacturer"] = "oxmanufacturers";
 
         // creating language set tables and inserting by one test record
-        foreach ( $this->_aLangTables as $iPos => $sTable ) {
+        foreach ($this->_aLangTables as $iPos => $sTable) {
             $sQ = "show create table {$sTable}";
-            $rs = $oDb->execute( $sQ );
+            $rs = $oDb->execute($sQ);
 
             // creating table
-            $sQ = end( $rs->fields );
-            if ( ( stripos( $sTable, "oxartextends" ) === false && stripos( $sTable, "oxshops" ) === false ) &&
-                 !preg_match( "/oxshopid/i", $sQ ) ) {
-                unset( $this->_aLangTables[$iPos] );
+            $sQ = end($rs->fields);
+            if ((stripos($sTable, "oxartextends") === false && stripos($sTable, "oxshops") === false) &&
+                !preg_match("/oxshopid/i", $sQ)
+            ) {
+                unset($this->_aLangTables[$iPos]);
                 continue;
             }
 
 
-            $sQ = str_replace( $sTable, $sTable . "_set1", $sQ );
-            $oDb->execute( $sQ );
+            $sQ = str_replace($sTable, $sTable . "_set1", $sQ);
+            $oDb->execute($sQ);
         }
 
         $sShopId = $this->_sOXID;
 
         // inserting test records
-        foreach ( $this->_aLangTables as $sTable ) {
+        foreach ($this->_aLangTables as $sTable) {
 
             // do not insert data into shops table..
-            if ( stripos( $sTable, "oxshops" ) !== false ) {
+            if (stripos($sTable, "oxshops") !== false) {
                 continue;
             }
 
             $sQVal = "";
             $sQ = "show columns from {$sTable}";
-            $rs = $oDb->execute( $sQ );
-            if ( $rs != false && $rs->recordCount() > 0 ) {
-                while ( !$rs->EOF ) {
+            $rs = $oDb->execute($sQ);
+            if ($rs != false && $rs->recordCount() > 0) {
+                while (!$rs->EOF) {
                     $sValue = $rs->fields["Default"];
-                    $sType  = $rs->fields["Type"];
+                    $sType = $rs->fields["Type"];
                     $sField = $rs->fields["Field"];
 
                     // overwriting default values
-                    if ( stripos( $sField, "oxshopid" ) !== false ) {
+                    if (stripos($sField, "oxshopid") !== false) {
                         $sValue = $sShopId;
                     }
-                    if ( stripos( $sField, "oxid" ) !== false ) {
+                    if (stripos($sField, "oxid") !== false) {
                         $sValue = "_testRecordForTest";
                     }
 
 
-                    if ( $sQVal ) {
+                    if ($sQVal) {
                         $sQVal .= ", ";
                     }
                     $sQVal .= "'$sValue'";
@@ -964,8 +956,8 @@ class Unit_Core_oxi18ntest extends OxidTestCase
                 }
             }
 
-            $oDb->execute( "insert into {$sTable} values ({$sQVal})" );
-            $oDb->execute( "insert into {$sTable}_set1 values ({$sQVal})" );
+            $oDb->execute("insert into {$sTable} values ({$sQVal})");
+            $oDb->execute("insert into {$sTable}_set1 values ({$sQVal})");
         }
     }
 
@@ -977,10 +969,10 @@ class Unit_Core_oxi18ntest extends OxidTestCase
     protected function _deleteTestLanguage()
     {
         // dropping language set tables
-        $oDb = oxDb::getDb( oxDB::FETCH_MODE_ASSOC );
-        foreach ( $this->_aLangTables as $sTable ) {
-            $oDb->execute( "drop table {$sTable}_set1" );
-            $oDb->execute( "delete from {$sTable} where oxid like '_test%'" );
+        $oDb = oxDb::getDb(oxDB::FETCH_MODE_ASSOC);
+        foreach ($this->_aLangTables as $sTable) {
+            $oDb->execute("drop table {$sTable}_set1");
+            $oDb->execute("delete from {$sTable} where oxid like '_test%'");
         }
     }
 
@@ -992,29 +984,29 @@ class Unit_Core_oxi18ntest extends OxidTestCase
     public function testMultilangObjectDeletion()
     {
         $sId = "_testRecordForTest";
-        $oDb = oxDb::getDb( oxDB::FETCH_MODE_ASSOC );
+        $oDb = oxDb::getDb(oxDB::FETCH_MODE_ASSOC);
 
-        modConfig::getInstance()->setConfigParam( "iLangPerTable", 4 );
-        oxTestModules::addFunction( "oxLang", "getLanguageIds", "{return array('0' => 'de', '1' => 'de', '2' => 'lt', '3' => 'ru', '4' => 'pl', '5' => 'cz');}");
+        modConfig::getInstance()->setConfigParam("iLangPerTable", 4);
+        oxTestModules::addFunction("oxLang", "getLanguageIds", "{return array('0' => 'de', '1' => 'de', '2' => 'lt', '3' => 'ru', '4' => 'pl', '5' => 'cz');}");
 
-        foreach ( $this->_aLangTables as $sObjectType => $sTableName ) {
+        foreach ($this->_aLangTables as $sObjectType => $sTableName) {
 
-            $this->assertTrue( (bool) $oDb->getOne( "select 1 from {$sTableName} where oxid = '{$sId}'" ), "Missing data for table {$sTableName} table" );
-            $this->assertTrue( (bool) $oDb->getOne( "select 1 from {$sTableName}_set1 where oxid = '{$sId}'" ), "Missing data for table {$sTableName}_set1 table" );
+            $this->assertTrue((bool) $oDb->getOne("select 1 from {$sTableName} where oxid = '{$sId}'"), "Missing data for table {$sTableName} table");
+            $this->assertTrue((bool) $oDb->getOne("select 1 from {$sTableName}_set1 where oxid = '{$sId}'"), "Missing data for table {$sTableName}_set1 table");
 
-            $oObject = oxNew( $sObjectType );
-            $oObject->setId( $sId );
+            $oObject = oxNew($sObjectType);
+            $oObject->setId($sId);
 
             // some fine tuning..
-            if ( $sObjectType == "oxcategory" ) {
-                $oObject->oxcategories__oxright = new oxField( 11 );
-                $oObject->oxcategories__oxleft  = new oxField( 10 );
+            if ($sObjectType == "oxcategory") {
+                $oObject->oxcategories__oxright = new oxField(11);
+                $oObject->oxcategories__oxleft = new oxField(10);
             }
 
-            $this->assertTrue( $oObject->delete( $sId ), "Unable to delete $sObjectType type object" );
+            $this->assertTrue($oObject->delete($sId), "Unable to delete $sObjectType type object");
 
-            $this->assertFalse( (bool) $oDb->getOne( "select 1 from {$sTableName} where oxid = '{$sId}'" ), "Not cleaned {$sTableName} table" );
-            $this->assertFalse( (bool) $oDb->getOne( "select 1 from {$sTableName}_set1 where oxid = '{$sId}'" ), "Not cleaned {$sTableName}_set1 table" );
+            $this->assertFalse((bool) $oDb->getOne("select 1 from {$sTableName} where oxid = '{$sId}'"), "Not cleaned {$sTableName} table");
+            $this->assertFalse((bool) $oDb->getOne("select 1 from {$sTableName}_set1 where oxid = '{$sId}'"), "Not cleaned {$sTableName}_set1 table");
         }
     }
 

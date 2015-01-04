@@ -1,35 +1,33 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
  * Article review manager.
  * Performs loading, updating, inserting of article review.
  *
- * @package model
  */
 class oxReview extends oxBase
 {
+
     /**
      * Shop control variable
      *
@@ -50,7 +48,7 @@ class oxReview extends oxBase
     public function __construct()
     {
         parent::__construct();
-        $this->init( 'oxreviews' );
+        $this->init('oxreviews');
     }
 
     /**
@@ -60,13 +58,13 @@ class oxReview extends oxBase
      *
      * @return bool
      */
-    public function assign( $dbRecord )
+    public function assign($dbRecord)
     {
-        $blRet = parent::assign( $dbRecord );
+        $blRet = parent::assign($dbRecord);
 
-        if ( isset( $this->oxreviews__oxuserid ) && $this->oxreviews__oxuserid->value ) {
+        if (isset($this->oxreviews__oxuserid) && $this->oxreviews__oxuserid->value) {
             $oDb = oxDb::getDb();
-            $this->oxuser__oxfname = new oxField( $oDb->getOne( "select oxfname from oxuser where oxid=".$oDb->quote( $this->oxreviews__oxuserid->value ) ));
+            $this->oxuser__oxfname = new oxField($oDb->getOne("select oxfname from oxuser where oxid=" . $oDb->quote($this->oxreviews__oxuserid->value)));
         }
 
         return $blRet;
@@ -79,11 +77,11 @@ class oxReview extends oxBase
      *
      * @return bool
      */
-    public function load( $oxId )
+    public function load($oxId)
     {
-        if ( $blRet = parent::load( $oxId ) ) {
+        if ($blRet = parent::load($oxId)) {
             // convert date's to international format
-            $this->oxreviews__oxcreate->setValue(oxRegistry::get("oxUtilsDate")->formatDBDate( $this->oxreviews__oxcreate->value ));
+            $this->oxreviews__oxcreate->setValue(oxRegistry::get("oxUtilsDate")->formatDBDate($this->oxreviews__oxcreate->value));
         }
 
         return $blRet;
@@ -97,7 +95,8 @@ class oxReview extends oxBase
     protected function _insert()
     {
         // set oxcreate
-        $this->oxreviews__oxcreate = new oxField(date( 'Y-m-d H:i:s', oxRegistry::get("oxUtilsDate")->getTime() ));
+        $this->oxreviews__oxcreate = new oxField(date('Y-m-d H:i:s', oxRegistry::get("oxUtilsDate")->getTime()));
+
         return parent::_insert();
     }
 
@@ -116,37 +115,37 @@ class oxReview extends oxBase
     {
         $oDb = oxDb::getDb();
 
-        $oRevs = oxNew( 'oxlist' );
-        $oRevs->init( 'oxreview' );
+        $oRevs = oxNew('oxlist');
+        $oRevs->init('oxreview');
 
         $sObjectIdWhere = '';
-        if ( is_array( $aIds ) && count( $aIds ) ) {
-            $sObjectIdWhere = "oxreviews.oxobjectid in ( ".implode(", ", oxDb::getInstance()->quoteArray( $aIds ))." )";
-        } elseif ( is_string( $aIds ) && $aIds ) {
-            $sObjectIdWhere = "oxreviews.oxobjectid = ".$oDb->quote( $aIds );
+        if (is_array($aIds) && count($aIds)) {
+            $sObjectIdWhere = "oxreviews.oxobjectid in ( " . implode(", ", oxDb::getInstance()->quoteArray($aIds)) . " )";
+        } elseif (is_string($aIds) && $aIds) {
+            $sObjectIdWhere = "oxreviews.oxobjectid = " . $oDb->quote($aIds);
         } else {
             return $oRevs;
         }
 
-        $iLoadInLang = is_null( $iLoadInLang ) ? (int) oxRegistry::getLang()->getBaseLanguage() : (int) $iLoadInLang;
+        $iLoadInLang = is_null($iLoadInLang) ? (int) oxRegistry::getLang()->getBaseLanguage() : (int) $iLoadInLang;
 
-        $sSelect = "select oxreviews.* from oxreviews where oxreviews.oxtype = ".$oDb->quote( $sType )." and $sObjectIdWhere and oxreviews.oxlang = '$iLoadInLang'";
+        $sSelect = "select oxreviews.* from oxreviews where oxreviews.oxtype = " . $oDb->quote($sType) . " and $sObjectIdWhere and oxreviews.oxlang = '$iLoadInLang'";
 
-        if ( !$blLoadEmpty ) {
+        if (!$blLoadEmpty) {
             $sSelect .= ' and oxreviews.oxtext != "" ';
         }
 
-        if ( $this->getConfig()->getConfigParam( 'blGBModerate' ) ) {
+        if ($this->getConfig()->getConfigParam('blGBModerate')) {
             $sSelect .= ' and ( oxreviews.oxactive = "1" ';
-            $sSelect .= ( $oUser = $this->getUser() ) ? 'or  oxreviews.oxuserid = ' . $oDb->quote( $oUser->getId() ) . ' )' :  ')';
+            $sSelect .= ($oUser = $this->getUser()) ? 'or  oxreviews.oxuserid = ' . $oDb->quote($oUser->getId()) . ' )' : ')';
         }
 
         $sSelect .= ' order by oxreviews.oxcreate desc ';
 
-        $oRevs->selectString( $sSelect );
+        $oRevs->selectString($sSelect);
 
         // change date
-        foreach ( $oRevs as $oItem ) {
+        foreach ($oRevs as $oItem) {
             $oItem->oxreviews__oxcreate->convertToFormattedDbDate();
             $oItem->oxreviews__oxtext->convertToPseudoHtml();
         }
@@ -173,7 +172,6 @@ class oxReview extends oxBase
     {
         return $this->oxreviews__oxobjectid->value;
     }
-
 
 
 }

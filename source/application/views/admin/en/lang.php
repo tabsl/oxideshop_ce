@@ -1,24 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   lang
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /*
@@ -38,7 +37,8 @@ $aLang = array(
 'simpleDateFormat'                                         => 'Y-m-d',
 
 'GENERAL_ACTIVE'                                           => 'Active',
-'GENERAL_ACTIVFROMTILL'                                    => 'OR Active',
+'GENERAL_ALWAYS_ACTIVE'                                    => 'Always active',
+'GENERAL_ACTIVFROMTILL'                                    => 'Active for a period',
 'GENERAL_OR'                                               => 'Or',
 'GENERAL_ACTIVTITLE'                                       => 'A',
 'GENERAL_ADMIN_TITLE'                                      => '[OXID eShop Administration]',
@@ -345,6 +345,8 @@ $aLang = array(
 'ADMINLINKS_LIST_TITLE'                                    => '[OXID Links Administration]',
 'ADMINLINKS_LIST_MENUITEM'                                 => 'Customer Information',
 'ADMINLINKS_LIST_MENUSUBITEM'                              => 'Links',
+'ADMIN_MALL_SELECT_ALL_SHOPS'                              => 'Select All',
+'ADMIN_MALL_SELECT_NONE_SHOPS'                             => 'Select None',
 'ARTICLE_ATTRIBUTE_TOOMANYATTRIBUTES'                      => 'Please select only one Attribute!',
 'ARTICLE_ATTRIBUTE_NOATTRIBUTES'                           => 'Please select one Attribute!',
 'ARTICLE_ATTRIBUTE_NOATTRIBUTE'                            => 'Available Attributes',
@@ -385,6 +387,7 @@ $aLang = array(
 'ARTICLE_EXTEND_QUESTIONEMAIL'                             => 'Alt. Contact',
 'ARTICLE_EXTEND_ISSEARCH'                                  => 'Searchable',
 'ARTICLE_EXTEND_ISCONFIGURABLE'                            => 'Product can be customized',
+'ARTICLE_EXTEND_SHOWCUSTOMAGREEMENT'                       => 'Confirm terms and conditions',
 'ARTICLE_EXTEND_NONMATERIAL'                               => 'Intangible Product',
 'ARTICLE_EXTEND_FREESHIPPING'                              => 'Free Shipping',
 'ARTICLE_EXTEND_BLFIXEDPRICE'                              => 'Deactivate Price Alert',
@@ -547,8 +550,7 @@ $aLang = array(
 'AUCTMASTER_DO_UNKNOWNERROR'                               => 'Unknown Error!',
 'AUCTMASTER_DO_EXPORTNOTSTARTED'                           => 'Export not yet started.',
 'AUCTMASTER_DO_EXPORTEND'                                  => 'Export completed.',
-'AUCTMASTER_DO_EXPORTFILE1'                                => "Not able to write to export file ",
-'AUCTMASTER_DO_EXPORTFILE2'                                => '',
+'AUCTMASTER_DO_EXPORTFILE'                                 => 'Not able to write to export file %s',
 'AUCTMASTER_DO_EXPORTING1'                                 => 'Export running. Export',
 'AUCTMASTER_DO_EXPORTING2'                                 => 'of overall',
 'GENEXPORT_EXPRUNNING'                                     => 'Export running.',
@@ -675,8 +677,7 @@ $aLang = array(
 'DISCOUNT_USERS_SETUSER'                                   => 'Assigned Users',
 'DYN_ECONDA_ACTIVE'                                        => 'Activate Econda Webcontrolling?',
 'DYN_ECONDA_ATTENTION'                                     => 'Please note: ',
-'DYN_ECONDA_FILETO'                                        => 'You have to copy the file "emos2.js" which you receive from Econda into the directory ',
-'DYN_ECONDA_COPY'                                          => '',
+'DYN_ECONDA_COPY_FILE'                                     => 'You have to copy the file "emos2.js" which you receive from Econda into the directory %s',
 'DYN_TRUSTED_TRUSTEDSHOP'                                  => 'Trusted Shops ID',
 'DYN_TRUSTED_TRUSTEDSHOP_ERROR'                            => 'Invalid Trusted Shops ID. Contact Trusted Shops for your valid ID.',
 'DYN_TRUSTED_USER'                                         => 'User name (wsUser)',
@@ -689,7 +690,7 @@ $aLang = array(
 'DYN_TRUSTED_CREDIT_CARD'                                  => 'Credit Card / Debit Card',
 'DYN_TRUSTED_INVOICE'                                      => 'Invoice',
 'DYN_TRUSTED_CASH_ON_DELIVERY'                             => 'Cash on delivery',
-'DYN_TRUSTED_PREPAYMENT'                                   => 'Prepayment',
+'DYN_TRUSTED_PREPAYMENT'                                   => 'Cash in advance',
 'DYN_TRUSTED_CHEQUE'                                       => 'Cheque',
 'DYN_TRUSTED_PAYBOX'                                       => 'Paybox',
 'DYN_TRUSTED_PAYPAL'                                       => 'PayPal',
@@ -728,9 +729,7 @@ $aLang = array(
 'DYN_TRUSTED_RATINGS_ERR_NOT_REGISTERED_FOR_TRUSTEDRATING' => 'Trusted Shops Customer Ratings are not yet activated for this Trusted Shops ID. Please sign up here or contact <u>service@trustedshops.co.uk</u>.',
 'DYN_TRUSTED_RATINGS_CONFIGFILE'                           => '<b>NOTICE:</b> config.inc.php file contains additional configuration options. In case you need to customize Trusted Shops Customer Ratings or add additional language support (default configuration supports DE and EN) please adjust your config file.',
 'DYNBASE_ADDCATTOCAMPAIGN'                                 => 'Add category to campaign parameter',
-'DYNBASE_DO_SUCCESS'                                       => 'Success! Your Export File can be downloaded',
-'DYNBASE_DO_HERE'                                          => 'here',
-'DYNBASE_DO_DOWNLOAD'                                      => '',
+'DYNBASE_DO_SUCCESS'                                       => 'Success! Your export file can be downloaded <a href="%s" target="_blank">here</a>',
 'DYNBASE_DO_LINK'                                          => 'The Partner can also pick-up this file himself - please note following Link: ',
 'DYNSCREEN_TITLE'                                          => 'marketing',
 'DYNSCREEN_LIST_SERVICE'                                   => 'Service Area',
@@ -782,6 +781,8 @@ $aLang = array(
 'THEME_ACTIVATE'                                           => 'Activate',
 'THEME_PARENT_THEME_TITLE'                                 => 'Parent theme',
 'THEME_PARENT_VERSIONS'                                    => 'Compatible parent theme versions',
+'MODULE_ID'                                                => 'Module ID',
+'MODULE_PROBLEMATIC_FILES'                                 => 'Problematic files',
 'MODULE_AUTHOR'                                            => 'Author',
 'MODULE_VERSION'                                           => 'Version',
 'MODULE_ACTIVATE'                                          => 'Activate',
@@ -792,9 +793,10 @@ $aLang = array(
 'MODULE_ENTERMODULENAME'                                   => 'Module name',
 'MODULE_ENTERMODULEID'                                     => 'Module ID',
 'MODULE_ENTERMODULEEXTENDSCLASSES'                         => 'Extended classes',
-'MODULE_STANDALONEFILE'                                    => 'This module is a standalone php file. The module should be saved inside a directory!',
-'MODULE_EXTENSIONISDELETED'                                => 'There are modules which are registered in eShop, but module directory is missing.',
-'MODULE_DELETEEXTENSION'                                   => 'Do you want to remove all module information including config options and block information for templates?',
+'MODULE_EXTENSIONISDELETED'                                => 'Invalid modules were detected.',
+'MODULE_DELETEEXTENSION'                                   => 'Do you want to delete all registered module information and saved configurations?',
+'MODULE_PASSWORDS_DO_NOT_MATCH'                            => 'Passwords do not match!',
+'MODULE_REPEAT_PASSWORD'                                   => 'Confirm password',
 'LANGUAGE_ERRORGENERATEVIEWS'                              => "Please don't forget to update the database views under Service->Tools",
 'LANGUAGE_ACTIVE'                                          => 'Active in frontend',
 'LANGUAGE_LIST_MENUITEM'                                   => 'Master Settings',
@@ -812,7 +814,7 @@ $aLang = array(
 'LANGUAGE_ERROR_RESETING_MULTILANG_FIELDS'                 => 'Attention: Error occured while reseting multilanguage fields after language delete!',
 'LANGUAGE_DELETINGMAINLANG_WARNING'                        => 'Attention: you can\'t delete main language (with ID = 0)!',
 'LANGUAGE_ABBRCHANGEMAINLANG_WARNING'                      => 'Attention: you can\'t change abbreviation of main language (with ID = 0)!',
-'LANGUAGE_ALREADYEXISTS_ERROR'                             => 'Error: language with such abbervation already exists!',
+'LANGUAGE_ALREADYEXISTS_ERROR'                             => 'Error: a language with this abbreviation already exists!',
 'LANGUAGE_EMPTYLANGUAGENAME_ERROR'                         => 'Please enter language name!',
 'SETUP_DIRNOTDELETED_WARNING'                              => 'Please delete directory: setup!',
 'UPDATEAPP_DIRNOTDELETED_WARNING'                          => 'Please delete directory: updateApp!',
@@ -898,6 +900,7 @@ $aLang = array(
 'ORDER_MAIN_IPADDRESS'                                     => 'IP Address',
 'ORDER_MAIN_BILLNUM'                                       => 'Invoice No.',
 'ORDER_MAIN_TRACKCODE'                                     => 'Tracking Code',
+'ORDER_MAIN_TRACKCODE_LINK'                                => 'Tracking Link',
 'ORDER_MAIN_DISCOUNT'                                      => 'Discount',
 'ORDER_MAIN_PAIDON'                                        => 'Paid on',
 'ORDER_MAIN_USERVOUCHER'                                   => 'Used Coupon',
@@ -917,8 +920,8 @@ $aLang = array(
 'ORDER_OVERVIEW_VATID'                                     => 'VAT ID:',
 'ORDER_OVERVIEW_DELTYPE'                                   => 'Shipped with',
 'ORDER_OVERVIEW_LSBANKNAME'                                => 'Bank',
-'ORDER_OVERVIEW_LSBLZ'                                     => 'Bank code',
-'ORDER_OVERVIEW_LSKTONR'                                   => 'Account No.',
+'ORDER_OVERVIEW_LSBLZ'                                     => 'Bank code (or BIC)',
+'ORDER_OVERVIEW_LSKTONR'                                   => 'Account No. (or IBAN)',
 'ORDER_OVERVIEW_LSKTOINHABER'                              => 'Account Holder',
 'ORDER_OVERVIEW_INFOLDER'                                  => 'In Folder',
 'ORDER_OVERVIEW_INTSTATUS'                                 => 'Internal Status',
@@ -937,45 +940,9 @@ $aLang = array(
 'ORDER_OVERVIEW_XMLEXPORT'                                 => 'XML Export',
 'ORDER_OVERVIEW_PDF_TYPE'                                  => 'PDF type',
 'ORDER_OVERVIEW_PDF_STANDART'                              => 'Invoice',
-'ORDER_OVERVIEW_PDF_DELIVERYADDRESS'                       => 'Shipping Address',
 'ORDER_OVERVIEW_PDF_DNOTE'                                 => 'Deliv. Note',
-'ORDER_OVERVIEW_PDF_FILLONPAYMENT'                         => 'Please always indicate for payments.',
-'ORDER_OVERVIEW_PDF_CUSTNR'                                => 'Customer number',
-'ORDER_OVERVIEW_PDF_TAXIDNR'                               => 'Sales tax id:',
-'ORDER_OVERVIEW_PDF_COUNTNR'                               => 'Invoice No:',
-'ORDER_OVERVIEW_PDF_STORNO'                                => 'CANCELLATION',
-'ORDER_OVERVIEW_PDF_PURCHASENR'                            => 'Order No.',
-'ORDER_OVERVIEW_PDF_ORDERSFROM'                            => 'Your Order ',
-'ORDER_OVERVIEW_PDF_ORDERSAT'                              => ' in ',
-'ORDER_OVERVIEW_PDF_AMOUNT'                                => 'Quantity',
-'ORDER_OVERVIEW_PDF_ARTID'                                 => 'Art.No.:',
-'ORDER_OVERVIEW_PDF_DESC'                                  => 'Description',
-'ORDER_OVERVIEW_PDF_UNITPRICE'                             => 'Unit Price',
-'ORDER_OVERVIEW_PDF_ALLPRICE'                              => 'Total',
-'ORDER_OVERVIEW_PDF_VAT'                                   => 'Tax %',
-'ORDER_OVERVIEW_PDF_ALLPRICENETTO'                         => 'Total Products (net)',
-'ORDER_OVERVIEW_PDF_ZZGLVAT'                               => 'plus sales tax ',
-'ORDER_OVERVIEW_PDF_PERCENTSUM'                            => '% Amount',
-'ORDER_OVERVIEW_PDF_ALLPRICEBRUTTO'                        => 'Total Products (brutto)',
-'ORDER_OVERVIEW_PDF_DISCOUNT'                              => 'Discount',
-'ORDER_OVERVIEW_PDF_VOUCHER'                               => 'Coupon',
-'ORDER_OVERVIEW_PDF_SHIPCOST'                              => 'Shipping & handling',
-'ORDER_OVERVIEW_PDF_BRUTTO'                                => '(brutto)',
-'ORDER_OVERVIEW_PDF_NETTO'                                 => '(netto)',
 'WRAPPING_COSTS'                              => 'Gift Wrapping',
 'GIFTCARD_COSTS'                              => 'Greeting Card',
-'ORDER_OVERVIEW_PDF_PAYMENTIMPACT'                         => 'Additional Charge Payment Method',
-'ORDER_OVERVIEW_PDF_ALLSUM_NET'                            => 'Grand Total (net)',
-'ORDER_OVERVIEW_PDF_ALLSUM'                                => 'Grand Total (brutto)',
-'ORDER_OVERVIEW_PDF_PAYUPTO'                               => 'Billing till ',
-'ORDER_OVERVIEW_PDF_GREETINGS'                             => 'Thank you for your order! Please order from us again and recommend us to other.',
-'ORDER_OVERVIEW_PDF_PHONE'                                 => 'phone : ',
-'ORDER_OVERVIEW_PDF_FAX'                                   => 'fax : ',
-'ORDER_OVERVIEW_PDF_ACCOUNTNR'                             => 'Account No. ',
-'ORDER_OVERVIEW_PDF_BANKCODE'                              => 'Routing No.: ',
-'ORDER_OVERVIEW_PDF_SELPAYMENT'                            => 'Payment Method: ',
-'ORDER_OVERVIEW_PDF_DELIVNOTE'                             => 'Delivery note nr.',
-'ORDER_OVERVIEW_PDF_TSPROTECTION'                          => 'Trusted Shops buyer protection',
 'ORDER_PACKAGE_TITLE'                                      => 'OXID PACKLIST',
 'ORDER_PACKAGE_SHOWPACKLIST'                               => 'Print Packing List',
 'ORDER_PACKAGE_PACKLIST'                                   => 'P A C K A G E  L A B E L S',
@@ -1137,7 +1104,7 @@ $aLang = array(
 'SHOP_MALL_MALLINHERIT_OXARTICLES'                         => 'Inherit all <b>products</b> from parent shop',
 'SHOP_MALL_MALLINHERIT_OXATTRIBUTES'                       => 'Inherit all <b>attributes</b> from parent shop',
 'SHOP_MALL_MALLINHERIT_OXDELIVERY'                         => 'Inherit <b>delivery information</b> from parent shop',
-'SHOP_MALL_MALLINHERIT_OXDISCOUNT'                         => 'Inherit all <b>discounts and VATs</b> from parent shop',
+'SHOP_MALL_MALLINHERIT_OXDISCOUNT'                         => 'Inherit all <b>discounts</b> from parent shop',
 'SHOP_MALL_MALLINHERIT_OXLINKS'                            => 'Inherit all <b>shop links</b> from parent shop',
 'SHOP_MALL_MALLINHERIT_OXVOUCHERSERIES'                    => 'Inherit all <b>coupon series</b> from parent shop',
 'SHOP_MALL_MALLINHERIT_OXNEWS'                             => 'Inherit <b>shop news</b> from parent shop',
@@ -1177,6 +1144,7 @@ $aLang = array(
 'SHOP_MAIN_HRBNR'                                          => 'CRB',
 'SHOP_MAIN_IBANNUMBER'                                     => 'Bank IBAN',
 'SHOP_MAIN_VATNUMBER'                                      => 'Sales Tax ID',
+'SHOP_MAIN_TAXNUMBER'                                      => 'Tax ID',
 'SHOP_MAIN_PRODUCTIVE'                                     => 'Productive Mode',
 'SHOP_CONFIG_CSVSEPARATOR'                                 => 'CSV Separation Char for Im/Export',
 'SHOP_CONFIG_CSVFIELDENCLOSER'                             => 'CSV-Encloser for Im/Export',
@@ -1198,6 +1166,7 @@ $aLang = array(
 'SHOP_CONFIG_ALLOWUNEVENAMOUNTS'                           => 'Allow fraction Quantities (e.g. 1.5)',
 'SHOP_CONFIG_BIDIRECTCROSS'                                => 'Enable bidirectional Crosselling',
 'SHOP_CONFIG_CONFIRMAGB'                                   => 'Users have to Confirm General Terms and Conditions during Check-Out',
+'SHOP_CONFIG_ENABLE_INTANGIBLE_PRODUCTS_AGREEMENT'         => 'Users have to confirm terms and conditions for downloadable and intangible products during the check-out',
 'SHOP_CONFIG_SHOWORDERBUTTONONTHETOP'                      => 'Show an additional "Order now" button at the top in 4th order step (by default "Order now" button is shown only on the bottom of the page).',
 'SHOP_CONFIG_CALCULATEVATFORDELIVERY'                      => 'Display shipping costs as net price and VAT (instead of gross) in shopping cart and invoice',
 'SHOP_CONFIG_CALCDELVATONTOP'                              => 'Enter Shipping Costs as net Price (plus VAT)',
@@ -1233,8 +1202,8 @@ $aLang = array(
 'SHOP_CONFIG_SORTFIELDS'                                   => 'Database Fields Product Lists can be sorted after',
 'SHOP_CONFIG_SEARCHFIELDS'                                 => 'Fields to be considered in Search',
 'SHOP_CONFIG_SEARCHUSEAND'                                 => 'If several Search Terms are entered, all Search Terms have to be found in Search Results (AND). (If this Setting is unchecked, only one Search Term has to be found (OR)',
-'SHOP_CONFIG_SETORDELETECURRENCY'                          => 'Add or remove Currencies. The format is: ',
-'SHOP_CONFIG_SETORDELETELANGUAGE'                          => 'Add or remove Languages.',
+'SHOP_CONFIG_SETORDELETECURRENCY'                          => 'Add or remove currencies. The format is: ',
+'SHOP_CONFIG_SETORDELETELANGUAGE'                          => 'Add or remove languages.',
 'SHOP_CONFIG_SETORDELETELANGUAGEURL'                       => "Language dependent Base URL's per language (optional). Enter one URL per line. The first URL is used for the first language, the second URL for the second language and so on. An example:<br />http://www.youreshop.de/<br />http://www.youreshop.com/",
 'SHOP_CONFIG_SETORDELETELANGUAGESSLURL'                    => "Language dependent Base SSL URL's per language (optional). Enter one URL per line. The first URL is used for the first language, the second URL for the second language and so on. An example:<br />https://www.yourssleshop.de/<br />https://www.yourssleshop.com/",
 'SHOP_CONFIG_SHIPPINGCOUNTRYVAT'                           => 'Use shipping country for VAT calculation instead of billing country',
@@ -1242,6 +1211,8 @@ $aLang = array(
 'SHOP_CONFIG_STOCKOFFDEFAULTMESSAGE'                       => 'Use default "out-of-stock" Message',
 'SHOP_CONFIG_STOCKONDEFAULTMESSAGE'                        => 'Use default "in-stock" Message',
 'SHOP_CONFIG_STORECREDITCARDINFO'                          => 'Save Credit Card information',
+'SHOP_CONFIG_SHOWTSINTERNATIONALFEESMESSAGE'               => 'Display a message about possible international delivery fees',
+'SHOP_CONFIG_SHOWTSCODMESSAGE'                             => 'Display a message about possible "cash on delivery" payment method fees',
 'SHOP_CONFIG_TIMEFORMAT'                                   => 'Time Format in eShop Admin',
 'SHOP_CONFIG_USEGDVERSION'                                 => 'Installed GDLib Version',
 'SHOP_CONFIG_USESTOCK'                                     => 'Activate Stock Management',
@@ -1257,7 +1228,7 @@ $aLang = array(
 'SHOP_CONFIG_RSSSEARCH'                                    => 'Search',
 'SHOP_CONFIG_RSSARTRECOMMLISTS'                            => 'Listmania (overview)',
 'SHOP_CONFIG_RSSRECOMMLISTARTS'                            => 'Listmania (products)',
-'SHOP_CONFIG_LOAD_DYNAMIC_PAGES'                           => 'Load additional Information from OXID server',
+'SHOP_CONFIG_LOAD_DYNAMIC_PAGES'                           => 'Enable connection with the OXID servers',
 'SHOP_CONFIG_CHECK_UPDATES'                                => 'Check for available updates regularly',
 'SHOP_CONFIG_SELECTSHOPCOMPONENTS'                         => 'Select eShop components',
 'SHOP_CONFIG_DISABLEONLINEVATIDCHECK'                      => 'Disable online VAT ID check',
@@ -1285,9 +1256,10 @@ $aLang = array(
 'SHOP_CONFIG_DOWNLOADS'                                    => 'Enable downloadable products',
 'SHOP_CONFIG_DOWNLOADS_PATH'                               => 'Path to files for downloadable products',
 'SHOP_CONFIG_CONFIRMCOOKIE'                                => 'Customers have to confirm the usage of cookies',
+'SHOP_CONFIG_DEBIT_OLD_BANK_INFORMATION_NOT_ALLOWED'       => 'Use IBAN/BIC only',
+'SHOP_CONFIG_PARCELSERVICE'                                => 'Shipping provider tracking URL',
 'SHOP_SYSTEM_ATTRIBUTESPERCENT'                            => 'Number of equal Attributes for similar Products (%)',
 'SHOP_SYSTEM_DEFAULTIMAGEQUALITY'                          => 'Picture Quality - from 0 (poor Quality, small File Size) to 100 (best Quality, large File Size)',
-'SHOP_SYSTEM_DENIEDDYNGROUPS'                              => 'Prohibited User Groups for dynamic User Group assignment using "dgr" URL param',
 'SHOP_SYSTEM_DISABLENAVBARS'                               => "Don't display most Navigation Elements during Checkout",
 'SHOP_SYSTEM_GBMODERATE'                                   => ' Moderate Guestbook and Product Reviews: They are only published after they are activated by an Administrator User',
 'SHOP_SYSTEM_ISERVERTIMESHIFT'                             => 'Server Time shift (hours)',
@@ -1380,7 +1352,7 @@ $aLang = array(
 'SYSREQ_MOD_REWRITE'                                       => 'Apache mod_rewrite module',
 'SYSREQ_ALLOW_URL_FOPEN'                                   => 'allow_url_fopen or fsockopen to port 80',
 'SYSREQ_PHP4_COMPAT'                                       => 'Zend compatibility mode must be off',
-'SYSREQ_PHP_VERSION'                                       => 'PHP version at least 5.2.10',
+'SYSREQ_PHP_VERSION'                                       => 'PHP version at least 5.3.25',
 'SYSREQ_REQUEST_URI'                                       => 'REQUEST_URI set',
 'SYSREQ_LIB_XML2'                                          => 'LIB XML2',
 'SYSREQ_PHP_XML'                                           => 'PHP XML',
@@ -1393,7 +1365,7 @@ $aLang = array(
 'SYSREQ_GD_INFO'                                           => 'GDlib v2 [v1] incl. JPEG support',
 'SYSREQ_INI_SET'                                           => 'ini_set allowed',
 'SYSREQ_REGISTER_GLOBALS'                                  => 'register_globals must be off',
-'SYSREQ_ZEND_OPTIMIZER'                                    => 'Zend Optimizer or Zend Guard Loader installed',
+'SYSREQ_ZEND_OPTIMIZER'                                    => 'Zend Guard Loader installed',
 'SYSREQ_ZEND_PLATFORM_OR_SERVER'                           => 'Zend Platform or Zend Server installed',
 'SYSREQ_MB_STRING'                                         => 'mbstring',
 'SYSREQ_CURL'                                              => 'cURL',
@@ -1415,6 +1387,7 @@ $aLang = array(
 'SYSREQ_MODULE_BLOCKS_MODNAME'                             => 'Module name',
 'SYSREQ_MODULE_BLOCKS_BLOCKNAME'                           => 'Block name',
 'SYSREQ_MODULE_BLOCKS_TPLFILE'                             => 'Template file',
+'SYSREQ_MAGIC_QUOTES_GPC'                                  => 'magic_quotes_gpc must be off',
 'TOOLS_LIST_TITLE'                                         => '[OXID Tools]',
 'TOOLS_LIST_SECCESS'                                       => 'Backup data mailed successfully.',
 'TOOLS_LIST_ACTIONEND'                                     => 'Action completed',
@@ -1458,12 +1431,12 @@ $aLang = array(
 'TOOLTIPS_NEWNEWSLETTER'                                   => 'New Newsletter Sample',
 'TOOLTIPS_NEWSHOP'                                         => 'Create New Shop',
 'TOOLTIPS_NEWUSERGROUP'                                    => 'Create New User Group',
-'TOOLTIPS_NEWCATEGORY'                                     => 'Create New Cateogry',
+'TOOLTIPS_NEWCATEGORY'                                     => 'Create New Category',
 'TOOLTIPS_NEWCOUNTRY'                                      => 'Create New Country',
 'TOOLTIPS_NEWLANGUAGE'                                     => 'Create New Language',
 'TOOLTIPS_NEWWRAPPING'                                     => 'Create New Wrapping',
 'TOOLTIPS_NEWCONTENT'                                      => 'Create New Content',
-'TOOLTIPS_NEWMALLCAT'                                      => 'Create New Mall Cateogry',
+'TOOLTIPS_NEWMALLCAT'                                      => 'Create New Mall Category',
 'TOOLTIPS_NEWARTICLE'                                      => 'Create New Product',
 'TOOLTIPS_NEWITEMS'                                        => 'Create new Attribute',
 'TOOLTIPS_NEWVAR1'                                         => 'New',
@@ -1503,7 +1476,6 @@ $aLang = array(
 'USER_EXTEND_MOBILFON'                                     => 'Celluar Phone',
 'USER_EXTEND_NEWSLETTER'                                   => 'Recieves Newsletter',
 'USER_EXTEND_EMAILFAILED'                                  => 'E-mail Adr. is Invalid',
-'USER_EXTEND_DISABLEAUTOGROUP'                             => 'Deactivate automatic User Group Assignment',
 'USER_EXTEND_BONI'                                         => 'Credit Rating',
 'USER_EXTEND_CREDITPOINTS'                                 => 'Credit points',
 'USER_LIST_ZIP'                                            => 'ZIP',
@@ -1887,6 +1859,14 @@ $aLang = array(
 'serial_added'                                             => 'License key has beend added',
 'serial_updated'                                           => 'License key has been updated',
 
+// Shop licensing problems
+'SHOP_LICENSE_ERROR_GRACE_EXPIRED'                         => 'The license key of your OXID eShop finally expired. Please contact the Technical Support.',
+'SHOP_LICENSE_ERROR_GRACE_WILL_EXPIRE'                     => 'The license key of your OXID eShop is expired. OXID eShop will go offline within 24 hours. Please enter a valid license key or contact the Technical Support!',
+'SHOP_LICENSE_ERROR_shop_unlicensed'                       => 'A problem with the license key of your OXID eShop occurred. That\'s why a hidden countdown of 7 days was started. After this period OXID eShop will go offline. Please enter the valid license key once again or contact the technical support!',
+'SHOP_LICENSE_ERROR_serial_expired'                        => 'The license key of your OXID eShop expired. That\'s why a hidden countdown of 7 days was started. After this period OXID eShop will go offline. Please enter a valid license key or contact the technical support!',
+'SHOP_LICENSE_ERROR_incorrect_mandate_amount'              => 'The number of the licensed sub-shops exceeded. That\'s why a hidden countdown of 7 days was started. After this period OXID eShop will go offline. Please enter a valid license key or contact the technical support!',
+'SHOP_LICENSE_ERROR_INFORMATION'                           => 'OXID eShop license information',
+
 'SHOP_OPTIONS_GROUP_GLOBAL'                                => 'Global',
 'SHOP_OPTIONS_GROUP_SEARCH'                                => 'Search',
 'SHOP_OPTIONS_GROUP_STOCK'                                 => 'Stock',
@@ -1903,6 +1883,7 @@ $aLang = array(
 'SHOP_OPTIONS_GROUP_INVITATIONS'                           => 'Invitations',
 'SHOP_OPTIONS_GROUP_FACEBOOK'                              => 'Facebook',
 'SHOP_OPTIONS_GROUP_SHOP_DOWNLOADABLEARTICLES'             => 'Downloadable products',
+'SHOP_OPTIONS_BANK_INFORMATION'                            => 'Bank account information (SEPA)',
 
 'PROMOTION_USERS_SETGROUPS'                                => 'Assigned User Groups',
 'PROMOTION_LIST_ALL'                                       => 'All',
@@ -1983,8 +1964,7 @@ $aLang = array(
 'SHOP_RDFA_SHOW_PRODUCTSTOCK'                              => 'Show real available product stock',
 
 'PAYMENT_RDFA_ASIGN_PAYMENT'                               => 'Assign payment',
-'PAYMENT_RDFA_ADVICE_START'                                => '<b>Hint:</b> Please choose only those payment methods, pre-defined in GoodRelations, that comply with your payment method',
-'PAYMENT_RDFA_ADVICE_END'                                  => '',
+'PAYMENT_RDFA_ADVICE'                                      => '<b>Hint:</b> Please choose only those payment methods, pre-defined in GoodRelations, that comply with your payment method <b>%s</b>.',
 'PAYMENT_RDFA_GENERAL'                                     => 'General payment methods',
 'PAYMENT_RDFA_CASH'                                        => 'Cash',
 'PAYMENT_RDFA_GOOGLECHECKOUT'                              => 'Google Checkout',
@@ -2004,8 +1984,7 @@ $aLang = array(
 'PAYMENT_RDFA_VISA'                                        => 'VISA',
 
 'DELIVERY_RDFA_ASIGN_DELIVERY'                             => 'Assign delivery method',
-'DELIVERY_RDFA_ADVICE_START'                               => '<b>Hint:</b> Please choose only those delivery methods, pre-defined in GoodRelations, that comply with your shipping method',
-'DELIVERY_RDFA_ADVICE_END'                                 => '',
+'DELIVERY_RDFA_ADVICE'                                     => '<b>Hint:</b> Please choose only those delivery methods, pre-defined in GoodRelations, that comply with your shipping method',
 'DELIVERY_RDFA_GENERAL'                                    => 'General delivery methods',
 'DELIVERY_RDFA_DELIVERYMODEDIRECTDOWNLOAD'                 => 'Download',
 'DELIVERY_RDFA_DELIVERYMODEOWNFLEET'                       => 'Own fleet',
@@ -2038,14 +2017,127 @@ $aLang = array(
 'REVERSE_PROXY_TEST_SUCCESS'                               => 'Reverse Proxy test succeed',
 'REVERSE_PROXY_TEST_FAILURE'                               => 'Reverse Proxy test failed',
 
-'SHOP_CONFIG_ADDITIONAL_SERVICE_VAT_CALCULATION_METHOD'    => 'VAT calculation of additional services',
+'SHOP_CONFIG_ADDITIONAL_SERVICE_VAT_CALCULATION_METHOD'       => 'VAT calculation of additional services',
 'SHOP_CONFIG_ADDITIONAL_SERVICE_VAT_CALCULATION_BIGGEST_NET'  => 'Calculate VAT according to the biggest net value',
 'SHOP_CONFIG_ADDITIONAL_SERVICE_VAT_CALCULATION_PROPORTIONAL' => 'Calculate VAT proportionately',
 
 'CUSTOM_TEMPLATE_EXIST_FOR_DELETED_SHOP'                   => 'Custom templates exist for deleted shop. Delete it manually if needed.',
-'TOTAL_PLUS_PROPORTIONAL_VAT'                              => "plus VAT (proportionally calculated)",
+'TOTAL_PLUS_PROPORTIONAL_VAT'                              => 'plus VAT (proportionally calculated)',
 
 'BUTTON_DOWNLOAD'                                          => 'Download',
+
+'oxdiag_menu'                                        => 'Diagnostics tool',
+'OXDIAG_LIST_MENUITEM'                               => 'Service',
+'OXDIAG_LIST_MENUSUBITEM'                            => 'Diagnostics tool',
+
+'OXDIAG_MAIN_TITLE'                                  => 'Diagnostics of your OXID eShop',
+'OXDIAG_VERSIONCHECKER'                              => 'Version checker',
+'OXDIAG_INTROINFORMATION'                            => 'This script is intended to check consistency of your OXID eShop. It collects names of php files and templates, detects their MD5 checksum, connects for each file to OXID\'s web service to determine if it fits this shop version.',
+'OXDIAG_INTROINFORMATION_NO_PERSONAL_INFO'           => 'It does neither collect nor transmit any license or personal information.',
+'OXDIAG_INTROINFORMATION_DATA_TRANSMITTED'           => 'Data to be transmitted to OXID is:',
+'OXDIAG_INTROINFORMATION_FILENAME_TO_BE_CHECKED'     => 'Filename to be checked',
+'OXDIAG_INTROINFORMATION_MD5_CHECKSUM'               => 'MD5 checksum',
+'OXDIAG_INTROINFORMATION_VERSION_DETECTED'           => 'Version which was detected',
+'OXDIAG_INTROINFORMATION_REVISION_DETECTED'          => 'Revision which was detected',
+'OXDIAG_INTROINFORMATION_MORE_INFORMATION'           => 'For more detailed information check out',
+'OXDIAG_INTROINFORMATION_OXID_ESALES_BLOG'           => 'OXID eSales\' Blog',
+'OXDIAG_INTROINFORMATION_CONTACT_US'                 => 'You can contact us using',
+'OXDIAG_INTROINFORMATION_ONLINE_CONTACT_FORM'        => 'Online Contact Form',
+
+'OXDIAG_FORM_LIST_ALL_FILES'                         => 'List all files (also those which were OK)',
+'OXDIAG_FORM_START_CHECK'                            => 'Start to check this eShop right now (may take some time)',
+
+'OXDIAG_RESULT_SUCCESSFUL'                           => 'Diagnostics check successful.',
+'OXDIAG_RESULT'                                      => 'Diagnostics check result',
+'OXDIAG_DOWNLOAD_FILE'                               => 'Click here to download the result file',
+'OXDIAG_ERRORMESSAGETEMPLATE'                        => 'These error(s) occured',
+'OXDIAG_VERSION'                                     => 'Version',
+'OXDIAG_EDITION'                                     => 'Edition',
+'OXDIAG_REVISION'                                    => 'Revision',
+'OXDIAG_SUMMARY'                                     => 'Summary',
+'OXDIAG_HINTS'                                       => 'Hints',
+'OXDIAG_OK'                                          => 'OK',
+'OXDIAG_MODIFIED'                                    => 'Modified',
+'OXDIAG_OBSOLETE'                                    => 'Obsolete',
+'OXDIAG_VERSION_MISMATCH'                            => 'Version mismatch',
+'OXDIAG_UNKNOWN'                                     => 'Unknown',
+'OXDIAG_NUMBER_OF_INVESTIGATED_FILES'                => 'Number of investigated files in total',
+'OXDIAG_SHOP_DOES_NOT_FIT'                           => 'This OXID eShop does not fit 100%',
+'OXDIAG_SHOP_ORIGINAL'                               => 'This OXID eShop was not modified and is fully original',
+
+'OXDIAG_ERRORMESSAGEWEBSERVICEISNOTREACHABLE'        => 'Web service is not available currently. Please try again later.',
+'OXDIAG_ERRORMESSAGEWEBSERVICERETURNEDNOXML'         => 'Web service returned not a XML.',
+'OXDIAG_ERRORMESSAGEVERSIONDOESNOTEXIST'             => 'OXID eShop %s %s in Revision %s does not exist.',
+'OXDIAG_ERRORVERSIONCOMPARE'                         => 'This text is not supposed to be here. Please try again.',
+'OXDIAG_MODIFIEDHINTS1'                              => 'OXID eShop has sophisticated possibility to extend it by modules without changing shipped files. It\'s not recommended and not needed to change shop files. See also our <a href="http://www.oxidforge.org/wiki/Tutorials#How_to_Extend_OXID_eShop_With_Modules_.28Part_1.29" target=_blank>tutorials</a>.',
+'OXDIAG_MODIFIEDHINTS2'                              => 'Since OXID eShop 4.2.0 it\'s possible to use <a href="http://www.oxidforge.org/wiki/Downloads/4.2.0#New_Features" target=_blank>your own templates without changing shipped ones</a>.',
+'OXDIAG_VERSIONMISMATCHHINTS'                        => 'Apparently one or more updates went wrong. See details link for more information about more details for each file. A left over file which is not any longer included in OXID eShop could also be a <u>possible</u> reason for version mismatch. Find information about update in our <a href="http://www.oxid-esales.com/en/support-services/documentation-and-help/oxid-eshop/installation/oxid-eshop-update-installation" target=_blank>Documentation and help</a>.',
+
+
+'OXDIAG_HOME'        =>    'OXID Diagnostics',
+'OXDIAG_ABOUT'       =>    'This Diagnostics tool collects technical information about your shop and server. This information might be useful before updating, installing modules or on diagnostics.',
+'OXDIAG_DOWNLOADLOG' =>    'Download report',
+
+//initial form
+'OXDIAG_COLLECT_MODULES'           =>    'Fetch modules',
+'OXDIAG_COLLECT_HEALTH'            =>    'Poll system health status',
+'OXDIAG_COLLECT_PHP'               =>    'Poll PHP configuration (selected parameters)',
+'OXDIAG_COLLECT_SERVER'            =>    'Poll system information (if possible)',
+'OXDIAG_COLLECT_CHKVERS'           =>    'Run <i>Version checker</i>',
+'OXDIAG_COLLECT_CHKVERS_DURATION'  =>    'This can engross the execution time of the module or execution might fail.',
+'OXDIAG_COLL_CHKV_NOTINST'         =>    '<i>Version checker</i> is not installed on this system. You may <a href="http://exchange.oxid-esales.com/OXID-oxid-oxid/Additional-OXID-Extensions/OXDIAG-3-1-0-Stable-CE-4-0-x-4-7-x.html">download the file from OXID eXchange</a> and install it in the root directory of the shop.',
+'OXDIAG_COLL_CHKV_FILE_GET'        =>    'The function <i>file_get_contents</i> is not available, <i>Version checker</i> cannot be accessed.',
+'OXDIAG_STORE_ANALYSIS'            =>    'Store results',
+'OXDIAG_COLLECT_START'             =>    'Start analysis!',
+
+//index
+'OXDIAG_GOTO'                      =>    'Go to',
+'OXDIAG_BASICS'                    =>    'Basics',
+'OXDIAG_MODULES'                   =>    'Modules',
+'OXDIAG_HEALTH'                    =>    'System health',
+'OXDIAG_PHPINFO'                   =>    'PHP information',
+'OXDIAG_SERVERINFO'                =>    'Server information',
+'OXDIAG_RESTART'                   =>    'Start new analysis',
+
+'OXDIAG_DISCL'                     =>    'The analysis below the line has been stored in a report file.',
+'OXDIAG_HEALTH_OK'                 =>    'OK',
+'OXDIAG_HEALTH_MIN'                =>    'MIN',
+'OXDIAG_HEALTH_FAIL'               =>    'FAIL',
+
+//modules
+'OXDIAG_MODULES_STATE'             =>    'Status',
+'OXDIAG_MODULES_NAME'              =>    'Name',
+'OXDIAG_MODULES_ID'                =>    'ID',
+'OXDIAG_MODULES_VERSION'           =>    'Version',
+'OXDIAG_MODULES_VENDOR'            =>    'Vendor',
+
+//php
+'OXDIAG_PHPINFO_EXTENSIONS'        =>    'PHP extensions',
+'OXDIAG_PHPINFO_PARAM'             =>    'Parameter',
+'OXDIAG_PHPINFO_VALUE'             =>    'Value',
+'OXDIAG_PHPINFO_ZENDEX'            =>    'Zend extension',
+'OXDIAG_PHPINFO_OFF'               =>    'Off',
+
+//server
+'OXDIAG_SRVINF_NOTALL'             =>    'Cannot request all values, due to disabled <i>exec</i> command on server.',
+'OXDIAG_SRVINF_NOTE'               =>    'Note: This information is gathered for the current runtime frontend server. Should you have more than one frontend server running, you may access those directly in order to gather their information.',
+'OXDIAG_SERVERINFO_NOT_DETECTED'   =>    'not detected',
+'OXDIAG_SERVERINFO_COMPONENT'      =>    'Component',
+'OXDIAG_CHKVERSION'                =>    'Output of Version check',
+'OXDIAG_CHKVERS_FULLREP'           =>    'Run Version check for full report',
+'SUBJECT_UNABLE_TO_SEND_VIA_CURL'  =>    'Information cannot be sent to OXID server via CURL',
+
+//final note
+'OXDIAG_FINALNOTE'                 =>    'End of analysis.',
+
+'OLC_ERROR_SERIAL_NOT_VALID'       => 'License key check failed. Try again or contact support if this occurs permanently.',
+'OLC_ERROR_RESPONSE_NOT_VALID'     => 'Service unavailable, try again later... If this persists, please check that your shop can make outgoing connections.',
+'OLC_ERROR_REQUEST_FAILED'         => 'Service unavailable, try again later... If this persists, please check that your shop can make outgoing connections.',
+'OLC_ERROR_RESPONSE_UNEXPECTED'    => 'Service unavailable, try again later... If this persists, please check that your shop can make outgoing connections.',
+
+'OMVN_ERROR_REQUEST_FAILED'        => 'Service unavailable, try again later... If this persists, please check that your shop can make outgoing connections.',
+
+'VERSION_UPDATE_LINK'              => 'http://www.oxid-esales.com/en/support-services/documentation-and-help/oxid-eshop/installation/oxid-eshop-update-installation/preparing-update.html',
 );
 
 /*

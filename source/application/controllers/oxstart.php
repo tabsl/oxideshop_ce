@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   views
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -27,6 +25,7 @@
  */
 class oxStart extends oxUBase
 {
+
     /**
      * Initializes globals and environment vars
      *
@@ -34,13 +33,14 @@ class oxStart extends oxUBase
      */
     public function appInit()
     {
-        $myConfig = $this->getConfig();
         $this->pageStart();
 
-        if ( 'oxstart' == oxConfig::getParameter( 'cl' )  || $this->isAdmin() )
+        if ('oxstart' == oxRegistry::getConfig()->getRequestParameter('cl') || $this->isAdmin()) {
             return;
+        }
 
-
+        $oSystemEventHandler = $this->_getSystemEventHandler();
+        $oSystemEventHandler->onShopStart();
     }
 
     /**
@@ -52,47 +52,43 @@ class oxStart extends oxUBase
     {
         parent::render();
 
-        $sErrorNo = oxConfig::getParameter( 'execerror' );
+        $sErrorNo = oxRegistry::getConfig()->getRequestParameter('execerror');
 
         $sTemplate = '';
 
 
 
-        if ( $sErrorNo == 'unknown' ) {
+        if ($sErrorNo == 'unknown') {
             $sTemplate = 'message/err_unknown.tpl';
         }
 
-        if ( $sTemplate ) {
+        if ($sTemplate) {
             return $sTemplate;
         } else {
-            return 'start.tpl';
+            return 'message/err_unknown.tpl';
         }
     }
 
     /**
      * Creates and starts session object, sets default currency.
-     *
-     * @return null
      */
     public function pageStart()
     {
-        $myConfig  = $this->getConfig();
+        $myConfig = $this->getConfig();
 
 
-        $myConfig->setConfigParam( 'iMaxMandates', $myConfig->getConfigParam( 'IMS' ) );
-        $myConfig->setConfigParam( 'iMaxArticles', $myConfig->getConfigParam( 'IMA' ) );
+        $myConfig->setConfigParam('iMaxMandates', $myConfig->getConfigParam('IMS'));
+        $myConfig->setConfigParam('iMaxArticles', $myConfig->getConfigParam('IMA'));
     }
 
     /**
      * Finalizes the script.
-     *
-     * @return null
      */
     public function pageClose()
     {
         $mySession = $this->getSession();
 
-        if ( isset( $mySession ) ) {
+        if (isset($mySession)) {
             $mySession->freeze();
         }
 
@@ -107,7 +103,16 @@ class oxStart extends oxUBase
      */
     public function getErrorNumber()
     {
-        return oxConfig::getParameter( 'errornr' );
+        return oxRegistry::getConfig()->getRequestParameter('errornr');
     }
 
+    /**
+     * Gets system event handler.
+     *
+     * @return oxSystemEventHandler
+     */
+    protected function _getSystemEventHandler()
+    {
+        return oxNew('oxSystemEventHandler');
+    }
 }

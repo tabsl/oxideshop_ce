@@ -1,24 +1,22 @@
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   out
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: oxinputvalidator.js 35529 2011-05-23 07:31:20Z vilma $
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 ( function( $ ) {
 
@@ -26,22 +24,22 @@
             options: {
                 classValid                 : "oxValid",
                 classInValid               : "oxInValid",
-                errorParagraf              : "p.oxValidateError",
+                errorParagraph              : "p.oxValidateError",
                 errorMessageNotEmpty       : "js-oxError_notEmpty",
                 errorMessageNotEmail       : "js-oxError_email",
                 errorMessageShort          : "js-oxError_length",
                 errorMessageNotEqual       : "js-oxError_match",
                 errorMessageIncorrectDate  : "js-oxError_incorrectDate",
-                metodValidate              : "js-oxValidate",
-                metodValidateEmail         : "js-oxValidate_email",
-                metodValidateNotEmpty      : "js-oxValidate_notEmpty",
-                metodValidateLength        : "js-oxValidate_length",
-                metodValidateMatch         : "js-oxValidate_match",
-                metodValidateDate          : "js-oxValidate_date",
+                methodValidate              : "js-oxValidate",
+                methodValidateEmail         : "js-oxValidate_email",
+                methodValidateNotEmpty      : "js-oxValidate_notEmpty",
+                methodValidateLength        : "js-oxValidate_length",
+                methodValidateMatch         : "js-oxValidate_match",
+                methodValidateDate          : "js-oxValidate_date",
                 idPasswordLength           : "#passwordLength",
                 listItem                   : "li",
                 list                       : "ul",
-                paragraf                   : "p",
+                paragraph                   : "p",
                 span                       : "span",
                 form                       : "form",
                 visible                    : ":visible"
@@ -53,9 +51,8 @@
                     options = self.options,
                     el      = self.element;
 
-                el.delegate("."+options.metodValidate, "blur", function() {
-
-                    var oTrigger = this; 
+                el.delegate("."+options.methodValidate, "blur", function() {
+                    var oTrigger = this;
                     // the element who caused the event
                     // adding a timeout to delay the callback from modifying the form
                     // this allows other events like CLICK to be called before the blur event
@@ -63,10 +60,10 @@
                     setTimeout(function(){
                         if ( $( oTrigger ).is(options.visible) ) {
                             var oFieldSet = self.getFieldSet( oTrigger );
-                            if ( oFieldSet.children( '.'+options.metodValidateDate ).length <= 0 ) {
+                            if ( oFieldSet.children( '.'+options.methodValidateDate ).length >= 0  ) {
                                 var blIsValid = self.isFieldSetValid( oFieldSet, true );
                                 self.hideErrorMessage( oFieldSet );
-                                if ( blIsValid != true ){
+                                if ( blIsValid != true ) {
                                     self.showErrorMessage( oFieldSet, blIsValid );
                                 }
                             }
@@ -90,13 +87,13 @@
                 var self = this;
                 var blValidInput = true;
 
-                    if ( $( oInput ).hasClass( oOptions.metodValidateNotEmpty ) && blValidInput ) {
+                    if ( $( oInput ).hasClass( oOptions.methodValidateNotEmpty ) && blValidInput ) {
                         if (! $.trim( $( oInput ).val()) ){
                             return oOptions.errorMessageNotEmpty;
                         }
                     }
 
-                    if ( $( oInput ).hasClass( oOptions.metodValidateEmail ) && blValidInput ) {
+                    if ( $( oInput ).hasClass( oOptions.methodValidateEmail ) && blValidInput ) {
 
                         if( $( oInput ).val()  ) {
 
@@ -105,9 +102,7 @@
                             }
                         }
                     }
-
-
-                    if ( $( oInput ).hasClass( oOptions.metodValidateLength ) && blValidInput ) {
+                    if ( $( oInput ).hasClass( oOptions.methodValidateLength ) && blValidInput ) {
 
                         var iLength = self.getLength( $( oInput ).closest(oOptions.form ));
                         if( $( oInput ).val() ) {
@@ -117,13 +112,13 @@
                         }
                     }
 
-                    if ( $( oInput ).hasClass( oOptions.metodValidateMatch ) && blValidInput ) {
+                    if ( $( oInput ).hasClass( oOptions.methodValidateMatch ) && blValidInput ) {
 
                         var inputs = new Array();
 
                         var oForm = $( oInput ).closest(oOptions.form);
 
-                        $( "." + oOptions.metodValidateMatch, oForm).each( function(index) {
+                        $( "." + oOptions.methodValidateMatch, oForm).each( function(index) {
                             inputs[index] = this;
                         });
 
@@ -135,7 +130,7 @@
                         }
                     }
 
-                    if ( $( oInput ).hasClass( oOptions.metodValidateDate ) ) {
+                    if ( $( oInput ).hasClass( oOptions.methodValidateDate ) ) {
                         oDay   = $( oInput ).parent().children( '.oxDay' );
                         oMonth = $( oInput ).parent().children( '.oxMonth' );
                         oYear  = $( oInput ).parent().children( '.oxYear' );
@@ -158,7 +153,7 @@
                         }
                     }
 
-                    if ( $( oInput ).hasClass( oOptions.metodValidate ) && blCanSetDefaultState) {
+                    if ( $( oInput ).hasClass( oOptions.methodValidate ) && blCanSetDefaultState) {
 
                         if( !$( oInput ).val()){
                             self.setDefaultState( oInput );
@@ -182,7 +177,7 @@
                 var self = this;
                 var oOptions = this.options;
 
-                $( "." + oOptions.metodValidate, oForm).each(    function(index) {
+                $( "." + oOptions.methodValidate, oForm).each(    function(index) {
 
                     if ( $( this ).is(oOptions.visible) ) {
 
@@ -211,7 +206,7 @@
                 var blIsValid = true;
                 var self = this;
                 var oOptions = this.options;
-                $("." + oOptions.metodValidate + ":not(:focus)", oFieldSet).each( function(index) {
+                $("." + oOptions.methodValidate + ":not(:focus)", oFieldSet).each( function(index) {
 
                     if ( $( this ).is(oOptions.visible) ) {
                         var tmpblIsValid = self.inputValidation( this, blCanSetDefaultState );
@@ -247,8 +242,8 @@
             {
                 oObject.removeClass(this.options.classValid);
                 oObject.addClass(this.options.classInValid);
-                oObject.children(this.options.errorParagraf).children( this.options.span + "." + messageType ).show();
-                oObject.children(this.options.errorParagraf).show();
+                oObject.children(this.options.errorParagraph).children( this.options.span + "." + messageType ).show();
+                oObject.children(this.options.errorParagraph).show();
 
                 return oObject;
             },
@@ -264,8 +259,8 @@
 
                 oObject.removeClass(this.options.classInValid);
                 oObject.addClass(this.options.classValid);
-                oObject.children(this.options.errorParagraf).children( this.options.span ).hide();
-                oObject.children(this.options.errorParagraf).hide();
+                oObject.children(this.options.errorParagraph).children( this.options.span ).hide();
+                oObject.children(this.options.errorParagraph).hide();
 
                 return oObject;
             },
@@ -307,12 +302,12 @@
 
                 oObject.removeClass(this.options.classInValid);
                 oObject.removeClass(this.options.classValid);
-                oObject.children(this.options.errorParagraf).hide();
+                oObject.children(this.options.errorParagraph).hide();
 
                 oOptions = this.options;
 
-                $( this.options.span, oObject.children( this.options.errorParagraf ) ).each( function(index) {
-                    oObject.children( oOptions.errorParagraf ).children( oOptions.span ).hide();
+                $( this.options.span, oObject.children( this.options.errorParagraph ) ).each( function(index) {
+                    oObject.children( oOptions.errorParagraph ).children( oOptions.span ).hide();
                 });
 
                 return oObject;
@@ -354,7 +349,7 @@
             {
                 email = jQuery.trim(email);
 
-                var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+                var reg = /^(.+?)\@(.+)\.(.+)$/;
 
                 if(reg.test(email) == false) {
                     return false;

@@ -1,32 +1,28 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
-
-require_once realpath( "." ).'/unit/OxidTestCase.php';
-require_once realpath( "." ).'/unit/test_config.inc.php';
 
 class mod_oxpaymentgateway extends oxpaymentgateway
 {
+
     public function getPaymentInfo()
     {
         return $this->_oPaymentInfo;
@@ -37,7 +33,7 @@ class mod_oxpaymentgateway extends oxpaymentgateway
         $this->_blActive = true;
     }
 
-    public function setError($iNr,$sMsg)
+    public function setError($iNr, $sMsg)
     {
         $this->_iLastErrorNo = $iNr;
         $this->_sLastError = $sMsg;
@@ -46,6 +42,7 @@ class mod_oxpaymentgateway extends oxpaymentgateway
 
 class Unit_Core_oxpaymentgatewayTest extends OxidTestCase
 {
+
     /**
      * Tear down the fixture.
      *
@@ -54,20 +51,20 @@ class Unit_Core_oxpaymentgatewayTest extends OxidTestCase
     protected function tearDown()
     {
         $sDelete = "Delete from oxuserpayments where oxuserid = 'test'";
-        oxDb::getDb()->Execute( $sDelete );
+        oxDb::getDb()->Execute($sDelete);
 
         parent::tearDown();
     }
 
     public function testSetPaymentParams()
     {
-        $oUserpayment = oxNew( "oxuserpayment" );
+        $oUserpayment = oxNew("oxuserpayment");
         $oUserpayment->oxuserpayments__oxuserid = new oxField("test", oxField::T_RAW);
         $oUserpayment->oxuserpayments__oxpaymentsid = new oxField("test", oxField::T_RAW);
         $oUserpayment->oxuserpayments__oxvalue = new oxField("test", oxField::T_RAW);
         $oUserpayment->Save();
         $oPaymentGateway = new mod_oxpaymentgateway;
-        $oPaymentGateway->setPaymentParams( $oUserpayment);
+        $oPaymentGateway->setPaymentParams($oUserpayment);
         $oUP = $oPaymentGateway->getPaymentInfo();
         $this->assertEquals($oUP->oxuserpayments__oxvalue->value, $oUserpayment->oxuserpayments__oxvalue->value);
     }
@@ -76,7 +73,7 @@ class Unit_Core_oxpaymentgatewayTest extends OxidTestCase
     {
         $oOrder = new stdClass();
         $oPaymentGateway = oxNew('oxPaymentGateway');
-        $blResult = $oPaymentGateway->executePayment( 2, $oOrder);
+        $blResult = $oPaymentGateway->executePayment(2, $oOrder);
 
         $this->assertEquals($blResult, true);
     }
@@ -86,37 +83,37 @@ class Unit_Core_oxpaymentgatewayTest extends OxidTestCase
         $oOrder = new stdClass();
         $oPaymentGateway = new mod_oxpaymentgateway;
         $oPaymentGateway->setActive();
-        $blResult = $oPaymentGateway->executePayment( 2, $oOrder);
+        $blResult = $oPaymentGateway->executePayment(2, $oOrder);
         $this->assertEquals($blResult, false);
     }
 
     public function testExecutePayment()
     {
         $oOrder = new stdClass();
-        $oUserpayment = oxNew( "oxuserpayment" );
+        $oUserpayment = oxNew("oxuserpayment");
         $oUserpayment->oxuserpayments__oxuserid = new oxField("test", oxField::T_RAW);
         $oUserpayment->oxuserpayments__oxpaymentsid = new oxField("test", oxField::T_RAW);
         $oUserpayment->oxuserpayments__oxvalue = new oxField("test", oxField::T_RAW);
         $oUserpayment->Save();
         $oPaymentGateway = new mod_oxpaymentgateway;
         $oPaymentGateway->setActive();
-        $oPaymentGateway->setPaymentParams( $oUserpayment);
-        $blResult = $oPaymentGateway->executePayment( 2, $oOrder);
+        $oPaymentGateway->setPaymentParams($oUserpayment);
+        $blResult = $oPaymentGateway->executePayment(2, $oOrder);
         $this->assertEquals($blResult, false);
     }
 
     public function testExecutePaymentWithEmptyPaymentId()
     {
         $oOrder = new stdClass();
-        $oUserpayment = oxNew( "oxuserpayment" );
+        $oUserpayment = oxNew("oxuserpayment");
         $oUserpayment->oxuserpayments__oxuserid = new oxField("test", oxField::T_RAW);
         $oUserpayment->oxuserpayments__oxpaymentsid = new oxField("oxempty", oxField::T_RAW);
         $oUserpayment->oxuserpayments__oxvalue = new oxField("test", oxField::T_RAW);
         $oUserpayment->Save();
         $oPaymentGateway = new mod_oxpaymentgateway;
         $oPaymentGateway->setActive();
-        $oPaymentGateway->setPaymentParams( $oUserpayment);
-        $blResult = $oPaymentGateway->executePayment( 2, $oOrder);
+        $oPaymentGateway->setPaymentParams($oUserpayment);
+        $blResult = $oPaymentGateway->executePayment(2, $oOrder);
         $this->assertEquals($blResult, true);
     }
 

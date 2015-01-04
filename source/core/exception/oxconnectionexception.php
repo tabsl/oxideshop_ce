@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -31,8 +29,9 @@
  */
 class oxConnectionException extends oxException
 {
+
     /**
-     * Enter description here...
+     * Address value
      *
      * @var string
      */
@@ -49,8 +48,6 @@ class oxConnectionException extends oxException
      * Enter address of the external server which caused the exception
      *
      * @param string $sAdress Externalserver address
-     *
-     * @return null
      */
     public function setAdress($sAdress)
     {
@@ -71,10 +68,8 @@ class oxConnectionException extends oxException
      * Sets the connection error returned by the connect function
      *
      * @param string $sConnError connection error
-     *
-     * @return null
      */
-    public function setConnectionError( $sConnError )
+    public function setConnectionError($sConnError)
     {
         $this->_sConnectionError = $sConnError;
     }
@@ -97,7 +92,7 @@ class oxConnectionException extends oxException
      */
     public function getString()
     {
-        return __CLASS__ .'-'.parent::getString()." Connection Adress --> ".$this->_sAddress."\n". "Connection Error --> ". $this->_sConnectionError;
+        return __CLASS__ . '-' . parent::getString() . " Connection Adress --> " . $this->_sAddress . "\n" . "Connection Error --> " . $this->_sConnectionError;
     }
 
     /**
@@ -110,6 +105,7 @@ class oxConnectionException extends oxException
         $aRes = parent::getValues();
         $aRes['adress'] = $this->getAdress();
         $aRes['connectionError'] = $this->getConnectionError();
+
         return $aRes;
     }
 }

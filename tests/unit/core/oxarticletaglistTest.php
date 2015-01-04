@@ -1,29 +1,24 @@
 <?php
-    /**
- *    This file is part of OXID eShop Community Edition.
+/**
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
-     *
-     * @link      http://www.oxid-esales.com
-     * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: oxarticletagsTest.php 26841 2012-12-21 13:58:15Z aurimas.gladutis $
-     */
-
-    require_once realpath( "." ).'/unit/OxidTestCase.php';
-    require_once realpath( "." ).'/unit/test_config.inc.php';
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @link      http://www.oxid-esales.com
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
+ */
 
 class Unit_Core_oxarticletaglistTest extends OxidTestCase
 {
@@ -35,7 +30,7 @@ class Unit_Core_oxarticletaglistTest extends OxidTestCase
     {
         $oArticleTagList = new oxArticleTagList();
         $oArticleTagList->setArticleId("testArticle");
-        $this->assertEquals( "testArticle", $oArticleTagList->getArticleId() );
+        $this->assertEquals("testArticle", $oArticleTagList->getArticleId());
     }
 
     /**
@@ -47,8 +42,8 @@ class Unit_Core_oxarticletaglistTest extends OxidTestCase
         $oArticleTagList->load('1126');
         $aTags = $oArticleTagList->getArray();
 
-            $this->assertEquals( 9, count( $aTags ) );
-            $this->assertTrue( array_key_exists( "fee", $aTags ) );
+        $this->assertEquals(9, count($aTags));
+        $this->assertTrue(array_key_exists("fee", $aTags));
     }
 
     /**
@@ -61,8 +56,8 @@ class Unit_Core_oxarticletaglistTest extends OxidTestCase
         $oArticleTagList->load('2000');
         $oTagSet = $oArticleTagList->get();
 
-            $iExpt = 1;
-        $this->assertEquals( $iExpt, count( $oTagSet->get() ) );
+        $iExpt = 1;
+        $this->assertEquals($iExpt, count($oTagSet->get()));
     }
 
     /**
@@ -71,8 +66,8 @@ class Unit_Core_oxarticletaglistTest extends OxidTestCase
     public function testLoadingArticleTagsWithNoArticleId()
     {
         $oArticleTagList = new oxArticleTagList();
-        $this->assertFalse( $oArticleTagList->loadList() );
-        $this->assertEquals( new oxTagSet(), $oArticleTagList->get() );
+        $this->assertFalse($oArticleTagList->loadList());
+        $this->assertEquals(new oxTagSet(), $oArticleTagList->get());
     }
 
     /**
@@ -90,7 +85,7 @@ class Unit_Core_oxarticletaglistTest extends OxidTestCase
         $oxTagSet = new oxTagSet();
         $oxTagSet->set($sExpTags);
 
-        $this->assertEquals( $oxTagSet, $oArticleTagList->get() );
+        $this->assertEquals($oxTagSet, $oArticleTagList->get());
     }
 
     /**
@@ -108,7 +103,7 @@ class Unit_Core_oxarticletaglistTest extends OxidTestCase
         $oxTagSet = new oxTagSet();
         $oxTagSet->set($sExpTags);
 
-        $this->assertEquals( $oxTagSet->get(), $oArticleTagList->getArray() );
+        $this->assertEquals($oxTagSet->get(), $oArticleTagList->getArray());
     }
 
     /**
@@ -119,21 +114,21 @@ class Unit_Core_oxarticletaglistTest extends OxidTestCase
         $oArticleTagList = new oxArticleTagList();
         $oArticleTagList->load("1126");
         $sOriginalTags = $oArticleTagList->get()->__toString();
-        $oArticleTagList->addTag( "testtag1" );
-        $oArticleTagList->addTag( "a" );
-        $this->assertTrue( $oArticleTagList->save() );
+        $oArticleTagList->addTag("testtag1");
+        $oArticleTagList->addTag("a");
+        $this->assertTrue($oArticleTagList->save());
 
         $oArticleTagList = new oxArticleTagList();
         $oArticleTagList->load("1126");
         $oTagList = $oArticleTagList->get();
         $aTags = $oTagList->get();
 
-            $this->assertEquals( 11, count( $aTags ) );
-            $this->assertTrue( array_key_exists( "testtag1", $aTags ) );
-            $this->assertTrue( array_key_exists( "a", $aTags ) );
+        $this->assertEquals(11, count($aTags));
+        $this->assertTrue(array_key_exists("testtag1", $aTags));
+        $this->assertTrue(array_key_exists("a", $aTags));
 
-        $oArticleTagList->set( $sOriginalTags );
-        $this->assertTrue( $oArticleTagList->save() );
+        $oArticleTagList->set($sOriginalTags);
+        $this->assertTrue($oArticleTagList->save());
     }
 
 
@@ -152,7 +147,7 @@ class Unit_Core_oxarticletaglistTest extends OxidTestCase
         $oxTagSet = new oxTagSet();
         $oxTagSet->set("test1,test2");
 
-        $this->assertEquals( $oxTagSet, $oArticleTagList->get() );
+        $this->assertEquals($oxTagSet, $oArticleTagList->get());
     }
 
     /**
@@ -164,10 +159,10 @@ class Unit_Core_oxarticletaglistTest extends OxidTestCase
     {
         $oArticleTagList = new oxArticleTagList();
         $oTagSet = new oxTagSet();
-        $this->assertEquals( $oTagSet, $oArticleTagList->get() );
+        $this->assertEquals($oTagSet, $oArticleTagList->get());
         $oArticleTagList->addTag("tag1");
         $oTagSet->set("tag1");
-        $this->assertEquals( $oTagSet, $oArticleTagList->get() );
+        $this->assertEquals($oTagSet, $oArticleTagList->get());
     }
 
     /**
@@ -178,7 +173,7 @@ class Unit_Core_oxarticletaglistTest extends OxidTestCase
     public function testFormationOfSingleTags()
     {
         $oArticleTagList = new oxArticleTagList();
-        $this->assertEquals( "", $oArticleTagList->get()->__toString() );
+        $this->assertEquals("", $oArticleTagList->get()->__toString());
 
         $oArticleTagList->addTag("tag1");
         $oArticleTagList->addTag("TAG2");
@@ -189,7 +184,7 @@ class Unit_Core_oxarticletaglistTest extends OxidTestCase
         $oArticleTagList->addTag(" one  sentence  tag ");
         $oArticleTagList->addTag("long testing string long testing string long testing string");
 
-        $this->assertEquals("tag1,tag2,tag3,one sentence tag,one sentence tag,long testing string long testing string long testing string", $oArticleTagList->get()->__toString() );
+        $this->assertEquals("tag1,tag2,tag3,one sentence tag,one sentence tag,long testing string long testing string long testing string", $oArticleTagList->get()->__toString());
     }
 
     /**
@@ -197,14 +192,14 @@ class Unit_Core_oxarticletaglistTest extends OxidTestCase
      */
     public function testGetTagsArticleTimeRange()
     {
-        $blParam = modConfig::getInstance()->getConfigParam( 'blUseTimeCheck' );
-        modConfig::getInstance()->setConfigParam( 'blUseTimeCheck', 1 );
+        $blParam = modConfig::getInstance()->getConfigParam('blUseTimeCheck');
+        modConfig::getInstance()->setConfigParam('blUseTimeCheck', 1);
 
         $oArticle = oxNew('oxarticle');
         $oArticle->load('1126');
         $oArticle->oxarticles__oxactive->value = 0;
-        $oArticle->oxarticles__oxactivefrom->value = date( 'Y-m-d H:i:s', oxUtilsDate::getInstance()->getTime() - 100 );
-        $oArticle->oxarticles__oxactiveto->value = date( 'Y-m-d H:i:s', oxUtilsDate::getInstance()->getTime() + 100 );
+        $oArticle->oxarticles__oxactivefrom->value = date('Y-m-d H:i:s', oxRegistry::get("oxUtilsDate")->getTime() - 100);
+        $oArticle->oxarticles__oxactiveto->value = date('Y-m-d H:i:s', oxRegistry::get("oxUtilsDate")->getTime() + 100);
         $oArticle->save();
 
         $oArticleTagList = new oxArticleTagList();
@@ -212,10 +207,10 @@ class Unit_Core_oxarticletaglistTest extends OxidTestCase
         $oTagSet = $oArticleTagList->get();
         $aTags = $oTagSet->get();
 
-            $this->assertEquals(9, count($aTags));
-            $this->assertTrue( array_key_exists( 'fee', $aTags ) );
+        $this->assertEquals(9, count($aTags));
+        $this->assertTrue(array_key_exists('fee', $aTags));
 
-        oxConfig::getInstance()->setConfigParam( 'blUseTimeCheck', $blParam) ;
+        oxRegistry::getConfig()->setConfigParam('blUseTimeCheck', $blParam);
         $oArticle->oxarticles__oxactive->value = 1;
         $oArticle->oxarticles__oxactivefrom->value = '0000-00-00 00:00:00';
         $oArticle->oxarticles__oxactiveto->value = '0000-00-00 00:00:00';

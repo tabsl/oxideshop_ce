@@ -1,77 +1,73 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
- * $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
-
-require_once realpath( "." ).'/unit/OxidTestCase.php';
-require_once realpath( "." ).'/unit/test_config.inc.php';
 
 class Unit_Core_oxsupercfgTest extends OxidTestCase
 {
+
     protected function tearDown()
     {
 
         return parent::tearDown();
     }
+
     public function testSetGetConfig()
     {
         $oOxSuperCfg = new oxsupercfg();
-        $oOxSuperCfg->setConfig( null);
-        $oConfig = oxConfig::getInstance();
-        $this->assertEquals( $oConfig, $oOxSuperCfg->getConfig() );
+        $oOxSuperCfg->setConfig(null);
+        $oConfig = oxRegistry::getConfig();
+        $this->assertEquals($oConfig, $oOxSuperCfg->getConfig());
 
-        $myConfig = $this->getMock( 'oxConfig', array( 'getConfigParam' ) );
-        $myConfig->expects( $this->once() )->method( 'getConfigParam')->will( $this->returnValue( true ) );
-        $oOxSuperCfg->setConfig( $myConfig);
-        $this->assertTrue( $oOxSuperCfg->getConfig()->getConfigParam('xxx') );
+        $myConfig = $this->getMock('oxConfig', array('getConfigParam'));
+        $myConfig->expects($this->once())->method('getConfigParam')->will($this->returnValue(true));
+        $oOxSuperCfg->setConfig($myConfig);
+        $this->assertTrue($oOxSuperCfg->getConfig()->getConfigParam('xxx'));
     }
 
     public function testSetGetSession()
     {
         $oOxSuperCfg = new oxsupercfg();
-        $oOxSuperCfg->setSession( null);
-        $oSession = oxSession::getInstance();
-        $this->assertEquals( $oSession, $oOxSuperCfg->getSession() );
+        $oOxSuperCfg->setSession(null);
+        $oSession = oxRegistry::getSession();
+        $this->assertEquals($oSession, $oOxSuperCfg->getSession());
 
-        $oSession = $this->getMock( 'oxConfig', array( 'getId' ) );
-        $oSession->expects( $this->once() )->method( 'getId')->will( $this->returnValue( 'xxx' ) );
-        $oOxSuperCfg->setSession( $oSession);
-        $this->assertEquals( 'xxx', $oOxSuperCfg->getSession()->getId() );
+        $oSession = $this->getMock('oxConfig', array('getId'));
+        $oSession->expects($this->once())->method('getId')->will($this->returnValue('xxx'));
+        $oOxSuperCfg->setSession($oSession);
+        $this->assertEquals('xxx', $oOxSuperCfg->getSession()->getId());
     }
 
     public function testSetGetUser()
     {
         $oOxSuperCfg = new oxsupercfg();
-        $oOxSuperCfg->setUser( null);
-        oxSession::setVar( 'usr', 'oxdefaultadmin' );
+        $oOxSuperCfg->setUser(null);
+        oxRegistry::getSession()->setVariable('usr', 'oxdefaultadmin');
         $oActUser = new oxuser();
         $oActUser->loadActiveUser();
-        $this->assertEquals( oxADMIN_LOGIN, $oOxSuperCfg->getUser()->oxuser__oxusername->value );
-        oxSession::setVar( 'usr', null );
+        $this->assertEquals(oxADMIN_LOGIN, $oOxSuperCfg->getUser()->oxuser__oxusername->value);
+        oxRegistry::getSession()->setVariable('usr', null);
         $oActUser = new oxuser();
         $oActUser->oxuser__oxusername = new oxField('testUser', oxField::T_RAW);
-        $oOxSuperCfg->setUser( $oActUser);
-        $this->assertEquals( 'testUser', $oOxSuperCfg->getUser()->oxuser__oxusername->value );
+        $oOxSuperCfg->setUser($oActUser);
+        $this->assertEquals('testUser', $oOxSuperCfg->getUser()->oxuser__oxusername->value);
     }
 
     public function testSetGetAdminMode()
@@ -79,8 +75,8 @@ class Unit_Core_oxsupercfgTest extends OxidTestCase
         $oOxSuperCfg = new oxsupercfg();
         $this->assertFalse($oOxSuperCfg->isAdmin());
 
-        $oOxSuperCfg->setAdminMode( true );
-        $this->assertTrue( $oOxSuperCfg->isAdmin() );
+        $oOxSuperCfg->setAdminMode(true);
+        $this->assertTrue($oOxSuperCfg->isAdmin());
     }
 
 

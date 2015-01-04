@@ -1,8 +1,21 @@
-[{ assign var="dynvalue" value=$oView->getDynValue()}]
+[{assign var="dynvalue" value=$oView->getDynValue()}]
+[{assign var="iPayError" value=$oView->getPaymentError() }]
 <dl>
     <dt>
         <input id="payment_[{$sPaymentID}]" type="radio" name="paymentid" value="[{$sPaymentID}]" [{if $oView->getCheckedPaymentId() == $paymentmethod->oxpayments__oxid->value}]checked[{/if}]>
-        <label for="payment_[{$sPaymentID}]"><b>[{ $paymentmethod->oxpayments__oxdesc->value}]</b></label>
+        <label for="payment_[{$sPaymentID}]"><b>[{ $paymentmethod->oxpayments__oxdesc->value}]
+        [{if $paymentmethod->getPrice()}]
+            [{assign var="oPaymentPrice" value=$paymentmethod->getPrice() }]
+            [{if $oViewConf->isFunctionalityEnabled('blShowVATForPayCharge') }]
+                ( [{oxprice price=$oPaymentPrice->getNettoPrice() currency=$currency}]
+                [{if $oPaymentPrice->getVatValue() > 0}]
+                    [{ oxmultilang ident="PLUS_VAT" }] [{oxprice price=$oPaymentPrice->getVatValue() currency=$currency }]
+                [{/if}])
+            [{else}]
+                ([{oxprice price=$oPaymentPrice->getBruttoPrice() currency=$currency}])
+            [{/if}]
+        [{/if}]
+        </b></label>
     </dt>
     <dd class="[{if $oView->getCheckedPaymentId() == $paymentmethod->oxpayments__oxid->value}]activePayment[{/if}]">
         <ul class="form">
@@ -13,15 +26,27 @@
                     <span class="js-oxError_notEmpty">[{ oxmultilang ident="ERROR_MESSAGE_INPUT_NOTALLFIELDS" }]</span>
                 </p>
             </li>
-            <li>
-                <label>[{ oxmultilang ident="BANK_CODE" suffix="COLON" }]</label>
-                <input type="text" class="js-oxValidate js-oxValidate_notEmpty" size="20" maxlength="64" name="dynvalue[lsblz]" autocomplete="off" value="[{ $dynvalue.lsblz }]">
+            <li [{if $iPayError == -4}]class="oxInValid"[{/if}]>
+                <label>
+                [{if $oView->isOldDebitValidationEnabled()}]
+                    [{ oxmultilang ident="BANK_CODE" suffix="COLON" }]
+                [{else}]
+                    [{ oxmultilang ident="BIC" suffix="COLON" }]
+                [{/if}]
+                </label>
+                <input type="text" class="js-oxValidate" size="20" maxlength="64" name="dynvalue[lsblz]" autocomplete="off" value="[{ $dynvalue.lsblz }]">
                 <p class="oxValidateError">
                     <span class="js-oxError_notEmpty">[{ oxmultilang ident="ERROR_MESSAGE_INPUT_NOTALLFIELDS" }]</span>
                 </p>
             </li>
-            <li>
-                <label>[{ oxmultilang ident="BANK_ACCOUNT_NUMBER" suffix="COLON" }]</label>
+            <li [{if $iPayError == -5}]class="oxInValid"[{/if}]>
+                <label>
+                [{if $oView->isOldDebitValidationEnabled()}]
+                    [{ oxmultilang ident="BANK_ACCOUNT_NUMBER" suffix="COLON" }]
+                [{else}]
+                    [{ oxmultilang ident="IBAN" suffix="COLON" }]
+                [{/if}]
+                </label>
                 <input type="text" class="js-oxValidate js-oxValidate_notEmpty" size="20" maxlength="64" name="dynvalue[lsktonr]" autocomplete="off" value="[{ $dynvalue.lsktonr }]">
                 <p class="oxValidateError">
                     <span class="js-oxError_notEmpty">[{ oxmultilang ident="ERROR_MESSAGE_INPUT_NOTALLFIELDS" }]</span>
@@ -29,7 +54,7 @@
             </li>
             <li>
                 <label>[{ oxmultilang ident="BANK_ACCOUNT_HOLDER" suffix="COLON" }]</label>
-                <input type="text" class="js-oxValidate js-oxValidate_notEmpty" size="20" maxlength="64" name="dynvalue[lsktoinhaber]" value="[{ if $dynvalue.lsktoinhaber }][{ $dynvalue.lsktoinhaber }][{else}][{$oxcmp_user->oxuser__oxfname->value}] [{$oxcmp_user->oxuser__oxlname->value}][{/if}]">
+                <input type="text" class="js-oxValidate js-oxValidate_notEmpty" size="20" maxlength="64" name="dynvalue[lsktoinhaber]" value="[{if $dynvalue.lsktoinhaber}][{$dynvalue.lsktoinhaber}][{else}][{$oxcmp_user->oxuser__oxfname->value}] [{$oxcmp_user->oxuser__oxlname->value}][{/if}]">
                 <p class="oxValidateError">
                     <span class="js-oxError_notEmpty">[{ oxmultilang ident="ERROR_MESSAGE_INPUT_NOTALLFIELDS" }]</span>
                 </p>

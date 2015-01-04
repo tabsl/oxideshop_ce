@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -28,6 +26,7 @@
  */
 class oxException extends Exception
 {
+
     /**
      * Log file path/name
      *
@@ -65,8 +64,6 @@ class oxException extends Exception
      * Set log file path/name
      *
      * @param string $sFile File name
-     *
-     * @return null
      */
     public function setLogFileName($sFile)
     {
@@ -87,8 +84,6 @@ class oxException extends Exception
      * Sets the exception message
      *
      * @param string $sMessage exception message
-     *
-     * @return null
      */
     public function setMessage($sMessage)
     {
@@ -97,8 +92,6 @@ class oxException extends Exception
 
     /**
      * To define that the exception was caught in renderer
-     *
-     * @return null
      */
     public function setRenderer()
     {
@@ -117,8 +110,6 @@ class oxException extends Exception
 
     /**
      * To define that the exception was not caught (only in oxexceptionhandler)
-     *
-     * @return null
      */
     public function setNotCaught()
     {
@@ -137,15 +128,13 @@ class oxException extends Exception
 
     /**
      * Prints exception in file EXCEPTION_LOG.txt
-     *
-     * @return null
      */
     public function debugOut()
     {
         //We are most likely are already dealing with an exception so making sure no other exceptions interfere
         try {
             $sLogMsg = $this->getString() . "\n---------------------------------------------\n";
-            oxRegistry::getUtils()->writeToLog( $sLogMsg, $this->getLogFileName() );
+            oxRegistry::getUtils()->writeToLog($sLogMsg, $this->getLogFileName());
         } catch (Exception $e) {
         }
     }
@@ -159,15 +148,15 @@ class oxException extends Exception
     public function getString()
     {
         $sWarning = "";
-        if ( $this->_blNotCaught ) {
+        if ($this->_blNotCaught) {
             $sWarning .= "--!--NOT CAUGHT--!--";
         }
 
-        if ( $this->_blRenderer ) {
+        if ($this->_blRenderer) {
             $sWarning .= "--!--RENDERER--!--";
         }
 
-        return $sWarning . __CLASS__ . " (time: ". date('Y-m-d H:i:s') ."): [{$this->code}]: {$this->message} \n Stack Trace: {$this->getTraceAsString()}\n\n";
+        return $sWarning . __CLASS__ . " (time: " . date('Y-m-d H:i:s') . "): [{$this->code}]: {$this->message} \n Stack Trace: {$this->getTraceAsString()}\n\n";
     }
 
     /**
@@ -197,10 +186,8 @@ class oxException extends Exception
      * Defines a name of the view variable containing the messages
      *
      * @param string $sDestination name of the view variable
-     *
-     * @return null
      */
-    public function setDestination( $sDestination )
+    public function setDestination($sDestination)
     {
     }
 }

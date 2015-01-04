@@ -1,32 +1,28 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
-
-require_once realpath( "." ).'/unit/OxidTestCase.php';
-require_once realpath( "." ).'/unit/test_config.inc.php';
 
 class Unit_Core_oxTagCloudTest extends OxidTestCase
 {
+
     /**
      * Test getting font size for tag
      */
@@ -61,8 +57,8 @@ class Unit_Core_oxTagCloudTest extends OxidTestCase
         $oTagCloud = new oxTagCloud();
         $oTagCloud->setCloudArray($aTestData);
 
-        foreach ( $aTestResults as $sTag => $iVal ) {
-            $this->assertEquals( $iVal, $oTagCloud->getTagSize( $sTag ) );
+        foreach ($aTestResults as $sTag => $iVal) {
+            $this->assertEquals($iVal, $oTagCloud->getTagSize($sTag));
         }
     }
 
@@ -94,19 +90,19 @@ class Unit_Core_oxTagCloudTest extends OxidTestCase
         $oTagSet->set("tag1,tag2");
 
         $oTagList = $this->getMock('oxtaglist', array('getCacheId', 'loadList', 'get'));
-        $oTagList->expects( $this->any() )->method( 'getCacheId' )->will( $this->returnValue( null ) );
-        $oTagList->expects( $this->any() )->method( 'loadList' )->will( $this->returnValue( true ) );
-        $oTagList->expects( $this->any() )->method( 'get' )->will( $this->returnValue( $oTagSet ) );
+        $oTagList->expects($this->any())->method('getCacheId')->will($this->returnValue(null));
+        $oTagList->expects($this->any())->method('loadList')->will($this->returnValue(true));
+        $oTagList->expects($this->any())->method('get')->will($this->returnValue($oTagSet));
 
         $oTagCloud = new oxTagCloud();
-        $oTagCloud->setTagList( $oTagList );
+        $oTagCloud->setTagList($oTagList);
 
         $aTags = array(
             "tag1" => new oxTag("tag1"),
             "tag2" => new oxTag("tag2"),
         );
 
-        $this->assertEquals( $aTags, $oTagCloud->getCloudArray() );
+        $this->assertEquals($aTags, $oTagCloud->getCloudArray());
     }
 
     /**
@@ -117,10 +113,10 @@ class Unit_Core_oxTagCloudTest extends OxidTestCase
         $oTagCloud = new oxTagCloud();
 
         $oTagCloud->setExtendedMode(true);
-        $this->assertTrue( $oTagCloud->isExtended() );
+        $this->assertTrue($oTagCloud->isExtended());
 
         $oTagCloud->setExtendedMode(false);
-        $this->assertFalse( $oTagCloud->isExtended() );
+        $this->assertFalse($oTagCloud->isExtended());
     }
 
     /**
@@ -133,21 +129,23 @@ class Unit_Core_oxTagCloudTest extends OxidTestCase
         $iMaxAmount = $oTagCloud->GetMaxAmount() + 10;
 
         $oTagSet = new oxTagSet();
-        for ( $i=1; $i<$iMaxAmount; $i++) {
-            $oTagSet->addTag('tag'.$i);
+        for ($i = 1; $i < $iMaxAmount; $i++) {
+            $oTagSet->addTag('tag' . $i);
         }
 
         $oTagList = $this->getMock('oxtaglist', array('getCacheId', 'loadList', 'get'));
-        $oTagList->expects( $this->any() )->method( 'getCacheId' )->will( $this->returnValue( null ) );
-        $oTagList->expects( $this->any() )->method( 'loadList' )->will( $this->returnValue( true ) );
-        $oTagList->expects( $this->any() )->method( 'get' )->will( $this->returnValue( $oTagSet ) );
+        $oTagList->expects($this->any())->method('getCacheId')->will($this->returnValue(null));
+        $oTagList->expects($this->any())->method('loadList')->will($this->returnValue(true));
+        $oTagList->expects($this->any())->method('get')->will($this->returnValue($oTagSet));
+
+        $oTagCloud->setTagList($oTagList);
 
         // should be taken from db
-        $this->assertEquals( $oTagCloud->GetMaxAmount(), count( $oTagCloud->getCloudArray() ) );
+        $this->assertEquals($oTagCloud->GetMaxAmount(), count($oTagCloud->getCloudArray()));
 
         $oTagCloud->setExtendedMode(false);
 
-        $this->assertEquals( $oTagCloud->GetMaxAmount(), count( $oTagCloud->getCloudArray() ) );
+        $this->assertEquals($oTagCloud->GetMaxAmount(), count($oTagCloud->getCloudArray()));
     }
 
     /**
@@ -158,10 +156,10 @@ class Unit_Core_oxTagCloudTest extends OxidTestCase
         $oTagCloud = new oxTagCloud();
 
         $oTagCloud->setExtendedMode(true);
-        $this->assertEquals( OXTAGCLOUD_EXTENDEDCOUNT, $oTagCloud->GetMaxAmount() );
+        $this->assertEquals(OXTAGCLOUD_EXTENDEDCOUNT, $oTagCloud->GetMaxAmount());
 
         $oTagCloud->setExtendedMode(false);
-        $this->assertEquals( OXTAGCLOUD_STARTPAGECOUNT, $oTagCloud->GetMaxAmount() );
+        $this->assertEquals(OXTAGCLOUD_STARTPAGECOUNT, $oTagCloud->GetMaxAmount());
     }
 
     /**
@@ -173,13 +171,13 @@ class Unit_Core_oxTagCloudTest extends OxidTestCase
         $oTagSet->add('tag1,tag2');
 
         $oTagList = $this->getMock('oxtaglist', array('getCacheId', 'loadList', 'get'));
-        $oTagList->expects( $this->any() )->method( 'getCacheId' )->will( $this->returnValue( "cacheId_1" ) );
+        $oTagList->expects($this->any())->method('getCacheId')->will($this->returnValue("cacheId_1"));
         // Load list should be called first time and after reset
-        $oTagList->expects( $this->exactly(2) )->method( 'loadList' )->will( $this->returnValue( true ) );
-        $oTagList->expects( $this->any() )->method( 'get' )->will( $this->returnValue( $oTagSet ) );
+        $oTagList->expects($this->exactly(2))->method('loadList')->will($this->returnValue(true));
+        $oTagList->expects($this->any())->method('get')->will($this->returnValue($oTagSet));
 
         $oTagCloud = new oxTagCloud();
-        $oTagCloud->setTagList( $oTagList );
+        $oTagCloud->setTagList($oTagList);
 
         $aTags = array(
             "tag1" => new oxTag("tag1"),
@@ -187,23 +185,23 @@ class Unit_Core_oxTagCloudTest extends OxidTestCase
         );
 
         // should be taken from db
-        $this->assertEquals( $aTags, $oTagCloud->getCloudArray() );
+        $this->assertEquals($aTags, $oTagCloud->getCloudArray());
 
         // Set new oxTagCloud, to reset the local class caching
         $oTagCloud = new oxTagCloud();
-        $oTagCloud->setTagList( $oTagList );
+        $oTagCloud->setTagList($oTagList);
 
         // should be taken from cache, loadList should not be called
-        $this->assertEquals( $aTags, $oTagCloud->getCloudArray() );
+        $this->assertEquals($aTags, $oTagCloud->getCloudArray());
 
         $oTagCloud->resetCache();
 
         // Set new oxTagCloud, to reset the local class caching
         $oTagCloud = new oxTagCloud();
-        $oTagCloud->setTagList( $oTagList );
+        $oTagCloud->setTagList($oTagList);
 
         // should be taken from db again, because we resetted cache.
-        $this->assertEquals( $aTags, $oTagCloud->getCloudArray() );
+        $this->assertEquals($aTags, $oTagCloud->getCloudArray());
     }
 
     /**
@@ -214,14 +212,14 @@ class Unit_Core_oxTagCloudTest extends OxidTestCase
         $oTagSet = new oxTagSet();
         $oTagSet->add('tag1,tag2');
 
-        $oTagList = $this->getMock('oxtaglist', array('getCacheId', 'loadList', 'get'));
-        $oTagList->expects( $this->any() )->method( 'getCacheId' )->will( $this->returnValue( null ) );
-        $oTagList->expects( $this->any() )->method( 'get' )->will( $this->returnValue( $oTagSet ) );
+        $oTagList = $this->getMock('oxTagList', array('getCacheId', 'loadList', 'get'));
+        $oTagList->expects($this->any())->method('getCacheId')->will($this->returnValue(null));
+        $oTagList->expects($this->any())->method('get')->will($this->returnValue($oTagSet));
         // Load list should be called all times, cache should not be used
-        $oTagList->expects( $this->exactly(2) )->method( 'loadList' )->will( $this->returnValue( true ) );
+        $oTagList->expects($this->exactly(2))->method('loadList')->will($this->returnValue(true));
 
         $oTagCloud = new oxTagCloud();
-        $oTagCloud->setTagList( $oTagList );
+        $oTagCloud->setTagList($oTagList);
 
         $aTags = array(
             "tag1" => new oxTag("tag1"),
@@ -229,13 +227,13 @@ class Unit_Core_oxTagCloudTest extends OxidTestCase
         );
 
         // should be taken from db
-        $this->assertEquals( $aTags, $oTagCloud->getCloudArray() );
+        $this->assertEquals($aTags, $oTagCloud->getCloudArray());
 
         // Set new oxTagCloud, to reset the local class caching
         $oTagCloud = new oxTagCloud();
-        $oTagCloud->setTagList( $oTagList );
+        $oTagCloud->setTagList($oTagList);
 
         // should be taken from cache, loadList should not be called
-        $this->assertEquals( $aTags, $oTagCloud->getCloudArray() );
+        $this->assertEquals($aTags, $oTagCloud->getCloudArray());
     }
 }

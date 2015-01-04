@@ -1,35 +1,31 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
-
-require_once realpath( "." ).'/unit/OxidTestCase.php';
-require_once realpath( "." ).'/unit/test_config.inc.php';
 
 /**
  * Testing oxattribute class.
  */
 class Unit_Core_oxattributeTest extends OxidTestCase
 {
+
     /**
      * Initialize the fixture.
      *
@@ -44,7 +40,7 @@ class Unit_Core_oxattributeTest extends OxidTestCase
 
         // article attribute
         $oNewGroup = new oxbase();
-        $oNewGroup->Init( 'oxobject2attribute' );
+        $oNewGroup->Init('oxobject2attribute');
         $oNewGroup->oxobject2attribute__oxobjectid = new oxField("test_oxid", oxField::T_RAW);
         $oNewGroup->oxobject2attribute__oxattrid = new oxField($this->_oAttr->getId(), oxField::T_RAW);
         $oNewGroup->oxobject2attribute__oxvalue = new oxField("testvalue", oxField::T_RAW);
@@ -52,7 +48,7 @@ class Unit_Core_oxattributeTest extends OxidTestCase
 
         // category attribute
         $oNewGroup = new oxbase();
-        $oNewGroup->Init( 'oxcategory2attribute' );
+        $oNewGroup->Init('oxcategory2attribute');
         $oNewGroup->oxcategory2attribute__oxobjectid = new oxField("test_oxid", oxField::T_RAW);
         $oNewGroup->oxcategory2attribute__oxattrid = new oxField($this->_oAttr->getId(), oxField::T_RAW);
         $oNewGroup->Save();
@@ -77,7 +73,7 @@ class Unit_Core_oxattributeTest extends OxidTestCase
     public function testDeleteNonExisting()
     {
         $oAttr = new oxAttribute();
-        $this->assertFalse( $oAttr->delete() );
+        $this->assertFalse($oAttr->delete());
     }
 
     /**
@@ -89,11 +85,11 @@ class Unit_Core_oxattributeTest extends OxidTestCase
     {
         $this->_oAttr->delete();
 
-        $sCheckOxid1 = oxDb::getDb()->GetOne( "select oxid from oxobject2attribute where oxattrid = '{$this->sOxid}'");
-        $sCheckOxid2 = oxDb::getDb()->GetOne( "select oxid from oxcategory2attribute where oxattrid = '{$this->sOxid}'");
+        $sCheckOxid1 = oxDb::getDb()->GetOne("select oxid from oxobject2attribute where oxattrid = '{$this->sOxid}'");
+        $sCheckOxid2 = oxDb::getDb()->GetOne("select oxid from oxcategory2attribute where oxattrid = '{$this->sOxid}'");
         $oAttr = new oxAttribute();
-        if ( $sCheckOxid1 || $sCheckOxid2 || $oAttr->Load( $this->_oAttr->getId() ) ) {
-            $this->fail( "fail deleting" );
+        if ($sCheckOxid1 || $sCheckOxid2 || $oAttr->Load($this->_oAttr->getId())) {
+            $this->fail("fail deleting");
         }
     }
 
@@ -109,8 +105,8 @@ class Unit_Core_oxattributeTest extends OxidTestCase
         $oAttr = oxNew("oxAttribute");
         $sVarId = '_testVar';
         $sVarId2 = '_testVar2';
-        $aSellTitle = array( 0 => '_testAttr',
-                             1 => '_tetsAttr_1');
+        $aSellTitle = array(0 => '_testAttr',
+                            1 => '_tetsAttr_1');
         $oValue = new stdClass();
         $oValue->name = 'red';
         $oValue2 = new stdClass();
@@ -119,18 +115,18 @@ class Unit_Core_oxattributeTest extends OxidTestCase
         $oValue3->name = 'blue';
         $oValue4 = new stdClass();
         $oValue4->name = 'blau';
-        $aSellValue = array( $sVarId => array ( 0 => $oValue,
-                                                1 => $oValue2),
-                             $sVarId2 => array ( 0 => $oValue3,
-                                                 1 => $oValue4));
-        $oAttr->assignVarToAttribute( $aSellValue, $aSellTitle );
-        $this->assertEquals( 2, $myDB->getOne("select count(*) from oxobject2attribute where oxobjectid like '_testVar%'") );
-        $oRez = $myDB->Execute( "select oxvalue, oxvalue_1, oxobjectid  from oxobject2attribute where oxobjectid = '_testVar'" );
+        $aSellValue = array($sVarId  => array(0 => $oValue,
+                                              1 => $oValue2),
+                            $sVarId2 => array(0 => $oValue3,
+                                              1 => $oValue4));
+        $oAttr->assignVarToAttribute($aSellValue, $aSellTitle);
+        $this->assertEquals(2, $myDB->getOne("select count(*) from oxobject2attribute where oxobjectid like '_testVar%'"));
+        $oRez = $myDB->Execute("select oxvalue, oxvalue_1, oxobjectid  from oxobject2attribute where oxobjectid = '_testVar'");
         while (!$oRez->EOF) {
             $oRez->fields = array_change_key_case($oRez->fields, CASE_LOWER);
-            $this->assertEquals( 'red', $oRez->fields[0]);
-            $this->assertEquals( '_testVar', $oRez->fields[2]);
-            $this->assertEquals( 'rot', $oRez->fields[1]);
+            $this->assertEquals('red', $oRez->fields[0]);
+            $this->assertEquals('_testVar', $oRez->fields[2]);
+            $this->assertEquals('rot', $oRez->fields[1]);
             $oRez->moveNext();
         }
     }
@@ -143,8 +139,8 @@ class Unit_Core_oxattributeTest extends OxidTestCase
     public function testGetAttrId()
     {
         $oAttr = $this->getProxyClass("oxAttribute");
-        $this->assertTrue( (bool) $oAttr->UNITgetAttrId('Design') );
-        $this->assertFalse( (bool) $oAttr->UNITgetAttrId('aaaaa') );
+        $this->assertTrue((bool) $oAttr->UNITgetAttrId('Design'));
+        $this->assertFalse((bool) $oAttr->UNITgetAttrId('aaaaa'));
     }
 
     /**
@@ -155,11 +151,11 @@ class Unit_Core_oxattributeTest extends OxidTestCase
     public function testCreateAttribute()
     {
         $oAttr = $this->getProxyClass("oxAttribute");
-        $aSellTitle = array( 0 => '_testAttr',
-                             1 => '_testAttr_1');
+        $aSellTitle = array(0 => '_testAttr',
+                            1 => '_testAttr_1');
         $sId = $oAttr->UNITcreateAttribute($aSellTitle);
-        $this->assertEquals( '_testAttr', oxDb::getDB()->getOne("select oxtitle from oxattribute where oxid = '$sId'") );
-        $this->assertEquals( '_testAttr_1', oxDb::getDB()->getOne("select oxtitle_1 from oxattribute where oxid = '$sId'") );
+        $this->assertEquals('_testAttr', oxDb::getDB()->getOne("select oxtitle from oxattribute where oxid = '$sId'"));
+        $this->assertEquals('_testAttr_1', oxDb::getDB()->getOne("select oxtitle_1 from oxattribute where oxid = '$sId'"));
     }
 
     /**
@@ -171,7 +167,7 @@ class Unit_Core_oxattributeTest extends OxidTestCase
     {
         $oAttr = $this->getProxyClass("oxAttribute");
         $aId = $oAttr->getAttributeAssigns('test_oxid');
-        $this->assertEquals( 1, count($aId) );
+        $this->assertEquals(1, count($aId));
     }
 
 
@@ -183,8 +179,8 @@ class Unit_Core_oxattributeTest extends OxidTestCase
     public function testSetTitle()
     {
         $oAttr = new oxAttribute();
-        $oAttr->setTitle( 'title' );
-        $this->assertEquals( 'title', $oAttr->getTitle() );
+        $oAttr->setTitle('title');
+        $this->assertEquals('title', $oAttr->getTitle());
     }
 
     /**
@@ -195,8 +191,8 @@ class Unit_Core_oxattributeTest extends OxidTestCase
     public function testSetActiveValue()
     {
         $oAttr = new oxAttribute();
-        $oAttr->setActiveValue( 'selectedValue' );
-        $this->assertEquals( 'selectedValue', $oAttr->getActiveValue() );
+        $oAttr->setActiveValue('selectedValue');
+        $this->assertEquals('selectedValue', $oAttr->getActiveValue());
     }
 
     /**
@@ -207,10 +203,10 @@ class Unit_Core_oxattributeTest extends OxidTestCase
     public function testAddValue()
     {
         $oAttr = new oxAttribute();
-        $oAttr->addValue( 'val1' );
-        $oAttr->addValue( 'val2' );
+        $oAttr->addValue('val1');
+        $oAttr->addValue('val2');
 
-        $this->assertEquals( array( 'val1', 'val2' ), $oAttr->getValues() );
+        $this->assertEquals(array('val1', 'val2'), $oAttr->getValues());
     }
 
     /**
@@ -220,10 +216,10 @@ class Unit_Core_oxattributeTest extends OxidTestCase
      */
     public function testGetArticleIds()
     {
-            return; // EE only
+        return; // EE only
         $aArticles = $this->_oAttr->getArticleIds();
-        $this->assertEquals( 1, count( $aArticles ) );
-        $this->assertEquals( 'test_oxid', $aArticles[0] );
+        $this->assertEquals(1, count($aArticles));
+        $this->assertEquals('test_oxid', $aArticles[0]);
     }
 
 

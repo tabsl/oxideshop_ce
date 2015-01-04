@@ -1,34 +1,32 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: oxmdvariant.php 20503 2009-10-15 14:54:11Z tomas $
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
  * Defines an element of multidimentional variant name tree structure. Contains article id, variant name, URL, price, price text, and a subset of MD variants.
  *
- * @package model
  */
 class oxMdVariant extends oxSuperCfg
 {
+
     /**
      * MD variant identifier
      *
@@ -89,8 +87,6 @@ class oxMdVariant extends oxSuperCfg
      * Sets MD variant identifier
      *
      * @param string $sId New id
-     *
-     * @return null;
      */
     public function setId($sId)
     {
@@ -111,8 +107,6 @@ class oxMdVariant extends oxSuperCfg
      * Sets parent id
      *
      * @param string $sParentId Parent id
-     *
-     * @return null;
      */
     public function setParentId($sParentId)
     {
@@ -132,9 +126,7 @@ class oxMdVariant extends oxSuperCfg
     /**
      * Sets MD subvariants
      *
-     * @param array[string]OxMdVariant $aSubvariants Subvariants
-     *
-     * @return null
+     * @param oxMdVariant[] $aSubvariants Subvariants
      */
     public function setMdSubvariants($aSubvariants)
     {
@@ -159,8 +151,9 @@ class oxMdVariant extends oxSuperCfg
     public function getFirstMdSubvariant()
     {
         $aMdSubvariants = $this->getMdSubvariants();
-        if (count($aMdSubvariants))
+        if (count($aMdSubvariants)) {
             return reset($aMdSubvariants);
+        }
 
         return null;
     }
@@ -176,13 +169,14 @@ class oxMdVariant extends oxSuperCfg
     {
         $aSubvariants = $this->getMdSubvariants();
         foreach ($aSubvariants as $oMdSubvariant) {
-            if (strcasecmp($oMdSubvariant->getName(), $sName) == 0)
+            if (strcasecmp($oMdSubvariant->getName(), $sName) == 0) {
                 return $oMdSubvariant;
+            }
         }
 
         $oNewSubvariant = oxNew("oxMdVariant");
         $oNewSubvariant->setName($sName);
-        $oNewSubvariant->setId(md5($sName.$this->getId()));
+        $oNewSubvariant->setId(md5($sName . $this->getId()));
         $oNewSubvariant->setParentId($this->getId());
         $this->_addMdSubvariant($oNewSubvariant);
 
@@ -197,8 +191,9 @@ class oxMdVariant extends oxSuperCfg
     public function getLink()
     {
         $oFirstSubvariant = $this->getFirstMdSubvariant();
-        if ($oFirstSubvariant)
+        if ($oFirstSubvariant) {
             return $oFirstSubvariant->getLink();
+        }
 
         return $this->_sUrl;
     }
@@ -207,8 +202,6 @@ class oxMdVariant extends oxSuperCfg
      * Name setter
      *
      * @param string $sName New name
-     *
-     * @return null;
      */
     public function setName($sName)
     {
@@ -253,6 +246,7 @@ class oxMdVariant extends oxSuperCfg
                 $dMinPrice = $dMinVariantPrice;
             }
         }
+
         return $dMinPrice;
 
     }
@@ -266,8 +260,9 @@ class oxMdVariant extends oxSuperCfg
     {
         $aSubvariants = $this->getMdSubvariants();
 
-        if (!count($aSubvariants))
+        if (!count($aSubvariants)) {
             return 0;
+        }
 
         $iMaxDepth = 0;
         foreach ($aSubvariants as $oSubvariant) {
@@ -288,12 +283,13 @@ class oxMdVariant extends oxSuperCfg
     {
         $myConfig = $this->getConfig();
         // 0002030 No need to return price if it disabled for better performance.
-        if ( !$myConfig->getConfigParam( 'bl_perfLoadPrice' ) ) {
+        if (!$myConfig->getConfigParam('bl_perfLoadPrice')) {
             return;
         }
 
-        if ($this->_sFPrice)
+        if ($this->_sFPrice) {
             return $this->_sFPrice;
+        }
 
         $sFromPrefix = '';
 
@@ -302,8 +298,8 @@ class oxMdVariant extends oxSuperCfg
         }
 
         $dMinPrice = $this->getMinDPrice();
-        $sFMinPrice = oxRegistry::getLang()->formatCurrency( $dMinPrice );
-        $sCurrency = ' '.$this->getConfig()->getActShopCurrencyObject()->sign;
+        $sFMinPrice = oxRegistry::getLang()->formatCurrency($dMinPrice);
+        $sCurrency = ' ' . $this->getConfig()->getActShopCurrencyObject()->sign;
         $this->_sFPrice = $sFromPrefix . $sFMinPrice . $sCurrency;
 
         return $this->_sFPrice;
@@ -312,12 +308,10 @@ class oxMdVariant extends oxSuperCfg
     /**
      * Inits MD variant by name. In case $aNames parameter has more than one element addNames recursively adds names for subvariants.
      *
-     * @param string     $sArtId Article ID
-     * @param array[int] $aNames Expected array of $sKey=>$sName pairs.
-     * @param double     $dPrice Price as double
-     * @param string     $sUrl   Article URL
-     *
-     * @return null
+     * @param string $sArtId Article ID
+     * @param array  $aNames Expected array of $sKey=>$sName pairs.
+     * @param double $dPrice Price as double
+     * @param string $sUrl   Article URL
      */
     public function addNames($sArtId, $aNames, $dPrice, $sUrl)
     {
@@ -346,8 +340,9 @@ class oxMdVariant extends oxSuperCfg
     {
         $oFirstSubvariant = $this->getFirstMdSubvariant();
 
-        if ($oFirstSubvariant)
+        if ($oFirstSubvariant) {
             return $oFirstSubvariant->getArticleId();
+        }
 
         return $this->_sArticleId;
     }
@@ -361,13 +356,15 @@ class oxMdVariant extends oxSuperCfg
      */
     public function hasArticleId($sArtId)
     {
-        if ($this->getArticleId() == $sArtId)
+        if ($this->getArticleId() == $sArtId) {
             return true;
+        }
 
         $aSubvariants = $this->getMdSubvariants();
         foreach ($aSubvariants as $oSubvariant) {
-            if ($oSubvariant->hasArticleId($sArtId))
+            if ($oSubvariant->hasArticleId($sArtId)) {
                 return true;
+            }
         }
 
         return false;
@@ -377,8 +374,6 @@ class oxMdVariant extends oxSuperCfg
      * Adds one subvariant to subvariant set
      *
      * @param OxMdVariant $oSubvariant Subvariant
-     *
-     * @return null
      */
     protected function _addMdSubvariant($oSubvariant)
     {
@@ -406,7 +401,7 @@ class oxMdVariant extends oxSuperCfg
                 return false;
             }
         }
+
         return true;
     }
-
 }

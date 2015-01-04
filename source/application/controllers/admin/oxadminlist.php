@@ -1,33 +1,31 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   admin
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
  * Admin selectlist list manager.
- * @package admin
  */
 class oxAdminList extends oxAdminView
 {
+
     /**
      * Name of chosen object class (default null).
      *
@@ -71,14 +69,14 @@ class oxAdminList extends oxAdminView
     protected $_aWhere = null;
 
     /**
-     * Enable/disable sorting by DESC (SQL) (defaultfalse - disable).
+     * Enable/disable sorting by DESC (SQL) (default false - disable).
      *
      * @var bool
      */
     protected $_blDesc = false;
 
     /**
-     * Set to true to enable multilanguage
+     * Set to true to enable multi language
      *
      * @var object
      */
@@ -133,11 +131,11 @@ class oxAdminList extends oxAdminView
      */
     public function getListSorting()
     {
-        if ( $this->_aCurrSorting === null ) {
-            $this->_aCurrSorting = oxConfig::getParameter( 'sort' );
+        if ($this->_aCurrSorting === null) {
+            $this->_aCurrSorting = oxRegistry::getConfig()->getRequestParameter('sort');
 
-            if ( !$this->_aCurrSorting && $this->_sDefSortField && ( $oBaseObject = $this->getItemListBaseObject() ) ) {
-                $this->_aCurrSorting[$oBaseObject->getCoreTableName()] = array( $this->_sDefSortField => "asc" );
+            if (!$this->_aCurrSorting && $this->_sDefSortField && ($oBaseObject = $this->getItemListBaseObject())) {
+                $this->_aCurrSorting[$oBaseObject->getCoreTableName()] = array($this->_sDefSortField => "asc");
             }
         }
 
@@ -151,8 +149,8 @@ class oxAdminList extends oxAdminView
      */
     public function getListFilter()
     {
-        if ( $this->_aListFilter === null ) {
-            $this->_aListFilter = oxConfig::getParameter( "where" );
+        if ($this->_aListFilter === null) {
+            $this->_aListFilter = oxRegistry::getConfig()->getRequestParameter("where");
         }
 
         return $this->_aListFilter;
@@ -165,18 +163,18 @@ class oxAdminList extends oxAdminView
      */
     protected function _getViewListSize()
     {
-        if ( !$this->_iViewListSize ) {
+        if (!$this->_iViewListSize) {
             $myConfig = $this->getConfig();
-            if ( $aProfile = oxSession::getVar( 'profile' ) ) {
-                if ( isset( $aProfile[1] ) ) {
-                    $myConfig->setConfigParam( 'iAdminListSize', (int) $aProfile[1] );
+            if ($aProfile = oxRegistry::getSession()->getVariable('profile')) {
+                if (isset($aProfile[1])) {
+                    $myConfig->setConfigParam('iAdminListSize', (int) $aProfile[1]);
                 }
             }
 
-            $this->_iViewListSize = (int) $myConfig->getConfigParam( 'iAdminListSize' );
-            if ( !$this->_iViewListSize ) {
+            $this->_iViewListSize = (int) $myConfig->getConfigParam('iAdminListSize');
+            if (!$this->_iViewListSize) {
                 $this->_iViewListSize = 10;
-                $myConfig->setConfigParam( 'iAdminListSize', $this->_iViewListSize );
+                $myConfig->setConfigParam('iAdminListSize', $this->_iViewListSize);
             }
         }
 
@@ -200,8 +198,8 @@ class oxAdminList extends oxAdminView
      */
     protected function _getUserDefListSize()
     {
-        if ( !$this->_iViewListSize ) {
-            if ( ! ($iViewListSize = (int) oxConfig::getParameter( 'viewListSize' ) ) ) {
+        if (!$this->_iViewListSize) {
+            if (!($iViewListSize = (int) oxRegistry::getConfig()->getRequestParameter('viewListSize'))) {
                 $iViewListSize = $this->_iDefViewListSize;
             }
             $this->_iViewListSize = $iViewListSize;
@@ -235,13 +233,13 @@ class oxAdminList extends oxAdminView
      */
     public function deleteEntry()
     {
-        $oDelete = oxNew( $this->_sListClass );
+        $oDelete = oxNew($this->_sListClass);
 
 
-        $blDelete = $oDelete->delete( $this->getEditObjectId() );
+        $blDelete = $oDelete->delete($this->getEditObjectId());
 
         // #A - we must reset object ID
-        if ( $blDelete && isset( $_POST['oxid'] ) ) {
+        if ($blDelete && isset($_POST['oxid'])) {
             $_POST['oxid'] = -1;
         }
 
@@ -253,45 +251,41 @@ class oxAdminList extends oxAdminView
      * Calculates list items count
      *
      * @param string $sSql SQL query used co select list items
-     *
-     * @return null
      */
-    protected function _calcListItemsCount( $sSql )
+    protected function _calcListItemsCount($sSql)
     {
         $oStr = getStr();
 
         // count SQL
-        $sSql = $oStr->preg_replace( '/select .* from/', 'select count(*) from ', $sSql );
+        $sSql = $oStr->preg_replace('/select .* from/i', 'select count(*) from ', $sSql);
 
         // removing order by
-        $sSql = $oStr->preg_replace( '/order by .*$/', '', $sSql );
+        $sSql = $oStr->preg_replace('/order by .*$/i', '', $sSql);
 
         // con of list items which fits current search conditions
-        $this->_iListSize = oxDb::getDb()->getOne( $sSql, false, false );
+        $this->_iListSize = oxDb::getDb()->getOne($sSql, false, false);
 
         // set it into session that other frames know about size of DB
-        oxSession::setVar( 'iArtCnt', $this->_iListSize );
+        oxRegistry::getSession()->setVariable('iArtCnt', $this->_iListSize);
     }
 
-     /**
+    /**
      * Set current list position
      *
      * @param string $sPage jump page string
-     *
-     * @return null
      */
-    protected function _setCurrentListPosition( $sPage = null )
+    protected function _setCurrentListPosition($sPage = null)
     {
         $iAdminListSize = $this->_getViewListSize();
 
-        $iJumpTo = $sPage?( (int) $sPage):( (int) ( (int) oxConfig::getParameter( 'lstrt' ) ) / $iAdminListSize );
-        $iJumpTo = ( $sPage && $iJumpTo )?( $iJumpTo - 1 ):$iJumpTo;
+        $iJumpTo = $sPage ? ((int) $sPage) : ((int) ((int) oxRegistry::getConfig()->getRequestParameter('lstrt')) / $iAdminListSize);
+        $iJumpTo = ($sPage && $iJumpTo) ? ($iJumpTo - 1) : $iJumpTo;
 
         $iJumpTo = $iJumpTo * $iAdminListSize;
-        if ( $iJumpTo < 1 ) {
+        if ($iJumpTo < 1) {
             $iJumpTo = 0;
-        } elseif ( $iJumpTo >= $this->_iListSize ) {
-            $iJumpTo = floor( $this->_iListSize / $iAdminListSize - 1 ) * $iAdminListSize;
+        } elseif ($iJumpTo >= $this->_iListSize) {
+            $iJumpTo = floor($this->_iListSize / $iAdminListSize - 1) * $iAdminListSize;
         }
 
         $this->_iCurrListPos = $this->_iOverPos = (int) $iJumpTo;
@@ -304,12 +298,12 @@ class oxAdminList extends oxAdminView
      *
      * @return string
      */
-    protected function _prepareOrderByQuery( $sSql = null )
+    protected function _prepareOrderByQuery($sSql = null)
     {
         // sorting
         $aSortFields = $this->getListSorting();
 
-        if ( is_array( $aSortFields ) && count( $aSortFields ) ) {
+        if (is_array($aSortFields) && count($aSortFields)) {
 
             // only add order by at full sql not for count(*)
             $sSql .= ' order by ';
@@ -318,21 +312,21 @@ class oxAdminList extends oxAdminView
             $oListItem = $this->getItemListBaseObject();
             $iLangId = $oListItem->isMultilang() ? $oListItem->getLanguage() : oxRegistry::getLang()->getBaseLanguage();
 
-            $blSortDesc = oxConfig::getParameter( 'adminorder' );
+            $blSortDesc = oxRegistry::getConfig()->getRequestParameter('adminorder');
             $blSortDesc = $blSortDesc !== null ? (bool) $blSortDesc : $this->_blDesc;
 
-            foreach ( $aSortFields as $sTable => $aFieldData ) {
+            foreach ($aSortFields as $sTable => $aFieldData) {
 
-                $sTable = $sTable ? ( getViewName( $sTable, $iLangId ) . '.' ) : '';
-                foreach ( $aFieldData as $sColumn => $sSortDir ) {
+                $sTable = $sTable ? (getViewName($sTable, $iLangId) . '.') : '';
+                foreach ($aFieldData as $sColumn => $sSortDir) {
 
                     $sField = $sTable . $sColumn;
 
                     //add table name to column name if no table name found attached to column name
-                    $sSql .= ( ( ( $blSep ) ? ', ' : '' ) ) . oxDb::getInstance()->escapeString( $sField );
+                    $sSql .= ((($blSep) ? ', ' : '')) . oxDb::getInstance()->escapeString($sField);
 
-                    //V oxactive field search always DESC
-                    if ( $blSortDesc || $sColumn == "oxactive" || strcasecmp( $sSortDir, 'desc' ) == 0 ) {
+                    //V oxActive field search always DESC
+                    if ($blSortDesc || $sColumn == "oxactive" || strcasecmp($sSortDir, 'desc') == 0) {
                         $sSql .= ' desc ';
                     }
 
@@ -351,9 +345,9 @@ class oxAdminList extends oxAdminView
      *
      * @return string
      */
-    protected function _buildSelectString( $oListObject = null )
+    protected function _buildSelectString($oListObject = null)
     {
-        return $oListObject !== null ? $oListObject->buildSelectString( null ) : "";
+        return $oListObject !== null ? $oListObject->buildSelectString(null) : "";
     }
 
 
@@ -366,13 +360,14 @@ class oxAdminList extends oxAdminView
      *
      * @return string
      */
-    protected function _processFilter( $sFieldValue )
+    protected function _processFilter($sFieldValue)
     {
         $oStr = getStr();
 
         //removing % symbols
-        $sFieldValue = $oStr->preg_replace( "/^%|%$/", "", trim( $sFieldValue ) );
-        return $oStr->preg_replace( "/\s+/", " ", $sFieldValue );
+        $sFieldValue = $oStr->preg_replace("/^%|%$/", "", trim($sFieldValue));
+
+        return $oStr->preg_replace("/\s+/", " ", $sFieldValue);
     }
 
     /**
@@ -383,32 +378,32 @@ class oxAdminList extends oxAdminView
      *
      * @return string
      */
-    protected function _buildFilter( $sVal, $blIsSearchValue )
+    protected function _buildFilter($sVal, $blIsSearchValue)
     {
-        if ( $blIsSearchValue ) {
+        if ($blIsSearchValue) {
             //is search string, using LIKE
-            $sQ = " like ".oxDb::getDb()->quote( '%'.$sVal.'%' )." ";
+            $sQ = " like " . oxDb::getDb()->quote('%' . $sVal . '%') . " ";
         } else {
             //not search string, values must be equal
-            $sQ = " = ".oxDb::getDb()->quote( $sVal )." ";
+            $sQ = " = " . oxDb::getDb()->quote($sVal) . " ";
         }
 
         return $sQ;
     }
 
     /**
-     * Checks if fulter contains wildcards like %
+     * Checks if filter contains wildcards like %
      *
      * @param string $sFieldValue filter value
      *
      * @return bool
      */
-    protected function _isSearchValue( $sFieldValue )
+    protected function _isSearchValue($sFieldValue)
     {
-        //check if this is search string (conatains % sign at begining and end of string)
+        //check if this is search string (contains % sign at beginning and end of string)
         $blIsSearchValue = false;
         $oStr = getStr();
-        if ( $oStr->preg_match( '/^%/', $sFieldValue ) && $oStr->preg_match( '/%$/', $sFieldValue ) ) {
+        if ($oStr->preg_match('/^%/', $sFieldValue) && $oStr->preg_match('/%$/', $sFieldValue)) {
             $blIsSearchValue = true;
         }
 
@@ -426,45 +421,45 @@ class oxAdminList extends oxAdminView
      *
      * @return string
      */
-    protected function _prepareWhereQuery( $aWhere, $sqlFull )
+    protected function _prepareWhereQuery($aWhere, $sqlFull)
     {
-        if ( count($aWhere) ) {
+        if (count($aWhere)) {
             $myUtilsString = oxRegistry::get("oxUtilsString");
-            while ( list($sFieldName, $sFieldValue) = each( $aWhere ) ) {
-                $sFieldValue = trim( $sFieldValue );
+            while (list($sFieldName, $sFieldValue) = each($aWhere)) {
+                $sFieldValue = trim($sFieldValue);
 
-                //check if this is search string (conatains % sign at begining and end of string)
-                $blIsSearchValue = $this->_isSearchValue( $sFieldValue );
+                //check if this is search string (contains % sign at beginning and end of string)
+                $blIsSearchValue = $this->_isSearchValue($sFieldValue);
 
                 //removing % symbols
-                $sFieldValue = $this->_processFilter( $sFieldValue );
+                $sFieldValue = $this->_processFilter($sFieldValue);
 
-                if ( strlen($sFieldValue) ) {
-                    $aVal = explode( ' ', $sFieldValue );
+                if (strlen($sFieldValue)) {
+                    $aVal = explode(' ', $sFieldValue);
 
-                    //for each search field using AND anction
+                    //for each search field using AND action
                     $sSqlBoolAction = ' and (';
 
-                    foreach ( $aVal as $sVal) {
+                    foreach ($aVal as $sVal) {
                         // trying to search spec chars in search value
                         // if found, add cleaned search value to search sql
-                        $sUml = $myUtilsString->prepareStrForSearch( $sVal );
+                        $sUml = $myUtilsString->prepareStrForSearch($sVal);
                         if ($sUml) {
                             $sSqlBoolAction .= '(';
                         }
 
-                        $sFieldName = oxDb::getInstance()->escapeString( $sFieldName );
+                        $sFieldName = oxDb::getInstance()->escapeString($sFieldName);
                         $sqlFull .= " {$sSqlBoolAction} {$sFieldName} ";
 
                         //for search in same field for different values using AND
                         $sSqlBoolAction = ' and ';
 
-                        $sqlFull .= $this->_buildFilter( $sVal, $blIsSearchValue );
+                        $sqlFull .= $this->_buildFilter($sVal, $blIsSearchValue);
 
-                        if ( $sUml ) {
+                        if ($sUml) {
                             $sqlFull .= " or {$sFieldName} ";
 
-                            $sqlFull .= $this->_buildFilter( $sUml, $blIsSearchValue );
+                            $sqlFull .= $this->_buildFilter($sUml, $blIsSearchValue);
                             $sqlFull .= ')'; // end of OR section
                         }
                     }
@@ -485,7 +480,7 @@ class oxAdminList extends oxAdminView
      *
      * @return string
      */
-    protected function _changeselect( $sSql )
+    protected function _changeselect($sSql)
     {
         return $sSql;
     }
@@ -498,30 +493,30 @@ class oxAdminList extends oxAdminView
      */
     public function buildWhere()
     {
-        if ( $this->_aWhere === null && ( $oList = $this->getItemList() ) ) {
+        if ($this->_aWhere === null && ($oList = $this->getItemList())) {
 
             $this->_aWhere = array();
             $aFilter = $this->getListFilter();
-            if ( is_array( $aFilter ) ) {
+            if (is_array($aFilter)) {
 
                 $oListItem = $this->getItemListBaseObject();
                 $iLangId = $oListItem->isMultilang() ? $oListItem->getLanguage() : oxRegistry::getLang()->getBaseLanguage();
-                $sLocalDateFormat = $this->getConfig()->getConfigParam( 'sLocalDateFormat' );
+                $sLocalDateFormat = $this->getConfig()->getConfigParam('sLocalDateFormat');
 
-                foreach ( $aFilter as $sTable => $aFilterData ) {
-                    foreach ( $aFilterData as $sName => $sValue ) {
-                        if ( $sValue || '0' === ( string ) $sValue ) {
+                foreach ($aFilter as $sTable => $aFilterData) {
+                    foreach ($aFilterData as $sName => $sValue) {
+                        if ($sValue || '0' === ( string ) $sValue) {
 
                             $sField = "{$sTable}__{$sName}";
 
                             // if no table name attached to field name, add it
-                            $sName = $sTable ? getViewName( $sTable, $iLangId ) . ".{$sName}" : $sName;
+                            $sName = $sTable ? getViewName($sTable, $iLangId) . ".{$sName}" : $sName;
 
                             // #M1260: if field is date
-                            if ( $sLocalDateFormat && $sLocalDateFormat != 'ISO' && isset( $oListItem->$sField ) ) {
+                            if ($sLocalDateFormat && $sLocalDateFormat != 'ISO' && isset($oListItem->$sField)) {
                                 $sFldType = $oListItem->{$sField}->fldtype;
-                                if ( "datetime" == $sFldType || "date" == $sFldType ) {
-                                    $sValue = $this->_convertToDBDate( $sValue, $sFldType );
+                                if ("datetime" == $sFldType || "date" == $sFldType) {
+                                    $sValue = $this->_convertToDBDate($sValue, $sFldType);
                                 }
                             }
 
@@ -543,27 +538,28 @@ class oxAdminList extends oxAdminView
      *
      * @return string
      */
-    protected function _convertToDBDate( $sValue, $sFldType )
+    protected function _convertToDBDate($sValue, $sFldType)
     {
         $oConvObject = new oxField();
         $oConvObject->setValue($sValue);
-        if ( $sFldType == "datetime" ) {
-            if ( strlen($sValue) == 10 || strlen($sValue) == 22 || ( strlen($sValue) == 19 && !stripos( $sValue, "m" ) ) ) {
-                oxRegistry::get("oxUtilsDate")->convertDBDateTime( $oConvObject, true );
+        if ($sFldType == "datetime") {
+            if (strlen($sValue) == 10 || strlen($sValue) == 22 || (strlen($sValue) == 19 && !stripos($sValue, "m"))) {
+                oxRegistry::get("oxUtilsDate")->convertDBDateTime($oConvObject, true);
             } else {
-                if ( strlen($sValue) > 10 ) {
-                    return $this->_convertTime( $sValue );
+                if (strlen($sValue) > 10) {
+                    return $this->_convertTime($sValue);
                 } else {
-                    return $this->_convertDate( $sValue );
+                    return $this->_convertDate($sValue);
                 }
             }
-        } elseif ( $sFldType == "date" ) {
-            if ( strlen($sValue) == 10 ) {
-                oxRegistry::get("oxUtilsDate")->convertDBDate( $oConvObject, true);
+        } elseif ($sFldType == "date") {
+            if (strlen($sValue) == 10) {
+                oxRegistry::get("oxUtilsDate")->convertDBDate($oConvObject, true);
             } else {
-                return $this->_convertDate( $sValue );
+                return $this->_convertDate($sValue);
             }
         }
+
         return $oConvObject->value;
     }
 
@@ -574,27 +570,27 @@ class oxAdminList extends oxAdminView
      *
      * @return string
      */
-    protected function _convertDate( $sDate )
+    protected function _convertDate($sDate)
     {
         // regexps to validate input
-        $aDatePatterns = array("/^([0-9]{2})\.([0-9]{4})/" => "EUR2",    // MM.YYYY
-                               "/^([0-9]{2})\.([0-9]{2})/" => "EUR1",    // DD.MM
-                               "/^([0-9]{2})\/([0-9]{4})/" => "USA2",    // MM.YYYY
-                               "/^([0-9]{2})\/([0-9]{2})/" => "USA1"     // DD.MM
-                              );
+        $aDatePatterns = array("/^([0-9]{2})\.([0-9]{4})/" => "EUR2", // MM.YYYY
+                               "/^([0-9]{2})\.([0-9]{2})/" => "EUR1", // DD.MM
+                               "/^([0-9]{2})\/([0-9]{4})/" => "USA2", // MM.YYYY
+                               "/^([0-9]{2})\/([0-9]{2})/" => "USA1" // DD.MM
+        );
 
         // date/time formatting rules
-        $aDFormats  = array("EUR1" => array(2, 1),
-                            "EUR2" => array(2, 1),
-                            "USA1" => array(1, 2),
-                            "USA2" => array(2, 1)
-                           );
+        $aDFormats = array("EUR1" => array(2, 1),
+                           "EUR2" => array(2, 1),
+                           "USA1" => array(1, 2),
+                           "USA2" => array(2, 1)
+        );
 
         // looking for date field
         $aDateMatches = array();
         $oStr = getStr();
-        foreach ( $aDatePatterns as $sPattern => $sType) {
-            if ( $oStr->preg_match( $sPattern, $sDate, $aDateMatches)) {
+        foreach ($aDatePatterns as $sPattern => $sType) {
+            if ($oStr->preg_match($sPattern, $sDate, $aDateMatches)) {
                 $sDate = $aDateMatches[$aDFormats[$sType][0]] . "-" . $aDateMatches[$aDFormats[$sType][1]];
                 break;
             }
@@ -610,29 +606,29 @@ class oxAdminList extends oxAdminView
      *
      * @return string
      */
-    protected function _convertTime( $sFullDate )
+    protected function _convertTime($sFullDate)
     {
-        $sDate = substr( $sFullDate, 0, 10 );
+        $sDate = substr($sFullDate, 0, 10);
         $oConvObject = new oxField();
         $oConvObject->setValue($sDate);
-        oxRegistry::get("oxUtilsDate")->convertDBDate( $oConvObject, true);
+        oxRegistry::get("oxUtilsDate")->convertDBDate($oConvObject, true);
         $oStr = getStr();
 
         // looking for time field
-        $sTime = substr( $sFullDate, 11);
-        if ( $oStr->preg_match( "/([0-9]{2}):([0-9]{2}) ([AP]{1}[M]{1})$/", $sTime, $aTimeMatches ) ) {
-            if ( $aTimeMatches[3] == "PM") {
+        $sTime = substr($sFullDate, 11);
+        if ($oStr->preg_match("/([0-9]{2}):([0-9]{2}) ([AP]{1}[M]{1})$/", $sTime, $aTimeMatches)) {
+            if ($aTimeMatches[3] == "PM") {
                 $iIntVal = (int) $aTimeMatches[1];
-                if ( $iIntVal < 13) {
+                if ($iIntVal < 13) {
                     $sTime = ($iIntVal + 12) . ":" . $aTimeMatches[2];
                 }
             } else {
                 $sTime = $aTimeMatches[1] . ":" . $aTimeMatches[2];
             }
-        } elseif ( $oStr->preg_match( "/([0-9]{2}) ([AP]{1}[M]{1})$/", $sTime, $aTimeMatches ) ) {
-            if ( $aTimeMatches[2] == "PM") {
+        } elseif ($oStr->preg_match("/([0-9]{2}) ([AP]{1}[M]{1})$/", $sTime, $aTimeMatches)) {
+            if ($aTimeMatches[2] == "PM") {
                 $iIntVal = (int) $aTimeMatches[1];
-                if ( $iIntVal < 13) {
+                if ($iIntVal < 13) {
                     $sTime = ($iIntVal + 12);
                 }
             } else {
@@ -647,82 +643,80 @@ class oxAdminList extends oxAdminView
 
     /**
      * Set parameters needed for list navigation
-     *
-     * @return null
      */
     protected function _setListNavigationParams()
     {
-        $myConfig  = $this->getConfig();
+        $myConfig = $this->getConfig();
 
         // list navigation
         $blShowNavigation = false;
         $iAdminListSize = $this->_getViewListSize();
-        if ( $this->_iListSize > $iAdminListSize ) {
+        if ($this->_iListSize > $iAdminListSize) {
             // yes, we need to build the navigation object
-            $pagenavigation = new stdClass();
-            $pagenavigation->pages    = round( ( ( $this->_iListSize - 1 ) / $iAdminListSize ) + 0.5, 0 );
-            $pagenavigation->actpage  = ($pagenavigation->actpage > $pagenavigation->pages)? $pagenavigation->pages : round( ( $this->_iCurrListPos / $iAdminListSize ) + 0.5, 0 );
-            $pagenavigation->lastlink = ( $pagenavigation->pages - 1 ) * $iAdminListSize;
-            $pagenavigation->nextlink = null;
-            $pagenavigation->backlink = null;
+            $pageNavigation = new stdClass();
+            $pageNavigation->pages = round((($this->_iListSize - 1) / $iAdminListSize) + 0.5, 0);
+            $pageNavigation->actpage = ($pageNavigation->actpage > $pageNavigation->pages) ? $pageNavigation->pages : round(($this->_iCurrListPos / $iAdminListSize) + 0.5, 0);
+            $pageNavigation->lastlink = ($pageNavigation->pages - 1) * $iAdminListSize;
+            $pageNavigation->nextlink = null;
+            $pageNavigation->backlink = null;
 
             $iPos = $this->_iCurrListPos + $iAdminListSize;
-            if ( $iPos < $this->_iListSize ) {
-                $pagenavigation->nextlink = $iPos = $this->_iCurrListPos + $iAdminListSize;
+            if ($iPos < $this->_iListSize) {
+                $pageNavigation->nextlink = $iPos = $this->_iCurrListPos + $iAdminListSize;
             }
 
-            if ( ( $this->_iCurrListPos - $iAdminListSize ) >= 0 ) {
-                $pagenavigation->backlink = $iPos = $this->_iCurrListPos - $iAdminListSize;
+            if (($this->_iCurrListPos - $iAdminListSize) >= 0) {
+                $pageNavigation->backlink = $iPos = $this->_iCurrListPos - $iAdminListSize;
             }
 
             // calculating list start position
-            $iStart = $pagenavigation->actpage - 5;
-            $iStart = ( $iStart <= 0 ) ? 1 : $iStart;
+            $iStart = $pageNavigation->actpage - 5;
+            $iStart = ($iStart <= 0) ? 1 : $iStart;
 
             // calculating list end position
-            $iEnd = $pagenavigation->actpage + 5;
-            $iEnd = ( $iEnd < $iStart + 10) ? $iStart + 10 : $iEnd;
-            $iEnd = ( $iEnd > $pagenavigation->pages ) ? $pagenavigation->pages : $iEnd;
+            $iEnd = $pageNavigation->actpage + 5;
+            $iEnd = ($iEnd < $iStart + 10) ? $iStart + 10 : $iEnd;
+            $iEnd = ($iEnd > $pageNavigation->pages) ? $pageNavigation->pages : $iEnd;
 
             // once again adjusting start pos ..
-            $iStart = ( $iEnd - 10 > 0 ) ? $iEnd - 10 : $iStart;
-            $iStart = ( $pagenavigation->pages <= 11) ? 1 : $iStart;
+            $iStart = ($iEnd - 10 > 0) ? $iEnd - 10 : $iStart;
+            $iStart = ($pageNavigation->pages <= 11) ? 1 : $iStart;
 
             // navigation urls
-            for ( $i = $iStart; $i <= $iEnd; $i++ ) {
+            for ($i = $iStart; $i <= $iEnd; $i++) {
                 $page = new stdclass();
                 $page->selected = 0;
-                if ( $i == $pagenavigation->actpage ) {
+                if ($i == $pageNavigation->actpage) {
                     $page->selected = 1;
                 }
-                $pagenavigation->changePage[$i] = $page;
+                $pageNavigation->changePage[$i] = $page;
             }
 
-            $this->_aViewData['pagenavi'] = $pagenavigation;
+            $this->_aViewData['pagenavi'] = $pageNavigation;
 
-            if ( isset( $this->_iOverPos)) {
+            if (isset($this->_iOverPos)) {
                 $iPos = $this->_iOverPos;
                 $this->_iOverPos = null;
             } else {
-                $iPos = oxConfig::getParameter( 'lstrt' );
+                $iPos = oxRegistry::getConfig()->getRequestParameter('lstrt');
             }
 
-            if ( !$iPos ) {
+            if (!$iPos) {
                 $iPos = 0;
             }
 
-            $this->_aViewData['lstrt']    = $iPos;
+            $this->_aViewData['lstrt'] = $iPos;
             $this->_aViewData['listsize'] = $this->_iListSize;
             $blShowNavigation = true;
         }
 
         // determine not used space in List
-        $iShowListSize  = $this->_iListSize - $this->_iCurrListPos;
+        $iShowListSize = $this->_iListSize - $this->_iCurrListPos;
         $iAdminListSize = $this->_getViewListSize();
-        $iNotUsed = $iAdminListSize - min( $iShowListSize, $iAdminListSize );
+        $iNotUsed = $iAdminListSize - min($iShowListSize, $iAdminListSize);
         $iSpace = $iNotUsed * 15;
 
-        if ( !$blShowNavigation ) {
+        if (!$blShowNavigation) {
             $iSpace += 20;
         }
 
@@ -733,37 +727,35 @@ class oxAdminList extends oxAdminView
      * Sets-up navigation parameters
      *
      * @param string $sNode active view id
-     *
-     * @return null
      */
-    protected function _setupNavigation( $sNode )
+    protected function _setupNavigation($sNode)
     {
         // navigation according to class
-        if ( $sNode ) {
+        if ($sNode) {
 
-            $myAdminNavig = $this->getNavigation();
+            $myAdminNavigation = $this->getNavigation();
 
             $sOxId = $this->getEditObjectId();
 
-            if ( $sOxId == -1) {
+            if ($sOxId == -1) {
                 //on first call or when pressed creating new item button, reseting active tab
                 $iActTab = $this->_iDefEdit;
             } else {
                 // active tab
-                $iActTab = oxConfig::getParameter( 'actedit' );
+                $iActTab = oxRegistry::getConfig()->getRequestParameter('actedit');
                 $iActTab = $iActTab ? $iActTab : $this->_iDefEdit;
             }
 
             // tabs
-            $this->_aViewData['editnavi'] = $myAdminNavig->getTabs( $sNode, $iActTab );
+            $this->_aViewData['editnavi'] = $myAdminNavigation->getTabs($sNode, $iActTab);
 
             // active tab
-            $this->_aViewData['actlocation'] = $myAdminNavig->getActiveTab( $sNode, $iActTab );
+            $this->_aViewData['actlocation'] = $myAdminNavigation->getActiveTab($sNode, $iActTab);
 
             // default tab
-            $this->_aViewData['default_edit'] = $myAdminNavig->getActiveTab( $sNode, $this->_iDefEdit );
+            $this->_aViewData['default_edit'] = $myAdminNavigation->getActiveTab($sNode, $this->_iDefEdit);
 
-            // passign active tab number
+            // assign active tab number
             $this->_aViewData['actedit'] = $iActTab;
         }
     }
@@ -771,48 +763,48 @@ class oxAdminList extends oxAdminView
     /**
      * Returns items list
      *
-     * @return oxlist
+     * @return oxList
      */
     public function getItemList()
     {
-        if ( $this->_oList === null && $this->_sListClass ) {
+        if ($this->_oList === null && $this->_sListClass) {
 
-            $this->_oList = oxNew( $this->_sListType );
+            $this->_oList = oxNew($this->_sListType);
             $this->_oList->clear();
-            $this->_oList->init( $this->_sListClass );
+            $this->_oList->init($this->_sListClass);
 
             $aWhere = $this->buildWhere();
 
             $oListObject = $this->_oList->getBaseObject();
 
-            oxSession::setVar( 'tabelle', $this->_sListClass );
-            $this->_aViewData['listTable'] = getViewName( $oListObject->getCoreTableName() );
-            $this->getConfig()->setGlobalParameter( 'ListCoreTable', $oListObject->getCoreTableName() );
+            oxRegistry::getSession()->setVariable('tabelle', $this->_sListClass);
+            $this->_aViewData['listTable'] = getViewName($oListObject->getCoreTableName());
+            $this->getConfig()->setGlobalParameter('ListCoreTable', $oListObject->getCoreTableName());
 
-            if ( $oListObject->isMultilang() ) {
+            if ($oListObject->isMultilang()) {
                 // is the object multilingual?
-                $oListObject->setLanguage( oxRegistry::getLang()->getBaseLanguage() );
+                $oListObject->setLanguage(oxRegistry::getLang()->getBaseLanguage());
 
-                if ( isset( $this->_blEmployMultilanguage ) ) {
-                    $oListObject->setEnableMultilang( $this->_blEmployMultilanguage );
+                if (isset($this->_blEmployMultilanguage)) {
+                    $oListObject->setEnableMultilang($this->_blEmployMultilanguage);
                 }
             }
 
-            $sSql = $this->_buildSelectString( $oListObject );
-            $sSql = $this->_prepareWhereQuery( $aWhere, $sSql );
-            $sSql = $this->_prepareOrderByQuery( $sSql );
-            $sSql = $this->_changeselect( $sSql );
+            $sSql = $this->_buildSelectString($oListObject);
+            $sSql = $this->_prepareWhereQuery($aWhere, $sSql);
+            $sSql = $this->_prepareOrderByQuery($sSql);
+            $sSql = $this->_changeselect($sSql);
 
             // calculates count of list items
-            $this->_calcListItemsCount( $sSql );
+            $this->_calcListItemsCount($sSql);
 
             // setting current list position (page)
-            $this->_setCurrentListPosition( oxConfig::getParameter( 'jumppage' ) );
+            $this->_setCurrentListPosition(oxRegistry::getConfig()->getRequestParameter('jumppage'));
 
-            // settting additioan params for list: current list size
-            $this->_oList->setSqlLimit( $this->_iCurrListPos, $this->_getViewListSize() );
+            // setting addition params for list: current list size
+            $this->_oList->setSqlLimit($this->_iCurrListPos, $this->_getViewListSize());
 
-            $this->_oList->selectString( $sSql );
+            $this->_oList->selectString($sSql);
         }
 
         return $this->_oList;
@@ -820,8 +812,6 @@ class oxAdminList extends oxAdminView
 
     /**
      * Clear items list
-     *
-     * @return null
      */
     public function clearItemList()
     {
@@ -831,12 +821,12 @@ class oxAdminList extends oxAdminView
     /**
      * Returns item list base object
      *
-     * @return oxbase
+     * @return oxBase
      */
     public function getItemListBaseObject()
     {
-        if ( ( $oList = $this->getItemList() ) ) {
-           return $oList->getBaseObject();
+        if (($oList = $this->getItemList())) {
+            return $oList->getBaseObject();
         }
     }
 }

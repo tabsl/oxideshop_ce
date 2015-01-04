@@ -1,29 +1,24 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
-
-require_once realpath( "." ).'/unit/OxidTestCase.php';
-require_once realpath( "." ).'/unit/test_config.inc.php';
 
 /*
  * Dummy class for getParsedContent function test.
@@ -31,7 +26,8 @@ require_once realpath( "." ).'/unit/test_config.inc.php';
  */
 class contentTest_oxUtilsView extends oxUtilsView
 {
-    public function parseThroughSmarty( $sDesc, $sOxid = null, $oActView = null, $blRecompile = false )
+
+    public function parseThroughSmarty($sDesc, $sOxid = null, $oActView = null, $blRecompile = false)
     {
         return $sDesc;
     }
@@ -42,6 +38,8 @@ class contentTest_oxUtilsView extends oxUtilsView
  */
 class Unit_Views_contentTest extends OxidTestCase
 {
+    
+    /** @var oxContent  */
     protected $_oObj = null;
 
     /**
@@ -53,7 +51,7 @@ class Unit_Views_contentTest extends OxidTestCase
     {
         parent::setUp();
         $this->_oObj = new oxbase();
-        $this->_oObj->init( 'oxcontents' );
+        $this->_oObj->init('oxcontents');
         $this->_oObj->oxcontents__oxtitle = new oxField('test', oxField::T_RAW);
         $sShopId = modConfig::getInstance()->getShopId();
         $this->_oObj->oxcontents__oxshopid = new oxField($sShopId, oxField::T_RAW);
@@ -68,7 +66,7 @@ class Unit_Views_contentTest extends OxidTestCase
         $sOxid = $this->_oObj->getId();
 
         $this->_oObj = new oxcontent();
-        $this->_oObj->load( $sOxid );
+        $this->_oObj->load($sOxid);
     }
 
     /**
@@ -79,8 +77,8 @@ class Unit_Views_contentTest extends OxidTestCase
     protected function tearDown()
     {
         $this->_oObj->delete();
-        $this->cleanUpTable( 'oxdelivery' );
-        $this->cleanUpTable( 'oxdel2delset' );
+        $this->cleanUpTable('oxdelivery');
+        $this->cleanUpTable('oxdel2delset');
         parent::tearDown();
         oxRemClassModule('contentTest_oxUtilsView');
     }
@@ -92,19 +90,19 @@ class Unit_Views_contentTest extends OxidTestCase
      */
     public function testCanShowContent()
     {
-        $oView = $this->getMock( "content", array( "getUser", "isEnabledPrivateSales" ), array(), '', false );
-        $oView->expects( $this->any() )->method( 'getUser' )->will( $this->returnValue( false ) );
-        $oView->expects( $this->any() )->method( 'isEnabledPrivateSales' )->will( $this->returnValue( true ) );
+        $oView = $this->getMock("content", array("getUser", "isEnabledPrivateSales"), array(), '', false);
+        $oView->expects($this->any())->method('getUser')->will($this->returnValue(false));
+        $oView->expects($this->any())->method('isEnabledPrivateSales')->will($this->returnValue(true));
 
-        $this->assertTrue( $oView->UNITcanShowContent( "oxagb" ) );
-        $this->assertTrue( $oView->UNITcanShowContent( "oxrightofwithdrawal" ) );
-        $this->assertTrue( $oView->UNITcanShowContent( "oximpressum" ) );
-        $this->assertFalse( $oView->UNITcanShowContent( "testcontentident" ) );
+        $this->assertTrue($oView->UNITcanShowContent("oxagb"));
+        $this->assertTrue($oView->UNITcanShowContent("oxrightofwithdrawal"));
+        $this->assertTrue($oView->UNITcanShowContent("oximpressum"));
+        $this->assertFalse($oView->UNITcanShowContent("testcontentident"));
 
-        $oView = $this->getMock( "content", array( "getUser", "isEnabledPrivateSales" ), array(), '', false );
-        $oView->expects( $this->any() )->method( 'getUser' )->will( $this->returnValue( false ) );
-        $oView->expects( $this->any() )->method( 'isEnabledPrivateSales' )->will( $this->returnValue( false ) );
-        $this->assertTrue( $oView->UNITcanShowContent( "testcontentident" ) );
+        $oView = $this->getMock("content", array("getUser", "isEnabledPrivateSales"), array(), '', false);
+        $oView->expects($this->any())->method('getUser')->will($this->returnValue(false));
+        $oView->expects($this->any())->method('isEnabledPrivateSales')->will($this->returnValue(false));
+        $this->assertTrue($oView->UNITcanShowContent("testcontentident"));
     }
 
     /**
@@ -114,12 +112,12 @@ class Unit_Views_contentTest extends OxidTestCase
      */
     public function testGetContentIdIfAgb()
     {
-        $sContentId = oxDb::getDb( oxDB::FETCH_MODE_ASSOC )->getOne( "SELECT oxid FROM oxcontents WHERE oxloadid = 'oxagb' " );
-        modConfig::setParameter( 'oxcid', $sContentId );
-        modConfig::getInstance()->setConfigParam( "blPsLoginEnabled", true );
+        $sContentId = oxDb::getDb(oxDB::FETCH_MODE_ASSOC)->getOne("SELECT oxid FROM oxcontents WHERE oxloadid = 'oxagb' ");
+        modConfig::setRequestParameter('oxcid', $sContentId);
+        modConfig::getInstance()->setConfigParam("blPsLoginEnabled", true);
 
         $oView = new content();
-        $this->assertEquals( $oView->getContentId(), $sContentId );
+        $this->assertEquals($oView->getContentId(), $sContentId);
     }
 
     /**
@@ -129,10 +127,10 @@ class Unit_Views_contentTest extends OxidTestCase
      */
     public function testGetSeoObjectId()
     {
-        modConfig::setParameter( 'oxcid', 'testseoobjectid' );
+        modConfig::setRequestParameter('oxcid', 'testseoobjectid');
 
         $oContentView = new content();
-        $this->assertEquals( 'testseoobjectid', $oContentView->UNITgetSeoObjectId() );
+        $this->assertEquals('testseoobjectid', $oContentView->UNITgetSeoObjectId());
     }
 
     /**
@@ -142,11 +140,11 @@ class Unit_Views_contentTest extends OxidTestCase
      */
     public function testGetViewId()
     {
-        modConfig::setParameter( 'oxcid', 'testparam' );
+        modConfig::setRequestParameter('oxcid', 'testparam');
 
         $oView = new oxubase();
         $oContentView = new content();
-        $this->assertEquals( $oView->getViewId().'|testparam', $oContentView->getViewId() );
+        $this->assertEquals($oView->getViewId() . '|testparam', $oContentView->getViewId());
     }
 
     /**
@@ -157,14 +155,14 @@ class Unit_Views_contentTest extends OxidTestCase
     public function testRender()
     {
         $oContent = new oxContent();
-        $oContent->setId( "testContent" );
+        $oContent->setId("testContent");
 
-        $oContentView = $this->getMock( 'content', array( '_canShowContent', 'getContent', 'showPlainTemplate', '_getTplName' ) );
-        $oContentView->expects( $this->atLeastOnce() )->method( '_getTplName' )->will( $this->returnValue( false ) );
-        $oContentView->expects( $this->atLeastOnce() )->method( '_canShowContent' )->will( $this->returnValue( true ) );
-        $oContentView->expects( $this->atLeastOnce() )->method( 'getContent' )->will( $this->returnValue( $oContent ) );
-        $oContentView->expects( $this->atLeastOnce() )->method( 'showPlainTemplate' )->will( $this->returnValue( 'true' ) );
-        $this->assertEquals( 'page/info/content_plain.tpl', $oContentView->render() );
+        $oContentView = $this->getMock('content', array('_canShowContent', 'getContent', 'showPlainTemplate', '_getTplName'));
+        $oContentView->expects($this->atLeastOnce())->method('_getTplName')->will($this->returnValue(false));
+        $oContentView->expects($this->atLeastOnce())->method('_canShowContent')->will($this->returnValue(true));
+        $oContentView->expects($this->atLeastOnce())->method('getContent')->will($this->returnValue($oContent));
+        $oContentView->expects($this->atLeastOnce())->method('showPlainTemplate')->will($this->returnValue('true'));
+        $this->assertEquals('page/info/content_plain.tpl', $oContentView->render());
     }
 
     /**
@@ -174,21 +172,22 @@ class Unit_Views_contentTest extends OxidTestCase
      */
     public function testRenderPsOn()
     {
-        oxTestModules::addFunction( 'oxUtils', 'redirect', '{ throw new Exception("redirect"); }');
+        oxTestModules::addFunction('oxUtils', 'redirect', '{ throw new Exception("redirect"); }');
 
-        modConfig::setParameter( 'oxcid', $this->_oObj->getId() );
-        modConfig::getInstance()->setConfigParam( "blPsLoginEnabled", true );
+        modConfig::setRequestParameter('oxcid', $this->_oObj->getId());
+        modConfig::getInstance()->setConfigParam("blPsLoginEnabled", true);
 
         try {
             // testing..
-            $oView = $this->getMock( "content", array( "_canShowContent" ), array(), '', false );
-            $oView->expects( $this->once() )->method( '_canShowContent' )->will( $this->returnValue( false ) );
+            $oView = $this->getMock("content", array("_canShowContent"), array(), '', false);
+            $oView->expects($this->once())->method('_canShowContent')->will($this->returnValue(false));
             $oView->render();
-        } catch ( Exception $oExcp ) {
-            $this->assertEquals( "redirect", $oExcp->getMessage(), "Error in oxsclogincontent::getContentId()" );
+        } catch (Exception $oExcp) {
+            $this->assertEquals("redirect", $oExcp->getMessage(), "Error in oxsclogincontent::getContentId()");
+
             return;
         }
-        $this->fail( "Error in content::getContentId()" );
+        $this->fail("Error in content::getContentId()");
     }
 
     /**
@@ -199,14 +198,14 @@ class Unit_Views_contentTest extends OxidTestCase
     public function testPrepareMetaKeyword()
     {
         $oContent = new oxarticle();
-        $oContent->oxcontents__oxtitle = $this->getMock( 'oxField', array( '__get' ) );
-        $oContent->oxcontents__oxtitle->expects( $this->once() )->method( '__get')->will( $this->returnValue( 'testtitle' ) );
+        $oContent->oxcontents__oxtitle = $this->getMock('oxField', array('__get'));
+        $oContent->oxcontents__oxtitle->expects($this->once())->method('__get')->will($this->returnValue('testtitle'));
 
-        $oContentView = $this->getMock( 'content', array( 'getContent' ) );
-        $oContentView->expects( $this->once() )->method( 'getContent')->will( $this->returnValue( $oContent ) );
+        $oContentView = $this->getMock('content', array('getContent'));
+        $oContentView->expects($this->once())->method('getContent')->will($this->returnValue($oContent));
 
         $oView = new oxubase();
-        $this->assertEquals( $oView->UNITprepareMetaKeyword( 'testtitle' ), $oContentView->UNITprepareMetaKeyword( null ) );
+        $this->assertEquals($oView->UNITprepareMetaKeyword('testtitle'), $oContentView->UNITprepareMetaKeyword(null));
     }
 
     /**
@@ -217,14 +216,14 @@ class Unit_Views_contentTest extends OxidTestCase
     public function testPrepareMetaDescription()
     {
         $oContent = new oxarticle();
-        $oContent->oxcontents__oxtitle = $this->getMock( 'oxField', array( '__get' ) );
-        $oContent->oxcontents__oxtitle->expects( $this->once() )->method( '__get')->will( $this->returnValue( 'testtitle' ) );
+        $oContent->oxcontents__oxtitle = $this->getMock('oxField', array('__get'));
+        $oContent->oxcontents__oxtitle->expects($this->once())->method('__get')->will($this->returnValue('testtitle'));
 
-        $oContentView = $this->getMock( 'content', array( 'getContent' ) );
-        $oContentView->expects( $this->once() )->method( 'getContent')->will( $this->returnValue( $oContent ) );
+        $oContentView = $this->getMock('content', array('getContent'));
+        $oContentView->expects($this->once())->method('getContent')->will($this->returnValue($oContent));
 
         $oView = new oxubase();
-        $this->assertEquals( $oView->UNITprepareMetaDescription( 'testtitle' ), $oContentView->UNITprepareMetaDescription( null ) );
+        $this->assertEquals($oView->UNITprepareMetaDescription('testtitle'), $oContentView->UNITprepareMetaDescription(null));
     }
 
     /**
@@ -234,10 +233,10 @@ class Unit_Views_contentTest extends OxidTestCase
      */
     public function testGetContentCategoryNoCategoryAssigned()
     {
-        $oView = $this->getMock( 'content', array( 'getContent' ) );
-        $oView->expects( $this->once() )->method( 'getContent')->will( $this->returnValue( new oxcontent() ) );
+        $oView = $this->getMock('content', array('getContent'));
+        $oView->expects($this->once())->method('getContent')->will($this->returnValue(new oxcontent()));
 
-        $this->assertFalse( $oView->getContentCategory() );
+        $this->assertFalse($oView->getContentCategory());
     }
 
     /**
@@ -248,12 +247,12 @@ class Unit_Views_contentTest extends OxidTestCase
     public function testGetContentCategorySomeCategoryAssigned()
     {
         $oContent = new oxcontent();
-        $oContent->oxcontents__oxtype = new oxfield( 2 );
+        $oContent->oxcontents__oxtype = new oxfield(2);
 
-        $oView = $this->getMock( 'content', array( 'getContent' ) );
-        $oView->expects( $this->once() )->method( 'getContent')->will( $this->returnValue( $oContent ) );
+        $oView = $this->getMock('content', array('getContent'));
+        $oView->expects($this->once())->method('getContent')->will($this->returnValue($oContent));
 
-        $this->assertEquals( $oContent, $oView->getContentCategory() );
+        $this->assertEquals($oContent, $oView->getContentCategory());
     }
 
     /**
@@ -263,14 +262,14 @@ class Unit_Views_contentTest extends OxidTestCase
      */
     public function testShowPlainTemplate()
     {
-        modConfig::getInstance()->setConfigParam( "blPsLoginEnabled", false );
-        modConfig::setParameter( 'plain', 0 );
+        modConfig::getInstance()->setConfigParam("blPsLoginEnabled", false);
+        modConfig::setRequestParameter('plain', 0);
         $oView = new content();
-        $this->assertFalse( $oView->showPlainTemplate() );
+        $this->assertFalse($oView->showPlainTemplate());
 
-        modConfig::setParameter( 'plain', 1 );
+        modConfig::setRequestParameter('plain', 1);
         $oView = new content();
-        $this->assertTrue( $oView->showPlainTemplate() );
+        $this->assertTrue($oView->showPlainTemplate());
     }
 
     /**
@@ -280,29 +279,29 @@ class Unit_Views_contentTest extends OxidTestCase
      */
     public function testShowPlainTemplatePsOn()
     {
-        modConfig::getInstance()->setConfigParam( "blPsLoginEnabled", true );
-        modConfig::setParameter( 'plain', 0 );
+        modConfig::getInstance()->setConfigParam("blPsLoginEnabled", true);
+        modConfig::setRequestParameter('plain', 0);
         $oView = new content();
-        $this->assertTrue( $oView->showPlainTemplate() );
+        $this->assertTrue($oView->showPlainTemplate());
 
-        modConfig::setParameter( 'plain', 1 );
+        modConfig::setRequestParameter('plain', 1);
         $oView = new content();
-        $this->assertTrue( $oView->showPlainTemplate() );
+        $this->assertTrue($oView->showPlainTemplate());
 
-        modConfig::setParameter( 'plain', 0 );
+        modConfig::setRequestParameter('plain', 0);
 
-        $oView = $this->getMock( 'content', array( 'getUser' ) );
-        $oView->expects( $this->any() )->method( 'getUser')->will( $this->returnValue( false ) );
-        $this->assertTrue( $oView->showPlainTemplate() );
+        $oView = $this->getMock('content', array('getUser'));
+        $oView->expects($this->any())->method('getUser')->will($this->returnValue(false));
+        $this->assertTrue($oView->showPlainTemplate());
 
-        modConfig::setParameter( 'plain', 0 );
+        modConfig::setRequestParameter('plain', 0);
 
-        $oUser = $this->getMock( 'oxuser', array( 'isTermsAccepted' ) );
-        $oUser->expects( $this->any() )->method( 'isTermsAccepted')->will( $this->returnValue( true ) );
+        $oUser = $this->getMock('oxuser', array('isTermsAccepted'));
+        $oUser->expects($this->any())->method('isTermsAccepted')->will($this->returnValue(true));
 
-        $oView = $this->getMock( 'content', array( 'getUser' ) );
-        $oView->expects( $this->any() )->method( 'getUser')->will( $this->returnValue( $oUser ) );
-        $this->assertFalse( $oView->showPlainTemplate() );
+        $oView = $this->getMock('content', array('getUser'));
+        $oView->expects($this->any())->method('getUser')->will($this->returnValue($oUser));
+        $this->assertFalse($oView->showPlainTemplate());
 
     }
 
@@ -313,15 +312,15 @@ class Unit_Views_contentTest extends OxidTestCase
      */
     public function testGetContentIdWithOxcidParam()
     {
-        modConfig::setParameter( 'oxcid', $this->_oObj->getId() );
-        modConfig::getInstance()->setConfigParam( "blPsLoginEnabled", false );
+        modConfig::setRequestParameter('oxcid', $this->_oObj->getId());
+        modConfig::getInstance()->setConfigParam("blPsLoginEnabled", false);
 
-        oxTestModules::addFunction( 'oxUtils', 'redirect', '{ throw new Exception($aA[0]); }');
+        oxTestModules::addFunction('oxUtils', 'redirect', '{ throw new Exception($aA[0]); }');
 
         $oObj = new content();
 
         // testing special chars conversion
-        $this->assertEquals( $oObj->getContentId(), $this->_oObj->getId() );
+        $this->assertEquals($oObj->getContentId(), $this->_oObj->getId());
     }
 
     /**
@@ -335,12 +334,12 @@ class Unit_Views_contentTest extends OxidTestCase
         $oContent->setId('_testContent');
         $oContent->oxcontents__oxactive = new oxField('0');
         $oContent->save();
-        modConfig::setParameter( 'oxcid', $oContent->getId() );
+        modConfig::setRequestParameter('oxcid', $oContent->getId());
 
-        $oContentView = new Content() ;
+        $oContentView = new Content();
 
         // testing special chars conversion
-        $this->assertFalse( $oContentView->getContentId() );
+        $this->assertFalse($oContentView->getContentId());
     }
 
     /**
@@ -350,13 +349,13 @@ class Unit_Views_contentTest extends OxidTestCase
      */
     public function testGetContentIdWhenNoIdSpecified()
     {
-        modConfig::getInstance()->setConfigParam( "blPsLoginEnabled", false );
+        modConfig::getInstance()->setConfigParam("blPsLoginEnabled", false);
 
-        oxTestModules::addFunction( 'oxUtils', 'redirect', '{ throw new Exception($aA[0]); }');
-        $sContentId = oxDb::getDb( oxDB::FETCH_MODE_ASSOC )->getOne( "SELECT oxid FROM oxcontents WHERE oxloadid = 'oximpressum' " );
+        oxTestModules::addFunction('oxUtils', 'redirect', '{ throw new Exception($aA[0]); }');
+        $sContentId = oxDb::getDb(oxDB::FETCH_MODE_ASSOC)->getOne("SELECT oxid FROM oxcontents WHERE oxloadid = 'oximpressum' ");
 
         $oObj = new content();
-        $this->assertEquals( $sContentId, $oObj->getContentId() );
+        $this->assertEquals($sContentId, $oObj->getContentId());
     }
 
     /**
@@ -366,14 +365,14 @@ class Unit_Views_contentTest extends OxidTestCase
      */
     public function testGetContent()
     {
-        modConfig::setParameter( 'oxcid', $this->_oObj->getId() );
-        modConfig::getInstance()->setConfigParam( "blPsLoginEnabled", false );
-        oxTestModules::addFunction( 'oxUtils', 'redirect', '{ throw new Exception($aA[0]); }');
+        modConfig::setRequestParameter('oxcid', $this->_oObj->getId());
+        modConfig::getInstance()->setConfigParam("blPsLoginEnabled", false);
+        oxTestModules::addFunction('oxUtils', 'redirect', '{ throw new Exception($aA[0]); }');
 
         $oObj = new content();
 
         // testing special chars conversion
-        $this->assertEquals( $oObj->getContent()->getId(), $this->_oObj->getId() );
+        $this->assertEquals($oObj->getContent()->getId(), $this->_oObj->getId());
     }
 
     /**
@@ -383,9 +382,9 @@ class Unit_Views_contentTest extends OxidTestCase
      */
     public function testGetTplName()
     {
-       modConfig::setParameter( 'tpl', 'test.tpl' );
-       $oObj = $this->getProxyClass("content");
-       $this->assertEquals( 'message/test.tpl', $oObj->UNITgetTplName() );
+        modConfig::setRequestParameter('tpl', 'test.tpl');
+        $oObj = $this->getProxyClass("content");
+        $this->assertEquals('message/test.tpl', $oObj->UNITgetTplName());
     }
 
     /**
@@ -395,13 +394,13 @@ class Unit_Views_contentTest extends OxidTestCase
      */
     public function testRenderReturnSettedTemplateName()
     {
-       oxTestModules::addFunction( 'oxUtils', 'redirect', '{ throw new Exception($aA[0]); }');
-       modConfig::getInstance()->setConfigParam( "blPsLoginEnabled", false );
+        oxTestModules::addFunction('oxUtils', 'redirect', '{ throw new Exception($aA[0]); }');
+        modConfig::getInstance()->setConfigParam("blPsLoginEnabled", false);
 
-       $oView = $this->getMock( 'content', array( '_getTplName' ) );
-       $oView->expects( $this->once() )->method( '_getTplName')->will( $this->returnValue( 'test.tpl' ) );
+        $oView = $this->getMock('content', array('_getTplName'));
+        $oView->expects($this->once())->method('_getTplName')->will($this->returnValue('test.tpl'));
 
-       $this->assertEquals( 'test.tpl', $oView->render() );
+        $this->assertEquals('test.tpl', $oView->render());
     }
 
     /**
@@ -412,30 +411,31 @@ class Unit_Views_contentTest extends OxidTestCase
      */
     public function testGetTplNameWhenTplParamIsContentId()
     {
-       modConfig::setParameter( 'tpl', '2eb46767947d21851.22681675' );
-       $oObj = $this->getProxyClass("content");
-       $this->assertNull( $oObj->UNITgetTplName() );
+        modConfig::setRequestParameter('tpl', '2eb46767947d21851.22681675');
+        $oObj = $this->getProxyClass("content");
+        $this->assertNull($oObj->UNITgetTplName());
     }
 
     public function testContentNotFound()
     {
-       modConfig::setParameter( 'oxcid', null );
-       modConfig::setParameter( 'oxloadid', null );
-       $oView = $this->getMock( 'content', array( '_getTplName', 'getContentId' ) );
-       $oView->expects( $this->once() )->method( '_getTplName')->will( $this->returnValue( '' ) );
-       $oView->expects( $this->any() )->method( 'getContentId')->will( $this->returnValue( false ) );
+        modConfig::setRequestParameter('oxcid', null);
+        modConfig::setRequestParameter('oxloadid', null);
+        $oView = $this->getMock('content', array('_getTplName', 'getContentId'));
+        $oView->expects($this->once())->method('_getTplName')->will($this->returnValue(''));
+        $oView->expects($this->any())->method('getContentId')->will($this->returnValue(false));
 
-       $oUtils = $this->getMock( 'oxutils', array( 'handlePageNotFoundError' ) );
-       $oUtils->expects( $this->once() )->method( 'handlePageNotFoundError')->will( $this->throwException( new Exception("404")) );
-       oxTestModules::addModuleObject('oxutils', $oUtils);
+        $oUtils = $this->getMock('oxutils', array('handlePageNotFoundError'));
+        $oUtils->expects($this->once())->method('handlePageNotFoundError')->will($this->throwException(new Exception("404")));
+        oxTestModules::addModuleObject('oxutils', $oUtils);
 
-       try {
-        $oView->render();
-       } catch (Exception $e) {
-           $this->assertEquals('404', $e->getMessage());
-           return;
-       }
-       $this->fail("no exception");
+        try {
+            $oView->render();
+        } catch (Exception $e) {
+            $this->assertEquals('404', $e->getMessage());
+
+            return;
+        }
+        $this->fail("no exception");
     }
 
     /**
@@ -457,9 +457,9 @@ class Unit_Views_contentTest extends OxidTestCase
      */
     public function testGetTitle()
     {
-        modConfig::setParameter( 'oxcid', $this->_oObj->getId() );
+        modConfig::setRequestParameter('oxcid', $this->_oObj->getId());
         $oContent = new content();
-        $this->assertEquals( 'test', $oContent->getTitle() );
+        $this->assertEquals('test', $oContent->getTitle());
     }
 
     /**
@@ -473,7 +473,7 @@ class Unit_Views_contentTest extends OxidTestCase
         $oConf->setConfigParam('blRDFaEmbedding', '_test_value');
 
         $oView = new Content();
-        $this->assertSame( '_test_value', $oView->showRdfa() );
+        $this->assertSame('_test_value', $oView->showRdfa());
     }
 
     /**
@@ -494,7 +494,7 @@ class Unit_Views_contentTest extends OxidTestCase
         $this->assertFalse(empty($sExpResp));
 
         $oView = $this->getMock('Content', array('getContent'));
-        $oView->expects( $this->once() )->method('getContent')->will( $this->returnValue($oContent) );
+        $oView->expects($this->once())->method('getContent')->will($this->returnValue($oContent));
         $aTpl = $oView->getContentPageTpl();
         $this->assertSame($sExpResp, $aTpl[0]);
     }
@@ -517,7 +517,7 @@ class Unit_Views_contentTest extends OxidTestCase
         $this->assertFalse(empty($sExpResp));
 
         $oView = $this->getMock('Content', array('getContent'));
-        $oView->expects( $this->once() )->method('getContent')->will( $this->returnValue($oContent) );
+        $oView->expects($this->once())->method('getContent')->will($this->returnValue($oContent));
         $aTpl = $oView->getContentPageTpl();
         $this->assertSame($sExpResp, $aTpl[0]);
     }
@@ -540,7 +540,7 @@ class Unit_Views_contentTest extends OxidTestCase
         $this->assertFalse(empty($sExpResp));
 
         $oView = $this->getMock('Content', array('getContent'));
-        $oView->expects( $this->once() )->method('getContent')->will( $this->returnValue($oContent) );
+        $oView->expects($this->once())->method('getContent')->will($this->returnValue($oContent));
         $aTpl = $oView->getContentPageTpl();
         $this->assertSame($sExpResp, $aTpl[0]);
     }
@@ -560,7 +560,7 @@ class Unit_Views_contentTest extends OxidTestCase
 
         $oViewProxy = $this->getProxyClass('Content');
         $oViewProxy->setNonPublicVar('_aBusinessEntityExtends', $aInput);
-        $this->assertSame( $aExpResp, $oViewProxy->getBusinessEntityExtends() );
+        $this->assertSame($aExpResp, $oViewProxy->getBusinessEntityExtends());
     }
 
     /**
@@ -570,7 +570,7 @@ class Unit_Views_contentTest extends OxidTestCase
      */
     public function testGetNotMappedToRDFaPayments()
     {
-        oxTestModules::addFunction( 'oxPaymentList', 'getNonRDFaPaymentList', '{ return \'_call_getNonRDFaPaymentList\'; }');
+        oxTestModules::addFunction('oxPaymentList', 'getNonRDFaPaymentList', '{ return \'_call_getNonRDFaPaymentList\'; }');
 
         $oView = new Content();
         $oResp = $oView->getNotMappedToRDFaPayments();
@@ -584,7 +584,7 @@ class Unit_Views_contentTest extends OxidTestCase
      */
     public function testGetNotMappedToRDFaDeliverySets()
     {
-        oxTestModules::addFunction( 'oxdeliverysetlist', 'getNonRDFaDeliverySetList', '{ return \'_call_getNonRDFaDeliverySetList\'; }');
+        oxTestModules::addFunction('oxdeliverysetlist', 'getNonRDFaDeliverySetList', '{ return \'_call_getNonRDFaDeliverySetList\'; }');
 
         $oView = new Content();
         $oResp = $oView->getNotMappedToRDFaDeliverySets();
@@ -598,7 +598,7 @@ class Unit_Views_contentTest extends OxidTestCase
      */
     public function testGetDeliveryChargeSpecs()
     {
-        $oDelivery = oxNew( 'oxdelivery' );
+        $oDelivery = oxNew('oxdelivery');
         $oDelivery->setId('_testDeliveryId');
         $oDelivery->oxdelivery__oxtitle = new oxField('_testDelivertTitle' . $i, oxField::T_RAW);
         $oDelivery->oxdelivery__oxactive = new oxField(1, oxField::T_RAW);
@@ -610,9 +610,9 @@ class Unit_Views_contentTest extends OxidTestCase
 
         $oDelivery->save();
 
-        $oDel2Delset = oxNew( 'oxbase' );
-        $oDel2Delset->init( 'oxdel2delset' );
-        $oDel2Delset->setId( '_testDel2DelSetId' );
+        $oDel2Delset = oxNew('oxbase');
+        $oDel2Delset->init('oxdel2delset');
+        $oDel2Delset->setId('_testDel2DelSetId');
         $oDel2Delset->oxdel2delset__oxdelid = new oxField($oDelivery->getId(), oxField::T_RAW);
         $oDel2Delset->oxdel2delset__oxdelsetid = new oxField('oxidstandard', oxField::T_RAW);
         $oDel2Delset->save();
@@ -621,7 +621,7 @@ class Unit_Views_contentTest extends OxidTestCase
         $oResp = $oView->getDeliveryChargeSpecs();
 
         $this->assertEquals(5, count($oResp));
-        foreach ( $oResp as $oDelivery ) {
+        foreach ($oResp as $oDelivery) {
             $this->assertTrue($oDelivery instanceof oxdelivery);
             $this->assertTrue($oDelivery->deliverysetmethods instanceof oxdeliverysetlist);
         }
@@ -634,7 +634,7 @@ class Unit_Views_contentTest extends OxidTestCase
      */
     public function testGetDeliveryList()
     {
-        oxTestModules::addFunction( 'oxdeliverylist', 'getList', '{ return \'_call_getList\'; }');
+        oxTestModules::addFunction('oxdeliverylist', 'getList', '{ return \'_call_getList\'; }');
 
         $oView = new Content();
         $oResp = $oView->getDeliveryList();
@@ -652,7 +652,7 @@ class Unit_Views_contentTest extends OxidTestCase
         $oConf->setConfigParam('iRDFaVAT', 123);
 
         $oView = new Content();
-        $this->assertSame( 123, $oView->getRdfaVAT() );
+        $this->assertSame(123, $oView->getRdfaVAT());
     }
 
     /**
@@ -665,13 +665,13 @@ class Unit_Views_contentTest extends OxidTestCase
 
         $oView = new Content();
         $aResp = $oView->getRdfaPriceValidity();
-        $this->assertSame( array('validfrom', 'validthrough'),  array_keys($aResp));
+        $this->assertSame(array('validfrom', 'validthrough'), array_keys($aResp));
 
-        $startTime = time() - (2*60*60);
+        $startTime = time() - (2 * 60 * 60);
         $endTime = $startTime + (3 * 24 * 60 * 60);
 
-        $this->assertTrue( date('Y-m-d\TH:i:s', $startTime) <= $aResp['validfrom'] );
-        $this->assertTrue( date('Y-m-d\TH:i:s', $endTime) <= $aResp['validthrough'] );
+        $this->assertTrue(date('Y-m-d\TH:i:s', $startTime) <= $aResp['validfrom']);
+        $this->assertTrue(date('Y-m-d\TH:i:s', $endTime) <= $aResp['validthrough']);
     }
 
     /**
@@ -683,14 +683,14 @@ class Unit_Views_contentTest extends OxidTestCase
     {
         $this->_oObj->oxcontents__oxcontent = new oxField("[{ 'A'|cat:'B' }]SSSSSSSS", oxField::T_RAW);
         $this->_oObj->save();
-        modConfig::setParameter( 'oxcid', $this->_oObj->getId() );
+        modConfig::setRequestParameter('oxcid', $this->_oObj->getId());
         $oContent = new content();
 
-        $this->assertEquals( 'ABSSSSSSSS', $oContent->getParsedContent(), 'Result from smarty not same as in content page.' );
+        $this->assertEquals('ABSSSSSSSS', $oContent->getParsedContent(), 'Result from smarty not same as in content page.');
 
         // Check if second CMS page will be generated with different content.
         $oSecond = new oxcontent();
-        $oSecond->setId('_test_testGetParsedContent');// = new oxField('_test_testGetParsedContent');
+        $oSecond->setId('_test_testGetParsedContent'); // = new oxField('_test_testGetParsedContent');
         $oSecond->oxcontents__oxtitle = new oxField('test', oxField::T_RAW);
         $sShopId = modConfig::getInstance()->getShopId();
         $oSecond->oxcontents__oxshopid = new oxField($sShopId, oxField::T_RAW);
@@ -700,9 +700,34 @@ class Unit_Views_contentTest extends OxidTestCase
         $oSecond->oxcontents__oxactive = new oxField('1', oxField::T_RAW);
         $oSecond->oxcontents__oxactive_1 = new oxField('1', oxField::T_RAW);
         $oSecond->save();
-        modConfig::setParameter( 'oxcid', $oSecond->getId() );
+        modConfig::setRequestParameter('oxcid', $oSecond->getId());
         $oContent = new content();
 
         $this->assertEquals( 'ADSSSSSSSS', $oContent->getParsedContent(), 'Content not as in second page. If result ABSSSSSSSS than it is ame as in first page, so used wrong smarty cache file.' );
+    }
+    
+    /**
+     * getParsedContent() test case
+     * test returned parsed content with smarty tags when template regeneration is disabled
+     * and template is saved twice.
+     *
+     * @return null
+     */
+    public function testGetParsedContentTagsWhenTemplateAlreadyGeneratedAndRegenerationDisabled()
+    {
+        $this->getConfig()->setConfigParam('blCheckTemplates', false);
+
+        $this->_oObj->oxcontents__oxcontent = new oxField("[{* *}]generated", oxField::T_RAW);
+        $this->_oObj->save();
+        $this->getConfig()->setParameter('oxcid', $this->_oObj->getId());
+
+        $oContent = oxNew('content');
+        $oContent->getParsedContent();
+
+        $this->_oObj->oxcontents__oxcontent = new oxField("[{* *}]regenerated", oxField::T_RAW);
+        $this->_oObj->save();
+
+        $oContent = oxNew('content');
+        $this->assertEquals('regenerated', $oContent->getParsedContent());
     }
 }

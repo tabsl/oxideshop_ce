@@ -1,28 +1,24 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: timestampTest.php 26841 2010-03-25 13:58:15Z linas.kukulskis $
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
-
-require_once realpath(dirname(__FILE__).'/../../') . '/unit/OxidTestCase.php';
 
 /**
  * Integration test testing corect timestamp setting on update and insert in all tables
@@ -30,6 +26,7 @@ require_once realpath(dirname(__FILE__).'/../../') . '/unit/OxidTestCase.php';
  */
 class Integration_Timestamp_TimestampTest extends OxidTestCase
 {
+
     /**
      * Tear down the fixture.
      *
@@ -38,7 +35,7 @@ class Integration_Timestamp_TimestampTest extends OxidTestCase
     protected function tearDown()
     {
         $aTables = $this->objectNames();
-        foreach ($aTables as $aTable){
+        foreach ($aTables as $aTable) {
             $this->cleanUpTable($aTable[1]);
         }
 
@@ -54,7 +51,7 @@ class Integration_Timestamp_TimestampTest extends OxidTestCase
         $aNames = array(
             array('oxActions', 'oxactions', 'oxtitle'),
             array('oxAddress', 'oxaddress', 'oxcompany'),
-            array('oxArticle', 'oxarticles', 'oxtitle' ),
+            array('oxArticle', 'oxarticles', 'oxtitle'),
             array('oxAttribute', 'oxattribute', 'oxtitle'),
             array('oxCategory', 'oxcategories', 'oxtitle'),
             array('oxContent', 'oxcontents', 'oxtitle'),
@@ -99,7 +96,7 @@ class Integration_Timestamp_TimestampTest extends OxidTestCase
      *
      * @dataProvider objectNames
      */
-    public function testOnInsertDb( $objectName, $tableName )
+    public function testOnInsertDb($objectName, $tableName)
     {
         $sInsertSql = "INSERT INTO `$tableName` SET `oxid` = '_testId'";
         $sSelectSql = "SELECT `oxtimestamp` FROM `$tableName` WHERE `oxid` = '_testId'";
@@ -109,7 +106,7 @@ class Integration_Timestamp_TimestampTest extends OxidTestCase
         $oDb->Execute($sInsertSql);
         $sTimeStamp = $oDb->getOne($sSelectSql);
 
-        $this->assertTrue( $sTimeStamp != '0000-00-00 00:00:00' );
+        $this->assertTrue($sTimeStamp != '0000-00-00 00:00:00');
     }
 
     /**
@@ -117,7 +114,7 @@ class Integration_Timestamp_TimestampTest extends OxidTestCase
      *
      * @dataProvider objectNames
      */
-    public function testOnUpdateDb( $objectName, $tableName, $modifyField )
+    public function testOnUpdateDb($objectName, $tableName, $modifyField)
     {
         $sInsertSql = "INSERT INTO `$tableName` SET `oxid` = '_testId', `oxtimestamp` = '0000-00-00 00:00:00' ";
         $sUpdateSql = "UPDATE `$tableName` SET `$modifyField` = '_testmodified' WHERE `oxid` = '_testId'";
@@ -130,7 +127,7 @@ class Integration_Timestamp_TimestampTest extends OxidTestCase
 
         $sTimeStamp = $oDb->getOne($sSelectSql);
 
-        $this->assertTrue( $sTimeStamp != '0000-00-00 00:00:00' );
+        $this->assertTrue($sTimeStamp != '0000-00-00 00:00:00');
     }
 
     /**
@@ -138,21 +135,21 @@ class Integration_Timestamp_TimestampTest extends OxidTestCase
      *
      * @dataProvider objectNames
      */
-    public function testOnInsert( $objectName, $tableName, $modifyField )
+    public function testOnInsert($objectName, $tableName, $modifyField)
     {
         $attNameMod = $tableName . '__' . $modifyField;
 
-        $oObject = oxNew( $objectName );
+        $oObject = oxNew($objectName);
         $oObject->setId('_testId');
-        $oObject->$attNameMod = new oxField( 'test' );
+        $oObject->$attNameMod = new oxField('test');
         $oObject->save();
 
-        $oObject = oxNew( $objectName );
+        $oObject = oxNew($objectName);
         $oObject->load('_testId');
 
-        $attName = $tableName.'__oxtimestamp';
+        $attName = $tableName . '__oxtimestamp';
 
-        $this->assertTrue( $oObject->$attName->value != '0000-00-00 00:00:00' );
+        $this->assertTrue($oObject->$attName->value != '0000-00-00 00:00:00');
     }
 
     /**
@@ -160,26 +157,26 @@ class Integration_Timestamp_TimestampTest extends OxidTestCase
      *
      * @dataProvider objectNames
      */
-    public function testOnUpdate( $objectName, $tableName, $modifyField )
+    public function testOnUpdate($objectName, $tableName, $modifyField)
     {
         $attName = $tableName . '__oxtimestamp';
         $attNameMod = $tableName . '__' . $modifyField;
 
-        $oObject = oxNew( $objectName );
+        $oObject = oxNew($objectName);
         $oObject->setId('_testId');
-        $oObject->$attName = new oxField( '0000-00-00 00:00:00' );
-        $oObject->$attNameMod = new oxField( 'test' );
+        $oObject->$attName = new oxField('0000-00-00 00:00:00');
+        $oObject->$attNameMod = new oxField('test');
         $oObject->save();
 
-        $oObject = oxNew( $objectName );
+        $oObject = oxNew($objectName);
         $oObject->load('_testId');
-        $oObject->$attNameMod = new oxField( 'testmodyfied' );
+        $oObject->$attNameMod = new oxField('testmodyfied');
         $oObject->save();
 
-        $oObject = oxNew( $objectName );
+        $oObject = oxNew($objectName);
         $oObject->load('_testId');
 
-        $this->assertTrue( $oObject->$attName->value != '0000-00-00 00:00:00' );
+        $this->assertTrue($oObject->$attName->value != '0000-00-00 00:00:00');
     }
 
     /**
@@ -190,11 +187,11 @@ class Integration_Timestamp_TimestampTest extends OxidTestCase
     {
         $oDb = oxDb::getDb();
         $sQ = "SHOW FULL tables WHERE Table_Type = 'BASE TABLE'";
-        $aTableNames = $oDb->getArray( $sQ );
-        foreach ( $aTableNames as $sKey => $aTable ) {
+        $aTableNames = $oDb->getArray($sQ);
+        foreach ($aTableNames as $sKey => $aTable) {
             $sTableName = $aTable[0];
             $sSelectSql = "SHOW COLUMNS FROM `$sTableName` LIKE 'oxtimestamp'";
-            $this->assertEquals( "OXTIMESTAMP", $oDb->getOne( $sSelectSql ), "No OXTIMESTAMP field in TABLE: $sTableName" );
+            $this->assertEquals("OXTIMESTAMP", $oDb->getOne($sSelectSql), "No OXTIMESTAMP field in TABLE: $sTableName");
         }
     }
 }

@@ -1,39 +1,37 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   admin
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
  * Admin general export manager.
- * @package admin
  */
 class GenImport_Main extends oxAdminDetails
 {
+
     /**
      * Export class name
      *
      * @var string
      */
-    public $sClassDo   = "genImport_do";
+    public $sClassDo = "genImport_do";
 
     /**
      * Export ui class name
@@ -51,30 +49,35 @@ class GenImport_Main extends oxAdminDetails
 
     /**
      * Csv file field terminator
+     *
      * @var string
      */
     protected $_sStringTerminator = null;
 
     /**
      * Csv file field encloser
+     *
      * @var string
      */
     protected $_sStringEncloser = null;
 
     /**
      * Default Csv file field terminator
+     *
      * @var string
      */
     protected $_sDefaultStringTerminator = ";";
 
     /**
      * Default Csv file field encloser
+     *
      * @var string
      */
     protected $_sDefaultStringEncloser = '"';
 
     /**
      * Current class template name.
+     *
      * @var string
      */
     protected $_sThisTemplate = "genimport_main.tpl";
@@ -92,70 +95,70 @@ class GenImport_Main extends oxAdminDetails
         $oErpImport = new oxErpGenImport();
         $this->_sCsvFilePath = null;
 
-        $sNavStep = $oConfig->getParameter( 'sNavStep' );
+        $sNavStep = $oConfig->getRequestParameter('sNavStep');
 
-        if ( !$sNavStep ) {
+        if (!$sNavStep) {
             $sNavStep = 1;
         } else {
             $sNavStep++;
         }
 
 
-        $sNavStep = $this->_checkErrors( $sNavStep );
+        $sNavStep = $this->_checkErrors($sNavStep);
 
-        if ( $sNavStep == 1 ) {
-            $this->_aViewData['sGiCsvFieldTerminator'] = htmlentities( $this->_getCsvFieldsTerminator() );
-            $this->_aViewData['sGiCsvFieldEncloser']   = htmlentities( $this->_getCsvFieldsEncolser() );
+        if ($sNavStep == 1) {
+            $this->_aViewData['sGiCsvFieldTerminator'] = oxStr::getStr()->htmlentities($this->_getCsvFieldsTerminator());
+            $this->_aViewData['sGiCsvFieldEncloser'] = oxStr::getStr()->htmlentities($this->_getCsvFieldsEncolser());
         }
 
-        if ( $sNavStep == 2 ) {
+        if ($sNavStep == 2) {
             //saving csv field terminator and encloser to config
-            if ( $sTerminator = $oConfig->getParameter( 'sGiCsvFieldTerminator' ) ) {
+            if ($sTerminator = $oConfig->getRequestParameter('sGiCsvFieldTerminator')) {
                 $this->_sStringTerminator = $sTerminator;
-                $oConfig->saveShopConfVar( 'str', 'sGiCsvFieldTerminator', $sTerminator );
+                $oConfig->saveShopConfVar('str', 'sGiCsvFieldTerminator', $sTerminator);
             }
 
-            if ( $sEncloser = $oConfig->getParameter( 'sGiCsvFieldEncloser' ) ) {
+            if ($sEncloser = $oConfig->getRequestParameter('sGiCsvFieldEncloser')) {
                 $this->_sStringEncloser = $sEncloser;
-                $oConfig->saveShopConfVar( 'str', 'sGiCsvFieldEncloser', $sEncloser );
+                $oConfig->saveShopConfVar('str', 'sGiCsvFieldEncloser', $sEncloser);
             }
 
-            $sType = $oConfig->getParameter( 'sType' );
-            $oType = $oErpImport->getImportObject( $sType );
+            $sType = $oConfig->getRequestParameter('sType');
+            $oType = $oErpImport->getImportObject($sType);
             $this->_aViewData['sType'] = $sType;
-            $this->_aViewData['sImportTable'] =  $oType->getBaseTableName();
+            $this->_aViewData['sImportTable'] = $oType->getBaseTableName();
             $this->_aViewData['aCsvFieldsList'] = $this->_getCsvFieldsNames();
             $this->_aViewData['aDbFieldsList'] = $oType->getFieldList();
         }
 
-        if ( $sNavStep == 3 ) {
-            $aCsvFields = $oConfig->getParameter( 'aCsvFields' );
-            $sType = $oConfig->getParameter( 'sType' );
+        if ($sNavStep == 3) {
+            $aCsvFields = $oConfig->getRequestParameter('aCsvFields');
+            $sType = $oConfig->getRequestParameter('sType');
 
             $oErpImport = new oxErpGenImport();
-            $oErpImport->setImportTypePrefix( $sType );
-            $oErpImport->setCsvFileFieldsOrder( $aCsvFields );
-            $oErpImport->setCsvContainsHeader( oxSession::getVar( 'blCsvContainsHeader' ) );
+            $oErpImport->setImportTypePrefix($sType);
+            $oErpImport->setCsvFileFieldsOrder($aCsvFields);
+            $oErpImport->setCsvContainsHeader(oxRegistry::getSession()->getVariable('blCsvContainsHeader'));
 
-            $oErpImport->doImport( $this->_getUploadedCsvFilePath() );
+            $oErpImport->doImport($this->_getUploadedCsvFilePath());
             $this->_aViewData['iTotalRows'] = $oErpImport->getTotalImportedRowsNumber();
 
             //checking if errors occured during import
-            $this->_checkImportErrors( $oErpImport );
+            $this->_checkImportErrors($oErpImport);
 
             //deleting uploaded csv file from temp dir
             $this->_deleteCsvFile();
 
             //check if repeating import - then forsing first step
-            if ( $oConfig->getParameter( 'iRepeatImport' ) ) {
+            if ($oConfig->getRequestParameter('iRepeatImport')) {
                 $this->_aViewData['iRepeatImport'] = 1;
                 $sNavStep = 1;
             }
         }
 
-        if ( $sNavStep == 1 ) {
+        if ($sNavStep == 1) {
             $this->_aViewData['aImportTables'] = $oErpImport->getImportObjectsList();
-            asort( $this->_aViewData['aImportTables'] );
+            asort($this->_aViewData['aImportTables']);
             $this->_resetUploadedCsvData();
         }
 
@@ -166,15 +169,12 @@ class GenImport_Main extends oxAdminDetails
 
     /**
      * Deletes uploaded csv file from temp directory
-     *
-     * @return null
-     *
      */
     protected function _deleteCsvFile()
     {
         $sPath = $this->_getUploadedCsvFilePath();
-        if ( is_file( $sPath ) ) {
-           @unlink( $sPath );
+        if (is_file($sPath)) {
+            @unlink($sPath);
         }
     }
 
@@ -186,20 +186,20 @@ class GenImport_Main extends oxAdminDetails
      */
     protected function _getCsvFieldsNames()
     {
-        $blCsvContainsHeader = $this->getConfig()->getParameter( 'blContainsHeader' );
-        oxSession::setVar( 'blCsvContainsHeader', $blCsvContainsHeader );
+        $blCsvContainsHeader = $this->getConfig()->getRequestParameter('blContainsHeader');
+        oxRegistry::getSession()->setVariable('blCsvContainsHeader', $blCsvContainsHeader);
         $sCsvPath = $this->_getUploadedCsvFilePath();
 
         $aFirstRow = $this->_getCsvFirstRow();
 
-        if ( !$blCsvContainsHeader ) {
+        if (!$blCsvContainsHeader) {
             $iIndex = 1;
-            foreach ( $aFirstRow as $sValue ) {
+            foreach ($aFirstRow as $sValue) {
                 $aCsvFields[$iIndex] = 'Column ' . $iIndex++;
             }
         } else {
-            foreach ( $aFirstRow as $sKey => $sValue ) {
-                $aFirstRow[$sKey] = htmlentities( $sValue );
+            foreach ($aFirstRow as $sKey => $sValue) {
+                $aFirstRow[$sKey] = oxStr::getStr()->htmlentities($sValue);
             }
 
             $aCsvFields = $aFirstRow;
@@ -219,9 +219,9 @@ class GenImport_Main extends oxAdminDetails
         $iMaxLineLength = 8192;
 
         //getting first row
-        if ( ( $rFile = @fopen( $sPath, "r" ) ) !== false ) {
-            $aRow = fgetcsv( $rFile, $iMaxLineLength, $this->_getCsvFieldsTerminator(), $this->_getCsvFieldsEncolser() );
-            fclose( $rFile );
+        if (($rFile = @fopen($sPath, "r")) !== false) {
+            $aRow = fgetcsv($rFile, $iMaxLineLength, $this->_getCsvFieldsTerminator(), $this->_getCsvFieldsEncolser());
+            fclose($rFile);
         }
 
         return $aRow;
@@ -229,14 +229,12 @@ class GenImport_Main extends oxAdminDetails
 
     /**
      * Resets CSV parameters stored in session
-     *
-     *  @return null
      */
     protected function _resetUploadedCsvData()
     {
         $this->_sCsvFilePath = null;
-        oxSession::setVar( 'sCsvFilePath', null );
-        oxSession::setVar( 'blCsvContainsHeader', null );
+        oxRegistry::getSession()->setVariable('sCsvFilePath', null);
+        oxRegistry::getSession()->setVariable('blCsvContainsHeader', null);
     }
 
     /**
@@ -247,31 +245,31 @@ class GenImport_Main extends oxAdminDetails
      *
      * @return int
      */
-    protected function _checkErrors( $iNavStep )
+    protected function _checkErrors($iNavStep)
     {
-        if ( $iNavStep == 2 ) {
-            if ( !$this->_getUploadedCsvFilePath() ) {
-                $oEx = oxNew( "oxExceptionToDisplay" );
-                $oEx->setMessage( 'GENIMPORT_ERRORUPLOADINGFILE' );
-                oxRegistry::get("oxUtilsView")->addErrorToDisplay( $oEx, false, true, 'genimport' );
+        if ($iNavStep == 2) {
+            if (!$this->_getUploadedCsvFilePath()) {
+                $oEx = oxNew("oxExceptionToDisplay");
+                $oEx->setMessage('GENIMPORT_ERRORUPLOADINGFILE');
+                oxRegistry::get("oxUtilsView")->addErrorToDisplay($oEx, false, true, 'genimport');
                 $iNavStep = 1;
             }
         }
 
-        if ( $iNavStep == 3 ) {
+        if ($iNavStep == 3) {
             $blIsEmpty = true;
-            $aCsvFields = $this->getConfig()->getParameter( 'aCsvFields' );
-            foreach ( $aCsvFields as $sValue ) {
-                if ( $sValue ) {
-                   $blIsEmpty = false;
-                   break;
+            $aCsvFields = $this->getConfig()->getRequestParameter('aCsvFields');
+            foreach ($aCsvFields as $sValue) {
+                if ($sValue) {
+                    $blIsEmpty = false;
+                    break;
                 }
             }
 
-            if ( $blIsEmpty ) {
-                $oEx = oxNew( "oxExceptionToDisplay" );
-                $oEx->setMessage( 'GENIMPORT_ERRORASSIGNINGFIELDS' );
-                oxRegistry::get("oxUtilsView")->addErrorToDisplay( $oEx, false, true, 'genimport' );
+            if ($blIsEmpty) {
+                $oEx = oxNew("oxExceptionToDisplay");
+                $oEx->setMessage('GENIMPORT_ERRORASSIGNINGFIELDS');
+                oxRegistry::get("oxUtilsView")->addErrorToDisplay($oEx, false, true, 'genimport');
                 $iNavStep = 2;
             }
         }
@@ -288,18 +286,19 @@ class GenImport_Main extends oxAdminDetails
     protected function _getUploadedCsvFilePath()
     {
         //try to get uploaded csv file path
-        if ( $this->_sCsvFilePath !== null ) {
+        if ($this->_sCsvFilePath !== null) {
             return $this->_sCsvFilePath;
-        } elseif ( $this->_sCsvFilePath = oxSession::getVar( 'sCsvFilePath' ) ) {
+        } elseif ($this->_sCsvFilePath = oxRegistry::getSession()->getVariable('sCsvFilePath')) {
             return $this->_sCsvFilePath;
         }
 
         $oConfig = $this->getConfig();
-        $aFile = $oConfig->getUploadedFile( 'csvfile' );
-        if ( isset( $aFile['name'] ) && $aFile['name'] ) {
-            $this->_sCsvFilePath = $oConfig->getConfigParam( 'sCompileDir' ) . basename( $aFile['tmp_name'] );
-            move_uploaded_file( $aFile['tmp_name'], $this->_sCsvFilePath );
-            oxSession::setVar( 'sCsvFilePath', $this->_sCsvFilePath );
+        $aFile = $oConfig->getUploadedFile('csvfile');
+        if (isset($aFile['name']) && $aFile['name']) {
+            $this->_sCsvFilePath = $oConfig->getConfigParam('sCompileDir') . basename($aFile['tmp_name']);
+            move_uploaded_file($aFile['tmp_name'], $this->_sCsvFilePath);
+            oxRegistry::getSession()->setVariable('sCsvFilePath', $this->_sCsvFilePath);
+
             return $this->_sCsvFilePath;
         }
     }
@@ -308,16 +307,14 @@ class GenImport_Main extends oxAdminDetails
      * Checks if any error occured during import and displays them
      *
      * @param object $oErpImport Import object
-     *
-     * @return null
      */
-    protected function _checkImportErrors( $oErpImport )
+    protected function _checkImportErrors($oErpImport)
     {
-        foreach ( $oErpImport->getStatistics() as $aValue ) {
-            if ( !$aValue ['r'] ) {
-                $oEx = oxNew( "oxExceptionToDisplay" );
-                $oEx->setMessage( $aValue ['m'] );
-                oxRegistry::get("oxUtilsView")->addErrorToDisplay( $oEx, false, true, 'genimport' );
+        foreach ($oErpImport->getStatistics() as $aValue) {
+            if (!$aValue ['r']) {
+                $oEx = oxNew("oxExceptionToDisplay");
+                $oEx->setMessage($aValue ['m']);
+                oxRegistry::get("oxUtilsView")->addErrorToDisplay($oEx, false, true, 'genimport');
             }
         }
 
@@ -330,12 +327,13 @@ class GenImport_Main extends oxAdminDetails
      */
     protected function _getCsvFieldsTerminator()
     {
-        if ( $this->_sStringTerminator === null ) {
+        if ($this->_sStringTerminator === null) {
             $this->_sStringTerminator = $this->_sDefaultStringTerminator;
-            if ( $sChar = $this->getConfig()->getConfigParam( 'sGiCsvFieldTerminator' ) ) {
+            if ($sChar = $this->getConfig()->getConfigParam('sGiCsvFieldTerminator')) {
                 $this->_sStringTerminator = $sChar;
             }
         }
+
         return $this->_sStringTerminator;
     }
 
@@ -346,12 +344,13 @@ class GenImport_Main extends oxAdminDetails
      */
     protected function _getCsvFieldsEncolser()
     {
-        if ( $this->_sStringEncloser === null ) {
+        if ($this->_sStringEncloser === null) {
             $this->_sStringEncloser = $this->_sDefaultStringEncloser;
-            if ( $sChar = $this->getConfig()->getConfigParam( 'sGiCsvFieldEncloser' ) ) {
+            if ($sChar = $this->getConfig()->getConfigParam('sGiCsvFieldEncloser')) {
                 $this->_sStringEncloser = $sChar;
             }
         }
+
         return $this->_sStringEncloser;
     }
 }

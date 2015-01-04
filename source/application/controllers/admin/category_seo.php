@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   admin
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -27,6 +25,7 @@
  */
 class Category_Seo extends Object_Seo
 {
+
     /**
      * Updating showsuffix field
      *
@@ -35,12 +34,14 @@ class Category_Seo extends Object_Seo
     public function save()
     {
         $sOxid = $this->getEditObjectId();
-        $oCategory = oxNew( 'oxCategory' );
-        if ( $oCategory->load( $sOxid ) ) {
-            $oCategory->oxcategories__oxshowsuffix = new oxField( (int) oxConfig::getParameter( 'blShowSuffix' ) );
+        $oCategory = oxNew('oxCategory');
+        if ($oCategory->load($sOxid)) {
+            $blShowSuffixParameter = oxRegistry::getConfig()->getRequestParameter('blShowSuffix');
+            $sShowSuffixField = 'oxcategories__oxshowsuffix';
+            $oCategory->$sShowSuffixField = new oxField((int) $blShowSuffixParameter);
             $oCategory->save();
 
-            $this->_getEncoder()->markRelatedAsExpired( $oCategory );
+            $this->_getEncoder()->markRelatedAsExpired($oCategory);
         }
 
         return parent::save();
@@ -83,8 +84,8 @@ class Category_Seo extends Object_Seo
      */
     public function isEntrySuffixed()
     {
-        $oCategory = oxNew( 'oxcategory' );
-        if ( $oCategory->load( $this->getEditObjectId() ) ) {
+        $oCategory = oxNew('oxcategory');
+        if ($oCategory->load($this->getEditObjectId())) {
             return (bool) $oCategory->oxcategories__oxshowsuffix->value;
         }
     }
@@ -96,9 +97,9 @@ class Category_Seo extends Object_Seo
      */
     public function getEntryUri()
     {
-        $oCategory = oxNew( 'oxcategory' );
-        if ( $oCategory->load( $this->getEditObjectId() ) ) {
-            return $this->_getEncoder()->getCategoryUri( $oCategory, $this->getEditLang() );
+        $oCategory = oxNew('oxcategory');
+        if ($oCategory->load($this->getEditObjectId())) {
+            return $this->_getEncoder()->getCategoryUri($oCategory, $this->getEditLang());
         }
     }
 }

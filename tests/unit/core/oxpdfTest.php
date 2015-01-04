@@ -1,49 +1,45 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: oxbaseTest.php 26603 2010-03-17 09:26:17Z sarunas $
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
-
-require_once realpath( "." ).'/unit/OxidTestCase.php';
-require_once realpath( "." ).'/unit/test_config.inc.php';
 
 /**
  * Testing oxPdf class.
  */
 class Unit_Core_oxpdfTest extends OxidTestCase
 {
+
     /**
      * oxPdf::PutLink() test case
-
+     *
      * @return null
      */
     public function testPutLink()
     {
-        $oPdf = $this->getMock( "oxPdf", array( "SetTextColor", "SetStyle", "Write" ) );
-        $oPdf->expects( $this->at( 0 ) )->method( 'SetTextColor')->with( $this->equalTo( 0 ), $this->equalTo( 0 ), $this->equalTo( 255 ) );
-        $oPdf->expects( $this->at( 1 ) )->method( 'SetStyle')->with( $this->equalTo( 'U' ), $this->equalTo( true ) );
-        $oPdf->expects( $this->at( 2 ) )->method( 'Write')->with( $this->equalTo( 5 ), $this->equalTo( "testText" ), $this->equalTo( "testUrl" ) );
-        $oPdf->expects( $this->at( 3 ) )->method( 'SetStyle')->with( $this->equalTo( 'U' ), $this->equalTo( false ) );
-        $oPdf->expects( $this->at( 0 ) )->method( 'SetTextColor')->with( $this->equalTo( 0 ) );
-        $oPdf->PutLink( "testUrl", "testText" );
+        $oPdf = $this->getMock("oxPdf", array("SetTextColor", "SetStyle", "Write"));
+        $oPdf->expects($this->at(0))->method('SetTextColor')->with($this->equalTo(0), $this->equalTo(0), $this->equalTo(255));
+        $oPdf->expects($this->at(1))->method('SetStyle')->with($this->equalTo('U'), $this->equalTo(true));
+        $oPdf->expects($this->at(2))->method('Write')->with($this->equalTo(5), $this->equalTo("testText"), $this->equalTo("testUrl"));
+        $oPdf->expects($this->at(3))->method('SetStyle')->with($this->equalTo('U'), $this->equalTo(false));
+        $oPdf->expects($this->at(0))->method('SetTextColor')->with($this->equalTo(0));
+        $oPdf->PutLink("testUrl", "testText");
     }
 
     /**
@@ -53,9 +49,9 @@ class Unit_Core_oxpdfTest extends OxidTestCase
      */
     public function testSetStyle()
     {
-        $oPdf = $this->getMock( "oxPdf", array( "SetFont" ) );
-        $oPdf->expects( $this->once() )->method( 'SetFont')->with( $this->equalTo( '' ) );
-        $oPdf->SetStyle( "testTag", true );
+        $oPdf = $this->getMock("oxPdf", array("SetFont"));
+        $oPdf->expects($this->once())->method('SetFont')->with($this->equalTo(''));
+        $oPdf->SetStyle("testTag", true);
     }
 
     /**
@@ -65,10 +61,10 @@ class Unit_Core_oxpdfTest extends OxidTestCase
      */
     public function testCloseTag()
     {
-        $oPdf = $this->getMock( "oxPdf", array( "SetStyle" ) );
-        $oPdf->expects( $this->once() )->method( 'SetStyle')->with( $this->equalTo( 'B' ), $this->equalTo( false ) );
-        $oPdf->CloseTag( "B" );
-        $oPdf->CloseTag( "A" );
+        $oPdf = $this->getMock("oxPdf", array("SetStyle"));
+        $oPdf->expects($this->once())->method('SetStyle')->with($this->equalTo('B'), $this->equalTo(false));
+        $oPdf->CloseTag("B");
+        $oPdf->CloseTag("A");
     }
 
     /**
@@ -78,12 +74,12 @@ class Unit_Core_oxpdfTest extends OxidTestCase
      */
     public function testOpenTag()
     {
-        $oPdf = $this->getMock( "oxPdf", array( "SetStyle", "Ln" ) );
-        $oPdf->expects( $this->once() )->method( 'SetStyle')->with( $this->equalTo( 'B' ), $this->equalTo( true ) );
-        $oPdf->expects( $this->once() )->method( 'Ln')->with( $this->equalTo( 5 ) );
-        $oPdf->OpenTag( "B", "" );
-        $oPdf->OpenTag( "A", "" );
-        $oPdf->OpenTag( "BR", "" );
+        $oPdf = $this->getMock("oxPdf", array("SetStyle", "Ln"));
+        $oPdf->expects($this->once())->method('SetStyle')->with($this->equalTo('B'), $this->equalTo(true));
+        $oPdf->expects($this->once())->method('Ln')->with($this->equalTo(5));
+        $oPdf->OpenTag("B", "");
+        $oPdf->OpenTag("A", "");
+        $oPdf->OpenTag("BR", "");
     }
 
     /**
@@ -94,13 +90,13 @@ class Unit_Core_oxpdfTest extends OxidTestCase
     public function testWriteHTML()
     {
         $sHtml = '<a href="aaa" style="bbb"></a><div></div>';
-        $oPdf = $this->getMock( "oxPdf", array( "PutLink", "Write", "CloseTag", "OpenTag" ) );
-        $oPdf->expects( $this->never() )->method( 'PutLink');
-        $oPdf->expects( $this->atLeastOnce() )->method( 'Write');
-        $oPdf->expects( $this->atLeastOnce() )->method( 'CloseTag');
-        $oPdf->expects( $this->atLeastOnce() )->method( 'OpenTag');
-        $oPdf->Text( 0, 0, "text" );
-        $oPdf->SetFont( "Arial" ) ;
-        $oPdf->WriteHTML( $sHtml );
+        $oPdf = $this->getMock("oxPdf", array("PutLink", "Write", "CloseTag", "OpenTag"));
+        $oPdf->expects($this->never())->method('PutLink');
+        $oPdf->expects($this->atLeastOnce())->method('Write');
+        $oPdf->expects($this->atLeastOnce())->method('CloseTag');
+        $oPdf->expects($this->atLeastOnce())->method('OpenTag');
+        $oPdf->Text(0, 0, "text");
+        $oPdf->SetFont("Arial");
+        $oPdf->WriteHTML($sHtml);
     }
 }

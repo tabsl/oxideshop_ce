@@ -1,41 +1,40 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   admin
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: dyn_trusted.php 25466 2010-02-01 14:12:07Z alfonsas $
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 
 /**
  * Admin dyn trusted manager.
- * @package admin
+ *
  * @subpackage dyn
  */
 class dyn_trusted_ratings extends Shop_Config
 {
+
     /**
      * Config parameter which sould not be converted to multiline string
      *
      * @var array
      */
-    protected $_aSkipMultiline = array( 'aTsLangIds', 'aHomeCountry', 'aTsActiveLangIds' );
+    protected $_aSkipMultiline = array('aTsLangIds', 'aHomeCountry', 'aTsActiveLangIds');
 
     /**
      * Creates shop object, passes shop data to Smarty engine and returns name of
@@ -47,7 +46,7 @@ class dyn_trusted_ratings extends Shop_Config
     {
         parent::render();
 
-        $this->_aViewData['oxid']    = $this->getConfig()->getShopId();
+        $this->_aViewData['oxid'] = $this->getConfig()->getShopId();
         $this->_aViewData["alllang"] = oxRegistry::getLang()->getLanguageArray();
 
         return "dyn_trusted_ratings.tpl";
@@ -55,8 +54,6 @@ class dyn_trusted_ratings extends Shop_Config
 
     /**
      * Saves changed shop configuration parameters.
-     *
-     * @return mixed
      */
     public function save()
     {
@@ -64,36 +61,36 @@ class dyn_trusted_ratings extends Shop_Config
         $sOxId = $this->getEditObjectId();
 
         // base parameters
-        $aConfStrs  = oxConfig::getParameter( "confstrs" );
-        $aConfAArs  = oxConfig::getParameter( "confaarrs" );
-        $aConfBools = oxConfig::getParameter( "confbools" );
+        $aConfStrs = oxRegistry::getConfig()->getRequestParameter("confstrs");
+        $aConfAArs = oxRegistry::getConfig()->getRequestParameter("confaarrs");
+        $aConfBools = oxRegistry::getConfig()->getRequestParameter("confbools");
 
         // validating language Ids
-        if ( is_array( $aConfAArs['aTsLangIds'] ) ) {
+        if (is_array($aConfAArs['aTsLangIds'])) {
 
-            $blActive = ( isset( $aConfBools["blTsWidget"] ) && $aConfBools["blTsWidget"] == "true" ) ? true : false;
+            $blActive = (isset($aConfBools["blTsWidget"]) && $aConfBools["blTsWidget"] == "true") ? true : false;
             $sPkg = "OXID_ESALES";
 
             $aActiveLangs = array();
-            foreach ( $aConfAArs['aTsLangIds'] as $sLangId => $sId ) {
+            foreach ($aConfAArs['aTsLangIds'] as $sLangId => $sId) {
                 $aActiveLangs[$sLangId] = false;
-                if ( $sId ) {
-                    $sTsUser = $myConfig->getConfigParam( 'sTsUser' );
-                    $sTsPass = $myConfig->getConfigParam( 'sTsPass' );
+                if ($sId) {
+                    $sTsUser = $myConfig->getConfigParam('sTsUser');
+                    $sTsPass = $myConfig->getConfigParam('sTsPass');
                     // validating and switching on/off
-                    $sResult = $this->_validateId( $sId, (bool) $blActive, $sTsUser, $sTsPass, $sPkg );
+                    $sResult = $this->_validateId($sId, (bool) $blActive, $sTsUser, $sTsPass, $sPkg);
 
                     // keeping activation state
                     $aActiveLangs[$sLangId] = $sResult == "OK" ? true : false;
 
                     // error message
-                    if ( $sResult && $sResult != "OK" ) {
+                    if ($sResult && $sResult != "OK") {
                         $this->_aViewData["errorsaving"] = "DYN_TRUSTED_RATINGS_ERR_{$sResult}";
                     }
                 }
             }
 
-            $myConfig->saveShopConfVar( "arr", "aTsActiveLangIds", $aActiveLangs, $sOxId );
+            $myConfig->saveShopConfVar("arr", "aTsActiveLangIds", $aActiveLangs, $sOxId);
         }
 
         parent::save();
@@ -108,9 +105,9 @@ class dyn_trusted_ratings extends Shop_Config
     {
         $sWsdl = false;
         $oConfig = $this->getConfig();
-        $aTsConfig = $oConfig->getConfigParam( "aTsConfig" );
-        if ( is_array( $aTsConfig ) ) {
-            $sWsdl = $aTsConfig["blTestMode"] ? $oConfig->getConfigParam( "sTsServiceTestWsdl" ) : $oConfig->getConfigParam( "sTsServiceWsdl" );
+        $aTsConfig = $oConfig->getConfigParam("aTsConfig");
+        if (is_array($aTsConfig)) {
+            $sWsdl = $aTsConfig["blTestMode"] ? $oConfig->getConfigParam("sTsServiceTestWsdl") : $oConfig->getConfigParam("sTsServiceWsdl");
         }
 
         return $sWsdl;
@@ -127,17 +124,18 @@ class dyn_trusted_ratings extends Shop_Config
      *
      * @return string | bool
      */
-    protected function _validateId( $sId, $blActive, $sUser, $sPass, $sPkg )
+    protected function _validateId($sId, $blActive, $sUser, $sPass, $sPkg)
     {
         $sReturn = false;
-        if ( ( $sWsdl = $this->_getServiceWsdl() ) ) {
+        if (($sWsdl = $this->_getServiceWsdl())) {
             try {
-                $oClient = new SoapClient( $sWsdl );
-                $sReturn = $oClient->updateRatingWidgetState( $sId, (int) $blActive, $sUser, $sPass, $sPkg );
-            } catch ( SoapFault $oFault ) {
+                $oClient = new SoapClient($sWsdl);
+                $sReturn = $oClient->updateRatingWidgetState($sId, (int) $blActive, $sUser, $sPass, $sPkg);
+            } catch (SoapFault $oFault) {
                 $sReturn = $oFault->faultstring;
             }
         }
+
         return $sReturn;
     }
 
@@ -158,12 +156,13 @@ class dyn_trusted_ratings extends Shop_Config
      *
      * @return array
      */
-    protected function _multilineToArray( $sMultiline )
+    protected function _multilineToArray($sMultiline)
     {
         $aArr = $sMultiline;
-        if ( !is_array( $aArr ) ) {
-            $aArr = parent::_multilineToArray( $aArr );
+        if (!is_array($aArr)) {
+            $aArr = parent::_multilineToArray($aArr);
         }
+
         return $aArr;
     }
 
@@ -174,11 +173,11 @@ class dyn_trusted_ratings extends Shop_Config
      *
      * @return array
      */
-    protected function _multilineToAarray( $sMultiline )
+    protected function _multilineToAarray($sMultiline)
     {
         $aArr = $sMultiline;
-        if ( !is_array( $aArr ) ) {
-            $aArr = parent::_multilineToAarray( $aArr );
+        if (!is_array($aArr)) {
+            $aArr = parent::_multilineToAarray($aArr);
         }
 
         return $aArr;

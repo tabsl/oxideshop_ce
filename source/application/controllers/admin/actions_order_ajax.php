@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   admin
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -27,19 +25,20 @@
  */
 class actions_order_ajax extends ajaxListComponent
 {
+
     /**
      * Columns array
      *
      * @var array
      */
-    protected $_aColumns = array( 'container1' => array(
-                                        array( 'oxtitle',   'oxselectlist', 1, 1, 0 ),
-                                        array( 'oxsort',    'oxobject2selectlist', 1, 0, 0 ),
-                                        array( 'oxident',   'oxselectlist', 0, 0, 0 ),
-                                        array( 'oxvaldesc', 'oxselectlist', 0, 0, 0 ),
-                                        array( 'oxid',      'oxobject2selectlist', 0, 0, 1 )
-                                        )
-                                );
+    protected $_aColumns = array('container1' => array(
+        array('oxtitle', 'oxselectlist', 1, 1, 0),
+        array('oxsort', 'oxobject2selectlist', 1, 0, 0),
+        array('oxident', 'oxselectlist', 0, 0, 0),
+        array('oxvaldesc', 'oxselectlist', 0, 0, 0),
+        array('oxid', 'oxobject2selectlist', 0, 0, 1)
+    )
+    );
 
     /**
      * Returns SQL query for data to fetc
@@ -49,9 +48,10 @@ class actions_order_ajax extends ajaxListComponent
     protected function _getQuery()
     {
         $sSelTable = $this->_getViewName('oxselectlist');
-        $sArtId    = oxConfig::getParameter( 'oxid' );
+        $sArtId = oxRegistry::getConfig()->getRequestParameter('oxid');
 
-        $sQAdd = " from $sSelTable left join oxobject2selectlist on oxobject2selectlist.oxselnid = $sSelTable.oxid where oxobjectid = " . oxDb::getDb()->quote($sArtId ) . "  ";
+        $sQAdd = " from $sSelTable left join oxobject2selectlist on oxobject2selectlist.oxselnid = $sSelTable.oxid " .
+                 "where oxobjectid = " . oxDb::getDb()->quote($sArtId) . "  ";
 
         return $sQAdd;
     }
@@ -68,24 +68,23 @@ class actions_order_ajax extends ajaxListComponent
 
     /**
      * Applies sorting for selection lists
-     *
-     * @return null
      */
     public function setSorting()
     {
-        $sSelId  = oxConfig::getParameter( 'oxid' );
-        $sSelect = "select * from oxobject2selectlist where oxobjectid= " . oxDb::getDb()->quote( $sSelId ) . " order by oxsort";
+        $sSelId = oxRegistry::getConfig()->getRequestParameter('oxid');
+        $sQuotedSelectionId = oxDb::getDb()->quote($sSelId);
+        $sSelect = "select * from oxobject2selectlist where oxobjectid= {$sQuotedSelectionId} order by oxsort";
 
-        $oList = oxNew( "oxlist" );
-        $oList->init( "oxbase", "oxobject2selectlist" );
-        $oList->selectString( $sSelect );
+        $oList = oxNew("oxlist");
+        $oList->init("oxbase", "oxobject2selectlist");
+        $oList->selectString($sSelect);
 
         // fixing indexes
         $iSelCnt = 0;
         $aIdx2Id = array();
-        foreach ( $oList as $sKey => $oSel ) {
+        foreach ($oList as $sKey => $oSel) {
 
-            if ( $oSel->oxobject2selectlist__oxsort->value != $iSelCnt ) {
+            if ($oSel->oxobject2selectlist__oxsort->value != $iSelCnt) {
                 $oSel->oxobject2selectlist__oxsort->setValue($iSelCnt);
 
                 // saving new index
@@ -96,12 +95,12 @@ class actions_order_ajax extends ajaxListComponent
         }
 
         //
-        if ( ( $iKey = array_search( oxConfig::getParameter( 'sortoxid' ), $aIdx2Id ) ) !== false ) {
-            $iDir = (oxConfig::getParameter( 'direction' ) == 'up')?($iKey-1):($iKey+1);
-            if ( isset( $aIdx2Id[$iDir] ) ) {
+        if (($iKey = array_search(oxRegistry::getConfig()->getRequestParameter('sortoxid'), $aIdx2Id)) !== false) {
+            $iDir = (oxRegistry::getConfig()->getRequestParameter('direction') == 'up') ? ($iKey - 1) : ($iKey + 1);
+            if (isset($aIdx2Id[$iDir])) {
                 // exchanging indexes
-                $oDir1 = $oList->offsetGet( $aIdx2Id[$iDir] );
-                $oDir2 = $oList->offsetGet( $aIdx2Id[$iKey] );
+                $oDir1 = $oList->offsetGet($aIdx2Id[$iDir]);
+                $oDir2 = $oList->offsetGet($aIdx2Id[$iKey]);
 
                 $iCopy = $oDir1->oxobject2selectlist__oxsort->value;
                 $oDir1->oxobject2selectlist__oxsort->setValue($oDir2->oxobject2selectlist__oxsort->value);
@@ -114,10 +113,10 @@ class actions_order_ajax extends ajaxListComponent
 
         $sQAdd = $this->_getQuery();
 
-        $sQ      = 'select ' . $this->_getQueryCols() . $sQAdd;
+        $sQ = 'select ' . $this->_getQueryCols() . $sQAdd;
         $sCountQ = 'select count( * ) ' . $sQAdd;
 
-        $this->_outputResponse( $this->_getData( $sCountQ, $sQ ) );
+        $this->_outputResponse($this->_getData($sCountQ, $sQ));
 
     }
 }

@@ -1,35 +1,33 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   admin
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
  * Admin shop list manager.
  * Performs collection and managing (such as filtering or deleting) function.
  * Admin Menu: Main Menu -> Core Settings.
- * @package admin
  */
 class Shop_List extends oxAdminList
 {
+
     /**
      * Forces main frame update is set TRUE
      *
@@ -61,8 +59,6 @@ class Shop_List extends oxAdminList
     /**
      * Sets SQL query parameters (such as sorting),
      * executes parent method parent::Init().
-     *
-     * @return null
      */
     public function init()
     {
@@ -83,29 +79,29 @@ class Shop_List extends oxAdminList
         parent::render();
 
         $soxId = $this->_aViewData["oxid"] = $this->getEditObjectId();
-        if ( $soxId != '-1' && isset( $soxId ) ) {
+        if ($soxId != '-1' && isset($soxId)) {
             // load object
-            $oShop = oxNew( 'oxshop' );
-            if ( !$oShop->load( $soxId ) ) {
+            $oShop = oxNew('oxshop');
+            if (!$oShop->load($soxId)) {
                 $soxId = $myConfig->getBaseShopId();
-                $oShop->load( $soxId );
+                $oShop->load($soxId);
             }
             $this->_aViewData['editshop'] = $oShop;
         }
 
         // default page number 1
         $this->_aViewData['default_edit'] = 'shop_main';
-        $this->_aViewData['updatemain']   = $this->_blUpdateMain;
+        $this->_aViewData['updatemain'] = $this->_blUpdateMain;
 
-        if ( $this->_aViewData['updatenav'] ) {
+        if ($this->_aViewData['updatenav']) {
             //skipping requirements checking when reloading nav frame
-            oxSession::setVar( "navReload", true );
+            oxRegistry::getSession()->setVariable("navReload", true);
         }
 
         //making sure we really change shops on low level
-        if ( $soxId && $soxId != '-1' ) {
-            $myConfig->setShopId( $soxId );
-            oxSession::setVar( 'currentadminshop', $soxId );
+        if ($soxId && $soxId != '-1') {
+            $myConfig->setShopId($soxId);
+            oxRegistry::getSession()->setVariable('currentadminshop', $soxId);
         }
 
         return 'shop_list.tpl';
@@ -120,9 +116,9 @@ class Shop_List extends oxAdminList
     {
         // we override this to add our shop if we are not malladmin
         $this->_aWhere = parent::buildWhere();
-        if ( !oxSession::getVar( 'malladmin' ) ) {
+        if (!oxRegistry::getSession()->getVariable('malladmin')) {
             // we only allow to see our shop
-            $this->_aWhere[ getViewName( "oxshops" ) . ".oxid" ] = oxSession::getVar( "actshop" );
+            $this->_aWhere[getViewName("oxshops") . ".oxid"] = oxRegistry::getSession()->getVariable("actshop");
         }
 
         return $this->_aWhere;

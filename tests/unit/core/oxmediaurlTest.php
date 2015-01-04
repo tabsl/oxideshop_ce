@@ -1,32 +1,28 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
-
-require_once realpath( "." ).'/unit/OxidTestCase.php';
-require_once realpath( "." ).'/unit/test_config.inc.php';
 
 class Unit_Core_oxmediaurlTest extends OxidTestCase
 {
+
     /**
      * Initialize the fixture.
      *
@@ -59,22 +55,23 @@ class Unit_Core_oxmediaurlTest extends OxidTestCase
     protected function tearDown()
     {
         $this->cleanUpTable('oxmediaurls');
-        $sFilePath = oxConfig::getInstance()->getConfigParam('sShopDir').'/out/media/test.jpg';
+        $sFilePath = oxRegistry::getConfig()->getConfigParam('sShopDir') . '/out/media/test.jpg';
         if (file_exists($sFilePath)) {
             unlink($sFilePath);
         }
+
         return parent::tearDown();
     }
 
     public function testGetHtml()
     {
-        $oCfg = $this->getMock('oxConfig', array( 'isSsl', 'getShopUrl', 'getSslShopUrl'  ));
-        $oCfg->expects( $this->any() )->method( 'isSsl' )->will( $this->returnValue( 0 ) );
-        $oCfg->expects( $this->any() )->method( 'getShopUrl' )->will( $this->returnValue( 'http://shop/' ) );
-        $oCfg->expects( $this->never() )->method( 'getSslShopUrl' )->will( $this->returnValue( 'https://shop/' ) );
+        $oCfg = $this->getMock('oxConfig', array('isSsl', 'getShopUrl', 'getSslShopUrl'));
+        $oCfg->expects($this->any())->method('isSsl')->will($this->returnValue(0));
+        $oCfg->expects($this->any())->method('getShopUrl')->will($this->returnValue('http://shop/'));
+        $oCfg->expects($this->never())->method('getSslShopUrl')->will($this->returnValue('https://shop/'));
 
-        $oMediaUrl = $this->getMock('oxMediaUrl', array( 'getConfig' ), array(), '', false);
-        $oMediaUrl->expects( $this->any() )->method( 'getConfig' )->will( $this->returnValue( $oCfg ) );
+        $oMediaUrl = $this->getMock('oxMediaUrl', array('getConfig'), array(), '', false);
+        $oMediaUrl->expects($this->any())->method('getConfig')->will($this->returnValue($oCfg));
 
         // uploaded file
         $oMediaUrl->oxmediaurls__oxurl = new oxField('test.jpg', oxField::T_RAW);
@@ -99,13 +96,13 @@ class Unit_Core_oxmediaurlTest extends OxidTestCase
 
         // -- SSL ----------
 
-        $oCfg = $this->getMock('oxConfig', array( 'isSsl', 'getShopUrl', 'getSslShopUrl'  ));
-        $oCfg->expects( $this->any() )->method( 'isSsl' )->will( $this->returnValue( 1 ) );
-        $oCfg->expects( $this->never() )->method( 'getShopUrl' )->will( $this->returnValue( 'http://shop/' ) );
-        $oCfg->expects( $this->any() )->method( 'getSslShopUrl' )->will( $this->returnValue( 'https://shop/' ) );
+        $oCfg = $this->getMock('oxConfig', array('isSsl', 'getShopUrl', 'getSslShopUrl'));
+        $oCfg->expects($this->any())->method('isSsl')->will($this->returnValue(1));
+        $oCfg->expects($this->never())->method('getShopUrl')->will($this->returnValue('http://shop/'));
+        $oCfg->expects($this->any())->method('getSslShopUrl')->will($this->returnValue('https://shop/'));
 
-        $oMediaUrl = $this->getMock('oxMediaUrl', array( 'getConfig' ), array(), '', false);
-        $oMediaUrl->expects( $this->any() )->method( 'getConfig' )->will( $this->returnValue( $oCfg ) );
+        $oMediaUrl = $this->getMock('oxMediaUrl', array('getConfig'), array(), '', false);
+        $oMediaUrl->expects($this->any())->method('getConfig')->will($this->returnValue($oCfg));
 
         // uploaded file
         $oMediaUrl->oxmediaurls__oxurl = new oxField('test.jpg', oxField::T_RAW);
@@ -131,13 +128,13 @@ class Unit_Core_oxmediaurlTest extends OxidTestCase
 
     public function testGetHtmlLink($blNewPage = false)
     {
-        $oCfg = $this->getMock('oxConfig', array( 'isSsl', 'getShopUrl', 'getSslShopUrl'  ));
-        $oCfg->expects( $this->any() )->method( 'isSsl' )->will( $this->returnValue( 0 ) );
-        $oCfg->expects( $this->any() )->method( 'getShopUrl' )->will( $this->returnValue( 'http://shop/' ) );
-        $oCfg->expects( $this->never() )->method( 'getSslShopUrl' )->will( $this->returnValue( 'https://shop/' ) );
+        $oCfg = $this->getMock('oxConfig', array('isSsl', 'getShopUrl', 'getSslShopUrl'));
+        $oCfg->expects($this->any())->method('isSsl')->will($this->returnValue(0));
+        $oCfg->expects($this->any())->method('getShopUrl')->will($this->returnValue('http://shop/'));
+        $oCfg->expects($this->never())->method('getSslShopUrl')->will($this->returnValue('https://shop/'));
 
-        $oMediaUrl = $this->getMock('oxMediaUrl', array( 'getConfig' ), array(), '', false);
-        $oMediaUrl->expects( $this->any() )->method( 'getConfig' )->will( $this->returnValue( $oCfg ) );
+        $oMediaUrl = $this->getMock('oxMediaUrl', array('getConfig'), array(), '', false);
+        $oMediaUrl->expects($this->any())->method('getConfig')->will($this->returnValue($oCfg));
 
         // uploaded file
         $oMediaUrl->oxmediaurls__oxurl = new oxField('test.jpg', oxField::T_RAW);
@@ -162,13 +159,13 @@ class Unit_Core_oxmediaurlTest extends OxidTestCase
 
         // -- SSL -------------------
 
-        $oCfg = $this->getMock('oxConfig', array( 'isSsl', 'getShopUrl', 'getSslShopUrl'  ));
-        $oCfg->expects( $this->any() )->method( 'isSsl' )->will( $this->returnValue( 1 ) );
-        $oCfg->expects( $this->never() )->method( 'getShopUrl' )->will( $this->returnValue( 'http://shop/' ) );
-        $oCfg->expects( $this->any() )->method( 'getSslShopUrl' )->will( $this->returnValue( 'https://shop/' ) );
+        $oCfg = $this->getMock('oxConfig', array('isSsl', 'getShopUrl', 'getSslShopUrl'));
+        $oCfg->expects($this->any())->method('isSsl')->will($this->returnValue(1));
+        $oCfg->expects($this->never())->method('getShopUrl')->will($this->returnValue('http://shop/'));
+        $oCfg->expects($this->any())->method('getSslShopUrl')->will($this->returnValue('https://shop/'));
 
-        $oMediaUrl = $this->getMock('oxMediaUrl', array( 'getConfig' ), array(), '', false);
-        $oMediaUrl->expects( $this->any() )->method( 'getConfig' )->will( $this->returnValue( $oCfg ) );
+        $oMediaUrl = $this->getMock('oxMediaUrl', array('getConfig'), array(), '', false);
+        $oMediaUrl->expects($this->any())->method('getConfig')->will($this->returnValue($oCfg));
 
         // uploaded file
         $oMediaUrl->oxmediaurls__oxurl = new oxField('test.jpg', oxField::T_RAW);
@@ -195,15 +192,15 @@ class Unit_Core_oxmediaurlTest extends OxidTestCase
 
     public function testGetLink()
     {
-        $sFilePath = oxConfig::getInstance()->getConfigParam('sShopDir').'/out/media/test.jpg';
+        $sFilePath = oxRegistry::getConfig()->getConfigParam('sShopDir') . '/out/media/test.jpg';
         file_put_contents($sFilePath, 'test jpg file');
-        $oCfg = $this->getMock('oxConfig', array( 'isSsl', 'getShopUrl', 'getSslShopUrl'  ));
-        $oCfg->expects( $this->any() )->method( 'isSsl' )->will( $this->returnValue( 0 ) );
-        $oCfg->expects( $this->any() )->method( 'getShopUrl' )->will( $this->returnValue( 'http://shop/' ) );
-        $oCfg->expects( $this->never() )->method( 'getSslShopUrl' )->will( $this->returnValue( 'https://shop/' ) );
+        $oCfg = $this->getMock('oxConfig', array('isSsl', 'getShopUrl', 'getSslShopUrl'));
+        $oCfg->expects($this->any())->method('isSsl')->will($this->returnValue(0));
+        $oCfg->expects($this->any())->method('getShopUrl')->will($this->returnValue('http://shop/'));
+        $oCfg->expects($this->never())->method('getSslShopUrl')->will($this->returnValue('https://shop/'));
 
-        $oMediaUrl = $this->getMock('oxMediaUrl', array( 'getConfig' ), array(), '', false);
-        $oMediaUrl->expects( $this->any() )->method( 'getConfig' )->will( $this->returnValue( $oCfg ) );
+        $oMediaUrl = $this->getMock('oxMediaUrl', array('getConfig'), array(), '', false);
+        $oMediaUrl->expects($this->any())->method('getConfig')->will($this->returnValue($oCfg));
 
         // uploaded file
         $oMediaUrl->oxmediaurls__oxurl = new oxField('test.jpg', oxField::T_RAW);
@@ -228,13 +225,13 @@ class Unit_Core_oxmediaurlTest extends OxidTestCase
 
         // -- SSL -------------------
 
-        $oCfg = $this->getMock('oxConfig', array( 'isSsl', 'getShopUrl', 'getSslShopUrl'  ));
-        $oCfg->expects( $this->any() )->method( 'isSsl' )->will( $this->returnValue( 1 ) );
-        $oCfg->expects( $this->never() )->method( 'getShopUrl' )->will( $this->returnValue( 'http://shop/' ) );
-        $oCfg->expects( $this->any() )->method( 'getSslShopUrl' )->will( $this->returnValue( 'https://shop/' ) );
+        $oCfg = $this->getMock('oxConfig', array('isSsl', 'getShopUrl', 'getSslShopUrl'));
+        $oCfg->expects($this->any())->method('isSsl')->will($this->returnValue(1));
+        $oCfg->expects($this->never())->method('getShopUrl')->will($this->returnValue('http://shop/'));
+        $oCfg->expects($this->any())->method('getSslShopUrl')->will($this->returnValue('https://shop/'));
 
-        $oMediaUrl = $this->getMock('oxMediaUrl', array( 'getConfig' ), array(), '', false);
-        $oMediaUrl->expects( $this->any() )->method( 'getConfig' )->will( $this->returnValue( $oCfg ) );
+        $oMediaUrl = $this->getMock('oxMediaUrl', array('getConfig'), array(), '', false);
+        $oMediaUrl->expects($this->any())->method('getConfig')->will($this->returnValue($oCfg));
 
         // uploaded file
         $oMediaUrl->oxmediaurls__oxurl = new oxField('test.jpg', oxField::T_RAW);
@@ -273,9 +270,9 @@ class Unit_Core_oxmediaurlTest extends OxidTestCase
 
     }
 
-    public function testDeleteNonUploaded( $sOXID = null )
+    public function testDeleteNonUploaded($sOXID = null)
     {
-        $sFilePath = oxConfig::getInstance()->getConfigParam('sShopDir').'/out/media/test.jpg';
+        $sFilePath = oxRegistry::getConfig()->getConfigParam('sShopDir') . '/out/media/test.jpg';
         file_put_contents($sFilePath, 'test jpg file');
         $oMediaUrl = new oxMediaUrl();
         $oMediaUrl->load('_test3');
@@ -286,9 +283,9 @@ class Unit_Core_oxmediaurlTest extends OxidTestCase
     }
 
 
-    public function testDeleteUploaded( $sOXID = null )
+    public function testDeleteUploaded($sOXID = null)
     {
-        $sFilePath = oxConfig::getInstance()->getConfigParam('sShopDir').'/out/media/test.jpg';
+        $sFilePath = oxRegistry::getConfig()->getConfigParam('sShopDir') . '/out/media/test.jpg';
         file_put_contents($sFilePath, 'test jpg file');
         $oMediaUrl = new oxMediaUrl();
         $oMediaUrl->load('_test3');
@@ -298,14 +295,14 @@ class Unit_Core_oxmediaurlTest extends OxidTestCase
         $this->assertFalse(file_exists($sFilePath));
     }
 
-    public function testDeleteUploadedIfFullPathAdded( $sOXID = null )
+    public function testDeleteUploadedIfFullPathAdded($sOXID = null)
     {
-        $sFilePath = oxConfig::getInstance()->getConfigParam('sShopDir').'/out/media/test.jpg';
+        $sFilePath = oxRegistry::getConfig()->getConfigParam('sShopDir') . '/out/media/test.jpg';
         file_put_contents($sFilePath, 'test jpg file');
         $oMediaUrl = new oxMediaUrl();
         $oMediaUrl->load('_test3');
         $oMediaUrl->oxmediaurls__oxisuploaded = new oxField(true, oxField::T_RAW);
-        $oMediaUrl->oxmediaurls__oxurl = new oxField(modConfig::getInstance()->getShopUrl().'/out/media/test.jpg', oxField::T_RAW);
+        $oMediaUrl->oxmediaurls__oxurl = new oxField(modConfig::getInstance()->getShopUrl() . '/out/media/test.jpg', oxField::T_RAW);
         $this->assertTrue(file_exists($sFilePath));
         $oMediaUrl->delete();
         $this->assertFalse(file_exists($sFilePath));
@@ -313,26 +310,26 @@ class Unit_Core_oxmediaurlTest extends OxidTestCase
 
     public function testGetYoutubeHtml()
     {
-        $oMediaUrl = $this->getProxyClass( 'oxMediaUrl' );
-        $oMediaUrl->load( '_test2' );
+        $oMediaUrl = $this->getProxyClass('oxMediaUrl');
+        $oMediaUrl->load('_test2');
         $sExpt = 'test2<br><iframe width="425" height="344" src="http://www.youtube.com/embed/ZN239G6aJZo" frameborder="0" allowfullscreen></iframe>';
-        $this->assertEquals( $sExpt, $oMediaUrl->UNITgetYoutubeHtml() );
+        $this->assertEquals($sExpt, $oMediaUrl->UNITgetYoutubeHtml());
     }
-    
+
     public function testGetYoutubeHtmlWithParams()
     {
-    	$oMediaUrl = $this->getProxyClass('oxMediaUrl');
-    	$oMediaUrl->load('_test5');
-    	$sExpt = 'test5<br><iframe width="425" height="344" src="http://www.youtube.com/embed/GQ3AcPEPbH0?loop=1&amp;rel=0" frameborder="0" allowfullscreen></iframe>';
-    	$this->assertEquals($sExpt, $oMediaUrl->UNITgetYoutubeHtml());
+        $oMediaUrl = $this->getProxyClass('oxMediaUrl');
+        $oMediaUrl->load('_test5');
+        $sExpt = 'test5<br><iframe width="425" height="344" src="http://www.youtube.com/embed/GQ3AcPEPbH0?loop=1&amp;rel=0" frameborder="0" allowfullscreen></iframe>';
+        $this->assertEquals($sExpt, $oMediaUrl->UNITgetYoutubeHtml());
     }
-    
+
     public function testNewYoutubePattern()
     {
-        $oMediaUrl = $this->getProxyClass( 'oxMediaUrl' );
-        $oMediaUrl->load( '_test6' );
+        $oMediaUrl = $this->getProxyClass('oxMediaUrl');
+        $oMediaUrl->load('_test6');
         $sExpt = 'test6<br><iframe width="425" height="344" src="http://www.youtube.com/embed/tRCwo6pSHnk" frameborder="0" allowfullscreen></iframe>';
-        $this->assertEquals( $sExpt, $oMediaUrl->UNITgetYoutubeHtml() );
+        $this->assertEquals($sExpt, $oMediaUrl->UNITgetYoutubeHtml());
     }
 
 }

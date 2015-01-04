@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   views
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -31,8 +29,10 @@
  */
 class Account_Noticelist extends Account
 {
+
     /**
      * Current class template name.
+     *
      * @var string
      */
     protected $_sThisTemplate = 'page/account/noticelist.tpl';
@@ -88,11 +88,27 @@ class Account_Noticelist extends Account
 
         // is logged in ?
         $oUser = $this->getUser();
-        if ( !$oUser ) {
+        if (!$oUser) {
             return $this->_sThisTemplate = $this->_sThisLoginTemplate;
         }
 
         return $this->_sThisTemplate;
+    }
+
+    /**
+     * Returns array from parent::getNavigationParams(). If current request
+     * contains "sourcecl" and "anid" parameters - appends array with this
+     * data. Array is used to fill forms and append shop urls with actual
+     * state parameters
+     *
+     * @return array
+     */
+    public function getNavigationParams()
+    {
+        $aParams = parent::getNavigationParams();
+
+
+        return $aParams;
     }
 
     /**
@@ -102,11 +118,12 @@ class Account_Noticelist extends Account
      */
     public function getNoticeProductList()
     {
-        if ( $this->_aNoticeProductList === null ) {
-            if ( $oUser = $this->getUser() ) {
-                $this->_aNoticeProductList = $oUser->getBasket( 'noticelist' )->getArticles();
+        if ($this->_aNoticeProductList === null) {
+            if ($oUser = $this->getUser()) {
+                $this->_aNoticeProductList = $oUser->getBasket('noticelist')->getArticles();
             }
         }
+
         return $this->_aNoticeProductList;
     }
 
@@ -118,13 +135,13 @@ class Account_Noticelist extends Account
     public function getSimilarProducts()
     {
         // similar products list
-        if ( $this->_aSimilarProductList === null && count( $this->getNoticeProductList() ) ) {
+        if ($this->_aSimilarProductList === null && count($this->getNoticeProductList())) {
 
             // just ensuring that next call will skip this check
             $this->_aSimilarProductList = false;
 
             // loading similar products
-            if ( $oSimilarProd = current( $this->getNoticeProductList() ) ) {
+            if ($oSimilarProd = current($this->getNoticeProductList())) {
                 $this->_aSimilarProductList = $oSimilarProd->getSimilarProducts();
             }
         }
@@ -139,14 +156,15 @@ class Account_Noticelist extends Account
      */
     public function getSimilarRecommListIds()
     {
-        if ( $this->_aSimilarRecommListIds === null ) {
+        if ($this->_aSimilarRecommListIds === null) {
             $this->_aSimilarRecommListIds = false;
 
             $aNoticeProdList = $this->getNoticeProductList();
-            if ( is_array( $aNoticeProdList ) && count( $aNoticeProdList ) ) {
-                $this->_aSimilarRecommListIds = array_keys( $aNoticeProdList );
+            if (is_array($aNoticeProdList) && count($aNoticeProdList)) {
+                $this->_aSimilarRecommListIds = array_keys($aNoticeProdList);
             }
         }
+
         return $this->_aSimilarRecommListIds;
     }
 
@@ -158,14 +176,18 @@ class Account_Noticelist extends Account
     public function getBreadCrumb()
     {
         $aPaths = array();
-        $aPath  = array();
+        $aPath = array();
 
-        $aPath['title'] = oxRegistry::getLang()->translateString( 'MY_ACCOUNT', oxRegistry::getLang()->getBaseLanguage(), false );
-        $aPath['link']  =  oxRegistry::get("oxSeoEncoder")->getStaticUrl( $this->getViewConfig()->getSelfLink() . "cl=account" );
+        $oLang = oxRegistry::getLang();
+        $sSelfLink = $this->getViewConfig()->getSelfLink();
+
+        $iBaseLanguage = $oLang->getBaseLanguage();
+        $aPath['title'] = $oLang->translateString('MY_ACCOUNT', $iBaseLanguage, false);
+        $aPath['link'] = oxRegistry::get("oxSeoEncoder")->getStaticUrl($sSelfLink . "cl=account");
         $aPaths[] = $aPath;
 
-        $aPath['title'] = oxRegistry::getLang()->translateString( 'MY_WISH_LIST', oxRegistry::getLang()->getBaseLanguage(), false );
-        $aPath['link']  = $this->getLink();
+        $aPath['title'] = $oLang->translateString('MY_WISH_LIST', $iBaseLanguage, false);
+        $aPath['link'] = $this->getLink();
         $aPaths[] = $aPath;
 
         return $aPaths;

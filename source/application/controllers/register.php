@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   views
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -28,6 +26,7 @@
  */
 class Register extends User
 {
+
     /**
      * Current class template.
      *
@@ -51,6 +50,7 @@ class Register extends User
 
     /**
      * Order step marker
+     *
      * @var bool
      */
     protected $_blIsOrderStep = false;
@@ -73,9 +73,9 @@ class Register extends User
         parent::render();
 
         // checking registration status
-        if ( $this->isEnabledPrivateSales() && $this->isConfirmed() ) {
+        if ($this->isEnabledPrivateSales() && $this->isConfirmed()) {
             $sTemplate = $this->_sConfirmTemplate;
-        } elseif ( $this->getRegistrationStatus() ) {
+        } elseif ($this->getRegistrationStatus()) {
             $sTemplate = $this->_sSuccessTemplate;
         } else {
             $sTemplate = $this->_sThisTemplate;
@@ -91,7 +91,7 @@ class Register extends User
      */
     public function getRegistrationError()
     {
-        return oxConfig::getParameter( 'newslettererror' );
+        return oxRegistry::getConfig()->getRequestParameter('newslettererror');
     }
 
     /**
@@ -101,7 +101,7 @@ class Register extends User
      */
     public function getRegistrationStatus()
     {
-        return oxConfig::getParameter( 'success' );
+        return oxRegistry::getConfig()->getRequestParameter('success');
     }
 
     /**
@@ -111,10 +111,10 @@ class Register extends User
      *
      * @return bool
      */
-    public function isFieldRequired( $sField )
+    public function isFieldRequired($sField)
     {
-        if ( $aMustFillFields = $this->getMustFillFields() ) {
-            if ( isset( $aMustFillFields[$sField] ) ) {
+        if ($aMustFillFields = $this->getMustFillFields()) {
+            if (isset($aMustFillFields[$sField])) {
                 return true;
             }
         }
@@ -131,24 +131,24 @@ class Register extends User
      */
     public function confirmRegistration()
     {
-        $oUser = oxNew( 'oxuser' );
-        if ( $oUser->loadUserByUpdateId( $this->getUpdateId() ) ) {
+        $oUser = oxNew('oxuser');
+        if ($oUser->loadUserByUpdateId($this->getUpdateId())) {
 
             // resetting update key parameter
-            $oUser->setUpdateKey( true );
+            $oUser->setUpdateKey(true);
 
             // saving ..
-            $oUser->oxuser__oxactive = new oxField( 1 );
+            $oUser->oxuser__oxactive = new oxField(1);
             $oUser->save();
 
             // forcing user login
-            oxSession::setVar( 'usr', $oUser->getId() );
+            oxRegistry::getSession()->setVariable('usr', $oUser->getId());
 
             // redirecting to confirmation page
             return 'register?confirmstate=1';
         } else {
             // confirmation failed
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay( 'REGISTER_ERRLINKEXPIRED', false, true );
+            oxRegistry::get("oxUtilsView")->addErrorToDisplay('REGISTER_ERRLINKEXPIRED', false, true);
 
             // redirecting to confirmation page
             return 'account';
@@ -162,7 +162,7 @@ class Register extends User
      */
     public function getUpdateId()
     {
-        return oxConfig::getParameter( 'uid' );
+        return oxRegistry::getConfig()->getRequestParameter('uid');
     }
 
     /**
@@ -172,7 +172,7 @@ class Register extends User
      */
     public function isConfirmed()
     {
-         return (bool) oxConfig::getParameter( "confirmstate" );
+        return (bool) oxRegistry::getConfig()->getRequestParameter("confirmstate");
     }
 
     /**
@@ -185,12 +185,11 @@ class Register extends User
         $aPaths = array();
         $aPath = array();
 
-        $aPath['title'] = oxRegistry::getLang()->translateString( 'REGISTER', oxRegistry::getLang()->getBaseLanguage(), false );
+        $iBaseLanguage = oxRegistry::getLang()->getBaseLanguage();
+        $aPath['title'] = oxRegistry::getLang()->translateString('REGISTER', $iBaseLanguage, false);
         $aPath['link']  = $this->getLink();
         $aPaths[] = $aPath;
 
         return $aPaths;
     }
-
-
 }

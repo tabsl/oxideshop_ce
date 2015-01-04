@@ -1,34 +1,32 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
  * Lightweight variant handler. Implemnets only absolutely needed oxArticle methods.
  *
- * @package model
  */
 class oxSimpleVariant extends oxI18n implements oxIUrl
 {
+
     /**
      * Use lazy loading for this item
      *
@@ -73,6 +71,7 @@ class oxSimpleVariant extends oxI18n implements oxIUrl
 
     /**
      * user object
+     *
      * @var oxUser
      */
     protected $_oUser = null;
@@ -85,7 +84,7 @@ class oxSimpleVariant extends oxI18n implements oxIUrl
     {
         parent::__construct();
         $this->_sCacheKey = "simplevariants";
-        $this->init( 'oxarticles' );
+        $this->init('oxarticles');
     }
 
     /**
@@ -93,13 +92,11 @@ class oxSimpleVariant extends oxI18n implements oxIUrl
      * detaillink, moredetaillink, etc).
      *
      * @param string $aRecord Array representing current field values
-     *
-     * @return null
      */
-    public function assign( $aRecord)
+    public function assign($aRecord)
     {
         // load object from database
-        parent::assign( $aRecord);
+        parent::assign($aRecord);
 
     }
 
@@ -122,9 +119,10 @@ class oxSimpleVariant extends oxI18n implements oxIUrl
      */
     public function getArticleUser()
     {
-        if ( $this->_oUser === null ) {
+        if ($this->_oUser === null) {
             $this->_oUser = $this->getUser();
         }
+
         return $this->_oUser;
     }
 
@@ -136,18 +134,18 @@ class oxSimpleVariant extends oxI18n implements oxIUrl
     protected function _getGroupPrice()
     {
         $dPrice = $this->oxarticles__oxprice->value;
-        if ( $oUser = $this->getArticleUser() ) {
-            if ( $oUser->inGroup( 'oxidpricea' ) ) {
+        if ($oUser = $this->getArticleUser()) {
+            if ($oUser->inGroup('oxidpricea')) {
                 $dPrice = $this->oxarticles__oxpricea->value;
-            } elseif ( $oUser->inGroup( 'oxidpriceb' ) ) {
+            } elseif ($oUser->inGroup('oxidpriceb')) {
                 $dPrice = $this->oxarticles__oxpriceb->value;
-            } elseif ( $oUser->inGroup( 'oxidpricec' ) ) {
+            } elseif ($oUser->inGroup('oxidpricec')) {
                 $dPrice = $this->oxarticles__oxpricec->value;
             }
         }
 
         // #1437/1436C - added config option, and check for zero A,B,C price values
-        if ( $this->getConfig()->getConfigParam( 'blOverrideZeroABCPrices' ) && (double) $dPrice == 0 ) {
+        if ($this->getConfig()->getConfigParam('blOverrideZeroABCPrices') && (double) $dPrice == 0) {
             $dPrice = $this->oxarticles__oxprice->value;
         }
 
@@ -164,20 +162,20 @@ class oxSimpleVariant extends oxI18n implements oxIUrl
     {
         $myConfig = $this->getConfig();
         // 0002030 No need to return price if it disabled for better performance.
-        if ( !$myConfig->getConfigParam( 'bl_perfLoadPrice' ) ) {
+        if (!$myConfig->getConfigParam('bl_perfLoadPrice')) {
             return;
         }
 
-        if ( $this->_oPrice === null ) {
-            $this->_oPrice = oxNew( "oxPrice" );
-            if ( ( $dPrice = $this->_getGroupPrice() ) ) {
-                $this->_oPrice->setPrice( $dPrice, $this->_dVat );
+        if ($this->_oPrice === null) {
+            $this->_oPrice = oxNew("oxPrice");
+            if (($dPrice = $this->_getGroupPrice())) {
+                $this->_oPrice->setPrice($dPrice, $this->_dVat);
 
-                $this->_applyParentVat( $this->_oPrice );
-                $this->_applyCurrency( $this->_oPrice );
+                $this->_applyParentVat($this->_oPrice);
+                $this->_applyCurrency($this->_oPrice);
                 // apply discounts
                 $this->_applyParentDiscounts($this->_oPrice);
-            } elseif ( ( $oParent = $this->getParent() ) ) {
+            } elseif (($oParent = $this->getParent())) {
                 $this->_oPrice = $oParent->getPrice();
             }
         }
@@ -190,12 +188,10 @@ class oxSimpleVariant extends oxI18n implements oxIUrl
      *
      * @param oxPrice $oPrice Price object
      * @param object  $oCur   Currency object
-     *
-     * @return null
      */
-    protected function _applyCurrency(oxPrice $oPrice, $oCur = null )
+    protected function _applyCurrency(oxPrice $oPrice, $oCur = null)
     {
-        if ( !$oCur ) {
+        if (!$oCur) {
             $oCur = $this->getConfig()->getActShopCurrencyObject();
         }
 
@@ -206,13 +202,11 @@ class oxSimpleVariant extends oxI18n implements oxIUrl
      * Applies discounts which should be applied in general case (for 0 amount)
      *
      * @param oxprice $oPrice Price object
-     *
-     * @return null
      */
-    protected function _applyParentDiscounts( $oPrice )
+    protected function _applyParentDiscounts($oPrice)
     {
-        if ( ( $oParent = $this->getParent() ) ) {
-            $oParent->applyDiscountsForVariant( $oPrice );
+        if (($oParent = $this->getParent())) {
+            $oParent->applyDiscountsForVariant($oPrice);
         }
     }
 
@@ -220,12 +214,10 @@ class oxSimpleVariant extends oxI18n implements oxIUrl
      * apply parent article VAT to given price
      *
      * @param oxPrice $oPrice price object
-     *
-     * @return null
      */
-    protected function _applyParentVat( $oPrice )
+    protected function _applyParentVat($oPrice)
     {
-        if ( ( $oParent = $this->getParent() ) && !$this->getConfig()->getConfigParam( 'bl_perfCalcVatOnlyForBasketOrder' ) ) {
+        if (($oParent = $this->getParent()) && !$this->getConfig()->getConfigParam('bl_perfCalcVatOnlyForBasketOrder')) {
             $oParent->applyVats($oPrice);
         }
     }
@@ -234,8 +226,6 @@ class oxSimpleVariant extends oxI18n implements oxIUrl
      * Price setter
      *
      * @param object $oPrice price object
-     *
-     * @return null;
      */
     public function setPrice($oPrice)
     {
@@ -250,9 +240,10 @@ class oxSimpleVariant extends oxI18n implements oxIUrl
     public function getFPrice()
     {
         $sPrice = null;
-        if ( ( $oPrice = $this->getPrice() ) ) {
-            $sPrice = oxRegistry::getLang()->formatCurrency( $oPrice->getBruttoPrice() );
+        if (($oPrice = $this->getPrice())) {
+            $sPrice = oxRegistry::getLang()->formatCurrency($oPrice->getBruttoPrice());
         }
+
         return $sPrice;
     }
 
@@ -260,8 +251,6 @@ class oxSimpleVariant extends oxI18n implements oxIUrl
      * Sets parent article
      *
      * @param oxArticle $oParent Parent article
-     *
-     * @return null
      */
     public function setParent($oParent)
     {
@@ -286,9 +275,10 @@ class oxSimpleVariant extends oxI18n implements oxIUrl
     public function getLinkType()
     {
         $iLinkType = 0;
-        if ( ( $oParent = $this->getParent() ) ) {
+        if (($oParent = $this->getParent())) {
             $iLinkType = $oParent->getLinkType();
         }
+
         return $iLinkType;
     }
 
@@ -299,12 +289,13 @@ class oxSimpleVariant extends oxI18n implements oxIUrl
      *
      * @return bool
      */
-    public function inCategory( $sCatNid )
+    public function inCategory($sCatNid)
     {
         $blIn = false;
-        if ( ( $oParent = $this->getParent() ) ) {
-            $blIn = $oParent->inCategory( $sCatNid );
+        if (($oParent = $this->getParent())) {
+            $blIn = $oParent->inCategory($sCatNid);
         }
+
         return $blIn;
     }
 
@@ -315,12 +306,13 @@ class oxSimpleVariant extends oxI18n implements oxIUrl
      *
      * @return bool
      */
-    public function inPriceCategory( $sCatNid )
+    public function inPriceCategory($sCatNid)
     {
         $blIn = false;
-        if ( ( $oParent = $this->getParent() ) ) {
-            $blIn = $oParent->inPriceCategory( $sCatNid );
+        if (($oParent = $this->getParent())) {
+            $blIn = $oParent->inPriceCategory($sCatNid);
         }
+
         return $blIn;
     }
 
@@ -333,13 +325,13 @@ class oxSimpleVariant extends oxI18n implements oxIUrl
      *
      * @return string
      */
-    public function getBaseStdLink( $iLang, $blAddId = true, $blFull = true )
+    public function getBaseStdLink($iLang, $blAddId = true, $blFull = true)
     {
-        if ( !isset( $this->_aBaseStdUrls[$iLang][$iLinkType] ) ) {
-            $oArticle = oxNew( "oxArticle" );
-            $oArticle->setId( $this->getId() );
-            $oArticle->setLinkType( $iLinkType );
-            $this->_aBaseStdUrls[$iLang][$iLinkType] = $oArticle->getBaseStdLink( $iLang, $blAddId, $blFull );
+        if (!isset($this->_aBaseStdUrls[$iLang][$iLinkType])) {
+            $oArticle = oxNew("oxArticle");
+            $oArticle->setId($this->getId());
+            $oArticle->setLinkType($iLinkType);
+            $this->_aBaseStdUrls[$iLang][$iLinkType] = $oArticle->getBaseStdLink($iLang, $blAddId, $blFull);
         }
 
         return $this->_aBaseStdUrls[$iLang][$iLinkType];
@@ -353,18 +345,18 @@ class oxSimpleVariant extends oxI18n implements oxIUrl
      *
      * @return string
      */
-    public function getStdLink( $iLang = null, $aParams = array() )
+    public function getStdLink($iLang = null, $aParams = array())
     {
-        if ( $iLang === null ) {
+        if ($iLang === null) {
             $iLang = (int) $this->getLanguage();
         }
 
         $iLinkType = $this->getLinkType();
-        if ( !isset( $this->_aStdUrls[$iLang][$iLinkType] ) ) {
-            $oArticle = oxNew( "oxArticle" );
-            $oArticle->setId( $this->getId() );
-            $oArticle->setLinkType( $iLinkType );
-            $this->_aStdUrls[$iLang][$iLinkType] = $oArticle->getStdLink( $iLang, $aParams );
+        if (!isset($this->_aStdUrls[$iLang][$iLinkType])) {
+            $oArticle = oxNew("oxArticle");
+            $oArticle->setId($this->getId());
+            $oArticle->setLinkType($iLinkType);
+            $this->_aStdUrls[$iLang][$iLinkType] = $oArticle->getStdLink($iLang, $aParams);
         }
 
         return $this->_aStdUrls[$iLang][$iLinkType];
@@ -377,9 +369,9 @@ class oxSimpleVariant extends oxI18n implements oxIUrl
      *
      * @return string
      */
-    public function getBaseSeoLink( $iLang )
+    public function getBaseSeoLink($iLang)
     {
-        return oxRegistry::get("oxSeoEncoderArticle")->getArticleUrl( $this, $iLang, $iLinkType );
+        return oxRegistry::get("oxSeoEncoderArticle")->getArticleUrl($this, $iLang, $iLinkType);
     }
 
     /**
@@ -389,20 +381,21 @@ class oxSimpleVariant extends oxI18n implements oxIUrl
      *
      * @return string
      */
-    public function getLink( $iLang = null )
+    public function getLink($iLang = null)
     {
-        if ( $iLang === null ) {
+        if ($iLang === null) {
             $iLang = (int) $this->getLanguage();
         }
 
-        if ( !oxRegistry::getUtils()->seoIsActive() ) {
-            return $this->getStdLink( $iLang );
+        if (!oxRegistry::getUtils()->seoIsActive()) {
+            return $this->getStdLink($iLang);
         }
 
         $iLinkType = $this->getLinkType();
-        if ( !isset( $this->_aSeoUrls[$iLang][$iLinkType] ) ) {
-            $this->_aSeoUrls[$iLang][$iLinkType] = $this->getBaseSeoLink( $iLang );
+        if (!isset($this->_aSeoUrls[$iLang][$iLinkType])) {
+            $this->_aSeoUrls[$iLang][$iLinkType] = $this->getBaseSeoLink($iLang);
         }
+
         return $this->_aSeoUrls[$iLang][$iLinkType];
 
     }

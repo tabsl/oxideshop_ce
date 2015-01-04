@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   views
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -29,26 +27,31 @@
  */
 class MoreDetails extends Details
 {
+
     /**
      * Current class template name.
+     *
      * @var string
      */
     protected $_sThisTemplate = 'moredetails.tpl';
 
     /**
      * Current article id
+     *
      * @var string
      */
     protected $_sProductId = null;
 
     /**
      * Active picture id
+     *
      * @var string
      */
     protected $_sActPicId = null;
 
     /**
      * Article zoom pictures
+     *
      * @var array
      */
     protected $_aArtZoomPics = null;
@@ -67,9 +70,10 @@ class MoreDetails extends Details
      */
     public function getProductId()
     {
-        if ( $this->_sProductId === null ) {
+        if ($this->_sProductId === null) {
             $this->_sProductId = $this->getProduct()->getId();
         }
+
         return $this->_sProductId;
     }
 
@@ -80,15 +84,16 @@ class MoreDetails extends Details
      */
     public function getActPictureId()
     {
-        if ( $this->_sActPicId === null ) {
+        if ($this->_sActPicId === null) {
             $this->_sActPicId = false;
             $aPicGallery = $this->getProduct()->getPictureGallery();
 
-            if ( $aPicGallery['ZoomPic'] ) {
-                $sActPicId = oxConfig::getParameter( 'actpicid' );
+            if ($aPicGallery['ZoomPic']) {
+                $sActPicId = oxRegistry::getConfig()->getRequestParameter('actpicid');
                 $this->_sActPicId = $sActPicId ? $sActPicId : 1;
             }
         }
+
         return $this->_sActPicId;
     }
 
@@ -99,17 +104,18 @@ class MoreDetails extends Details
      */
     public function getArtZoomPics()
     {
-        if ( $this->_aArtZoomPics === null ) {
+        if ($this->_aArtZoomPics === null) {
             $this->_aArtZoomPics = false;
             //Get picture gallery
             $aPicGallery = $this->getProduct()->getPictureGallery();
             $blArtPic = $aPicGallery['ZoomPic'];
             $aArtPics = $aPicGallery['ZoomPics'];
 
-            if ( $blArtPic ) {
+            if ($blArtPic) {
                 $this->_aArtZoomPics = $aArtPics;
             }
         }
+
         return $this->_aArtZoomPics;
     }
 
@@ -120,11 +126,12 @@ class MoreDetails extends Details
      */
     public function getProduct()
     {
-        if ( $this->_oProduct === null ) {
-            $oArticle = oxNew( 'oxArticle' );
-            $oArticle->load( oxConfig::getParameter( 'anid' ) );
+        if ($this->_oProduct === null) {
+            $oArticle = oxNew('oxArticle');
+            $oArticle->load(oxRegistry::getConfig()->getRequestParameter('anid'));
             $this->_oProduct = $oArticle;
         }
+
         return $this->_oProduct;
     }
 }

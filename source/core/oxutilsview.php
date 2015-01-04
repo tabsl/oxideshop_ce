@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -27,17 +25,11 @@
  */
 class oxUtilsView extends oxSuperCfg
 {
-    /**
-     * oxUtils class instance.
-     *
-     * @var oxutils* instance
-     */
-    private static $_instance = null;
 
     /**
      * Template processor object (smarty)
      *
-     * @var smarty
+     * @var Smarty
      */
     protected static $_oSmarty = null;
 
@@ -63,18 +55,6 @@ class oxUtilsView extends oxSuperCfg
     protected $_aActiveModuleInfo = null;
 
     /**
-     * Utility instance getter
-     *
-     * @deprecated since v5.0 (2012-08-10); Use oxRegistry::get("oxUtilsView") instead.
-     *
-     * @return oxUtilsView
-     */
-    public static function getInstance()
-    {
-        return oxRegistry::get("oxUtilsView");
-    }
-
-    /**
      * returns existing or creates smarty object
      * Returns smarty object. If object not yet initiated - creates it. Sets such
      * default parameters, like cache lifetime, cache/templates directory, etc.
@@ -83,12 +63,12 @@ class oxUtilsView extends oxSuperCfg
      *
      * @return smarty
      */
-    public function getSmarty( $blReload = false )
+    public function getSmarty($blReload = false)
     {
-        if ( !self::$_oSmarty || $blReload ) {
+        if (!self::$_oSmarty || $blReload) {
             self::$_oSmarty = new Smarty();
-            $this->_fillCommonSmartyProperties( self::$_oSmarty );
-            $this->_smartyCompileCheck( self::$_oSmarty );
+            $this->_fillCommonSmartyProperties(self::$_oSmarty);
+            $this->_smartyCompileCheck(self::$_oSmarty);
         }
 
         return self::$_oSmarty;
@@ -103,25 +83,25 @@ class oxUtilsView extends oxSuperCfg
      *
      * @return string
      */
-    public function getTemplateOutput( $sTemplate, $oObject )
+    public function getTemplateOutput($sTemplate, $oObject)
     {
         $oSmarty = $this->getSmarty();
-        $iDebug  = $this->getConfig()->getConfigParam( 'iDebug' );
+        $iDebug = $this->getConfig()->getConfigParam('iDebug');
 
         // assign
         $aViewData = $oObject->getViewData();
-        if ( is_array( $aViewData ) ) {
-            foreach ( array_keys( $aViewData ) as $sViewName ) {
+        if (is_array($aViewData)) {
+            foreach (array_keys($aViewData) as $sViewName) {
                 // show debug information
-                if ( $iDebug == 4 ) {
-                    echo( "TemplateData[$sViewName] : \n");
-                    var_export( $aViewData[$sViewName] );
+                if ($iDebug == 4) {
+                    echo("TemplateData[$sViewName] : \n");
+                    var_export($aViewData[$sViewName]);
                 }
-                $oSmarty->assign_by_ref( $sViewName, $aViewData[$sViewName] );
+                $oSmarty->assign_by_ref($sViewName, $aViewData[$sViewName]);
             }
         }
 
-        return $oSmarty->fetch( $sTemplate );
+        return $oSmarty->fetch($sTemplate);
     }
 
     /**
@@ -129,15 +109,13 @@ class oxUtilsView extends oxSuperCfg
      *
      * @param array &$aView  view data array
      * @param array $aErrors array of errors to pass to view
-     *
-     * @return null
      */
-    public function passAllErrorsToView( &$aView, $aErrors )
+    public function passAllErrorsToView(&$aView, $aErrors)
     {
-        if ( count( $aErrors ) > 0 ) {
-            foreach ( $aErrors as $sLocation => $aEx2 ) {
-                foreach ( $aEx2 as $sKey => $oEr ) {
-                    $aView['Errors'][$sLocation][$sKey] = unserialize( $oEr );
+        if (count($aErrors) > 0) {
+            foreach ($aErrors as $sLocation => $aEx2) {
+                foreach ($aEx2 as $sKey => $oEr) {
+                    $aView['Errors'][$sLocation][$sKey] = unserialize($oEr);
                 }
             }
         }
@@ -153,15 +131,13 @@ class oxUtilsView extends oxSuperCfg
      * @param bool      $blCustomDestination true if the exception shouldn't be displayed at the default position (default false)
      * @param string    $sCustomDestination  defines a name of the view variable containing the messages, overrides Parameter 'CustomError' ("default")
      * @param string    $sActiveController   defines a name of the controller, which should handle the error.
-     *
-     * @return null
      */
-    public function addErrorToDisplay( $oEr, $blFull = false, $blCustomDestination = false, $sCustomDestination = "", $sActiveController = "" )
+    public function addErrorToDisplay($oEr, $blFull = false, $blCustomDestination = false, $sCustomDestination = "", $sActiveController = "")
     {
-        if ( $blCustomDestination && ( oxConfig::getParameter( 'CustomError' ) || $sCustomDestination!= '' ) ) {
+        if ($blCustomDestination && (oxRegistry::getConfig()->getRequestParameter('CustomError') || $sCustomDestination != '')) {
             // check if the current request wants do display exceptions on its own
-            $sDestination = oxConfig::getParameter( 'CustomError' );
-            if ( $sCustomDestination != '' ) {
+            $sDestination = oxRegistry::getConfig()->getRequestParameter('CustomError');
+            if ($sCustomDestination != '') {
                 $sDestination = $sCustomDestination;
             }
         } else {
@@ -172,46 +148,46 @@ class oxUtilsView extends oxSuperCfg
         //starting session if not yet started as all exception
         //messages are stored in session
         $oSession = $this->getSession();
-        if ( !$oSession->getId() && !$oSession->isHeaderSent() ) {
+        if (!$oSession->getId() && !$oSession->isHeaderSent()) {
             $oSession->setForceNewSession();
             $oSession->start();
         }
 
-        $aEx = oxSession::getVar( 'Errors' );
-        if ( $oEr instanceof oxException ) {
-             $oEx = oxNew( 'oxExceptionToDisplay' );
-             $oEx->setMessage( $oEr->getMessage() );
-             $oEx->setExceptionType( get_class( $oEr ) );
+        $aEx = oxRegistry::getSession()->getVariable('Errors');
+        if ($oEr instanceof oxException) {
+            $oEx = oxNew('oxExceptionToDisplay');
+            $oEx->setMessage($oEr->getMessage());
+            $oEx->setExceptionType(get_class($oEr));
 
-             if ( $oEr instanceof oxSystemComponentException ) {
-                $oEx->setMessageArgs( $oEr->getComponent() );
-             }
+            if ($oEr instanceof oxSystemComponentException) {
+                $oEx->setMessageArgs($oEr->getComponent());
+            }
 
-             $oEx->setValues( $oEr->getValues() );
-             $oEx->setStackTrace( $oEr->getTraceAsString() );
-             $oEx->setDebug( $blFull );
-             $oEr = $oEx;
-        } elseif ( $oEr && ! ( $oEr instanceof oxIDisplayError ) ) {
+            $oEx->setValues($oEr->getValues());
+            $oEx->setStackTrace($oEr->getTraceAsString());
+            $oEx->setDebug($blFull);
+            $oEr = $oEx;
+        } elseif ($oEr && !($oEr instanceof oxIDisplayError)) {
             // assuming that a string was given
             $sTmp = $oEr;
-            $oEr = oxNew( 'oxDisplayError' );
-            $oEr->setMessage( $sTmp );
-        } elseif ( $oEr instanceof oxIDisplayError ) {
+            $oEr = oxNew('oxDisplayError');
+            $oEr->setMessage($sTmp);
+        } elseif ($oEr instanceof oxIDisplayError) {
             // take the object
         } else {
             $oEr = null;
         }
 
-        if ( $oEr ) {
-            $aEx[$sDestination][] = serialize( $oEr );
-            oxRegistry::getSession()->setVariable( 'Errors', $aEx );
+        if ($oEr) {
+            $aEx[$sDestination][] = serialize($oEr);
+            oxRegistry::getSession()->setVariable('Errors', $aEx);
 
-            if ( $sActiveController == '' ) {
-                $sActiveController = oxRegistry::getConfig()->getRequestParameter( 'actcontrol' );
+            if ($sActiveController == '') {
+                $sActiveController = oxRegistry::getConfig()->getRequestParameter('actcontrol');
             }
-            if ( $sActiveController ) {
+            if ($sActiveController) {
                 $aControllerErrors[$sDestination] = $sActiveController;
-                oxRegistry::getSession()->setVariable( 'ErrorController', $aControllerErrors );
+                oxRegistry::getSession()->setVariable('ErrorController', $aControllerErrors);
             }
         }
     }
@@ -228,15 +204,19 @@ class oxUtilsView extends oxSuperCfg
      *
      * @return mixed
      */
-    public function parseThroughSmarty( $sDesc, $sOxid = null, $oActView = null, $blRecompile = false )
+    public function parseThroughSmarty($sDesc, $sOxid = null, $oActView = null, $blRecompile = false)
     {
+        if (oxRegistry::getConfig()->isDemoShop()) {
+            return $sDesc;
+        }
+
         startProfile("parseThroughSmarty");
 
         if (!is_array($sDesc) && strpos($sDesc, "[{") === false) {
             stopProfile("parseThroughSmarty");
+
             return $sDesc;
         }
-
 
         $iLang = oxRegistry::getLang()->getTplLanguage();
 
@@ -249,24 +229,24 @@ class oxUtilsView extends oxSuperCfg
 
         $oSmarty->force_compile = $blRecompile;
 
-        if ( !$oActView ) {
-            $oActView = oxNew( 'oxubase' );
+        if (!$oActView) {
+            $oActView = oxNew('oxubase');
             $oActView->addGlobalParams();
         }
 
         $aViewData = $oActView->getViewData();
-        foreach ( array_keys( $aViewData ) as $sName ) {
-            $oSmarty->assign_by_ref( $sName, $aViewData[$sName] );
+        foreach (array_keys($aViewData) as $sName) {
+            $oSmarty->assign_by_ref($sName, $aViewData[$sName]);
         }
 
-        if ( is_array( $sDesc ) ) {
-            foreach ( $sDesc as $sName => $aData ) {
-                $oSmarty->oxidcache = new oxField( $aData[1], oxField::T_RAW );
-                $sRes[$sName] = $oSmarty->fetch( "ox:".$aData[0].$iLang );
+        if (is_array($sDesc)) {
+            foreach ($sDesc as $sName => $aData) {
+                $oSmarty->oxidcache = new oxField($aData[1], oxField::T_RAW);
+                $sRes[$sName] = $oSmarty->fetch("ox:" . $aData[0] . $iLang);
             }
         } else {
             $oSmarty->oxidcache = new oxField($sDesc, oxField::T_RAW);
-            $sRes = $oSmarty->fetch( "ox:{$sOxid}{$iLang}" );
+            $sRes = $oSmarty->fetch("ox:{$sOxid}{$iLang}");
         }
 
         // restore tpl vars for continuing smarty processing if it is in one
@@ -282,12 +262,10 @@ class oxUtilsView extends oxSuperCfg
      * Templates directory setter
      *
      * @param string $sTplDir templates path
-     *
-     * @return null
      */
-    public function setTemplateDir( $sTplDir )
+    public function setTemplateDir($sTplDir)
     {
-        if ( $sTplDir && !in_array( $sTplDir, $this->_aTemplateDir ) ) {
+        if ($sTplDir && !in_array($sTplDir, $this->_aTemplateDir)) {
             $this->_aTemplateDir[] = $sTplDir;
         }
     }
@@ -303,10 +281,10 @@ class oxUtilsView extends oxSuperCfg
 
         //T2010-01-13
         //#1531
-        $this->setTemplateDir( $myConfig->getTemplateDir( $this->isAdmin() ) );
+        $this->setTemplateDir($myConfig->getTemplateDir($this->isAdmin()));
 
-        if ( !$this->isAdmin() ) {
-            $this->setTemplateDir( $myConfig->getOutDir( true ) . $myConfig->getConfigParam( 'sTheme' ) . "/tpl/" );
+        if (!$this->isAdmin()) {
+            $this->setTemplateDir($myConfig->getOutDir(true) . $myConfig->getConfigParam('sTheme') . "/tpl/");
         }
 
         return $this->_aTemplateDir;
@@ -320,9 +298,10 @@ class oxUtilsView extends oxSuperCfg
     public function getTemplateCompileId()
     {
         $sShopId = $this->getConfig()->getShopId();
-        $aDirs   = $this->getTemplateDirs();
-        $sDir    = reset($aDirs);
-        return md5( $sDir.'__'.$sShopId );
+        $aDirs = $this->getTemplateDirs();
+        $sDir = reset($aDirs);
+
+        return md5($sDir . '__' . $sShopId);
     }
 
     /**
@@ -335,13 +314,13 @@ class oxUtilsView extends oxSuperCfg
         $myConfig = $this->getConfig();
 
         //check for the Smarty dir
-        $sCompileDir = $myConfig->getConfigParam( 'sCompileDir' );
+        $sCompileDir = $myConfig->getConfigParam('sCompileDir');
         $sSmartyDir = $sCompileDir . "/smarty/";
-        if ( !is_dir( $sSmartyDir ) ) {
+        if (!is_dir($sSmartyDir)) {
             @mkdir($sSmartyDir);
         }
 
-        if ( !is_writable($sSmartyDir) ) {
+        if (!is_writable($sSmartyDir)) {
             $sSmartyDir = $sCompileDir;
         }
 
@@ -352,52 +331,52 @@ class oxUtilsView extends oxSuperCfg
      * sets properties of smarty object
      *
      * @param object $oSmarty template processor object (smarty)
-     *
-     * @return null
      */
-    protected function _fillCommonSmartyProperties( $oSmarty )
+    protected function _fillCommonSmartyProperties($oSmarty)
     {
         $myConfig = $this->getConfig();
-        $oSmarty->left_delimiter  = '[{';
+        $oSmarty->left_delimiter = '[{';
         $oSmarty->right_delimiter = '}]';
 
-        $oSmarty->register_resource( 'ox', array( 'ox_get_template',
-                                                  'ox_get_timestamp',
-                                                  'ox_get_secure',
-                                                  'ox_get_trusted' ) );
+        $oSmarty->register_resource(
+            'ox', array('ox_get_template',
+                        'ox_get_timestamp',
+                        'ox_get_secure',
+                        'ox_get_trusted')
+        );
 
         $sSmartyDir = $this->getSmartyDir();
 
-        // $myConfig->blTemplateCaching; // DODGER #655 : permanently switched off as it doesnt work good enough
-        $oSmarty->caching      = false;
-        $oSmarty->compile_dir  = $sSmartyDir;
-        $oSmarty->cache_dir    = $sSmartyDir;
+        $oSmarty->caching = false;
+        $oSmarty->compile_dir = $sSmartyDir;
+        $oSmarty->cache_dir = $sSmartyDir;
         $oSmarty->template_dir = $this->getTemplateDirs();
-        $oSmarty->compile_id   = $this->getTemplateCompileId();
+        $oSmarty->compile_id = $this->getTemplateCompileId();
 
-        $oSmarty->default_template_handler_func = array(oxRegistry::get("oxUtilsView"),'_smartyDefaultTemplateHandler');
+        $oSmarty->default_template_handler_func = array(oxRegistry::get("oxUtilsView"), '_smartyDefaultTemplateHandler');
 
-        include_once dirname(__FILE__).'/smarty/plugins/prefilter.oxblock.php';
+        include_once dirname(__FILE__) . '/smarty/plugins/prefilter.oxblock.php';
         $oSmarty->register_prefilter('smarty_prefilter_oxblock');
 
-        $iDebug = $myConfig->getConfigParam( 'iDebug' );
-        if (  $iDebug == 1 || $iDebug == 3 || $iDebug == 4 ) {
+        $iDebug = $myConfig->getConfigParam('iDebug');
+        if ($iDebug == 1 || $iDebug == 3 || $iDebug == 4) {
             $oSmarty->debugging = true;
         }
 
         if ($iDebug == 8 && !$myConfig->isAdmin()) {
-            include_once getShopBasePath().'core/smarty/plugins/prefilter.oxtpldebug.php';
+            include_once getShopBasePath() . 'core/smarty/plugins/prefilter.oxtpldebug.php';
             $oSmarty->register_prefilter('smarty_prefilter_oxtpldebug');
         }
 
-        //demoshop security
-        if ( !$myConfig->isDemoShop() ) {
-            $oSmarty->php_handling = (int) $myConfig->getConfigParam( 'iSmartyPhpHandling' );
-            $oSmarty->security     = false;
+        //demo shop security
+        if (!$myConfig->isDemoShop()) {
+            $oSmarty->php_handling = (int) $myConfig->getConfigParam('iSmartyPhpHandling');
+            $oSmarty->security = false;
         } else {
             $oSmarty->php_handling = SMARTY_PHP_REMOVE;
-            $oSmarty->security     = true;
+            $oSmarty->security = true;
             $oSmarty->security_settings['IF_FUNCS'][] = 'XML_ELEMENT_NODE';
+            $oSmarty->security_settings['IF_FUNCS'][] = 'is_int';
             $oSmarty->security_settings['MODIFIER_FUNCS'][] = 'round';
             $oSmarty->security_settings['MODIFIER_FUNCS'][] = 'floor';
             $oSmarty->security_settings['MODIFIER_FUNCS'][] = 'trim';
@@ -412,13 +391,11 @@ class oxUtilsView extends oxSuperCfg
      * sets compile check property to smarty object
      *
      * @param object $oSmarty template processor object (smarty)
-     *
-     * @return null
      */
-    protected function _smartyCompileCheck( $oSmarty )
+    protected function _smartyCompileCheck($oSmarty)
     {
         $myConfig = $this->getConfig();
-        $oSmarty->compile_check  = $myConfig->getConfigParam( 'blCheckTemplates' );
+        $oSmarty->compile_check = $myConfig->getConfigParam('blCheckTemplates');
 
     }
 
@@ -436,12 +413,14 @@ class oxUtilsView extends oxSuperCfg
     public function _smartyDefaultTemplateHandler($sResourceType, $sResourceName, &$sResourceContent, &$sResourceTimestamp, $oSmarty)
     {
         $myConfig = oxRegistry::getConfig();
-        if ( $sResourceType == 'file' && !is_readable($sResourceName) ) {
-            $sResourceName      = $myConfig->getTemplatePath($sResourceName, $myConfig->isAdmin());
-            $sResourceContent   = $oSmarty->_read_file($sResourceName);
+        if ($sResourceType == 'file' && !is_readable($sResourceName)) {
+            $sResourceName = $myConfig->getTemplatePath($sResourceName, $myConfig->isAdmin());
+            $sResourceContent = $oSmarty->_read_file($sResourceName);
             $sResourceTimestamp = filemtime($sResourceName);
+
             return is_file($sResourceName) && is_readable($sResourceName);
         }
+
         return false;
     }
 
@@ -461,18 +440,20 @@ class oxUtilsView extends oxSuperCfg
         $aModuleInfo = $this->_getActiveModuleInfo();
         $sModulePath = $aModuleInfo[$sModule];
         // for 4.5 modules, since 4.6 insert in oxtplblocks the full file name
-        if ( substr($sFile, -4) != '.tpl' ) {
+        if (substr($sFile, -4) != '.tpl') {
             $sFile = $sFile . ".tpl";
         }
         // for < 4.6 modules, since 4.7/5.0 insert in oxtplblocks the full file name and path
-        if ( basename($sFile) == $sFile ) {
+        if (basename($sFile) == $sFile) {
             $sFile = "out/blocks/$sFile";
         }
-        $sFileName = $this->getConfig()->getConfigParam( 'sShopDir' )."/modules/$sModulePath/$sFile";
-        if ( file_exists($sFileName) && is_readable($sFileName) ) {
+        $sFileName = $this->getConfig()->getConfigParam('sShopDir') . "/modules/$sModulePath/$sFile";
+        if (file_exists($sFileName) && is_readable($sFileName)) {
             return file_get_contents($sFileName);
         } else {
-            throw oxNew( "oxException", "Template block file ($sFileName) not found for '$sModule' module." );
+            /** @var oxException $oException */
+            $oException = oxNew("oxException", "Template block file ($sFileName) not found for '$sModule' module.");
+            throw $oException;
         }
     }
 
@@ -491,34 +472,34 @@ class oxUtilsView extends oxSuperCfg
 
         $sTplDir = trim($oConfig->getConfigParam('_sTemplateDir'), '/\\');
         $sFile = str_replace(array('\\', '//'), '/', $sFile);
-        if (preg_match('@/'.preg_quote($sTplDir, '@').'/(.*)$@', $sFile, $m)) {
+        if (preg_match('@/' . preg_quote($sTplDir, '@') . '/(.*)$@', $sFile, $m)) {
             $sFile = $m[1];
         }
 
-        $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
+        $oDb = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
         $sFileParam = $oDb->quote($sFile);
         $sShpIdParam = $oDb->quote($oConfig->getShopId());
         $aRet = array();
         $aIds = array();
 
-        if ( $this->_blIsTplBlocks === null ) {
+        if ($this->_blIsTplBlocks === null) {
             $this->_blIsTplBlocks = false;
             $aIds = $this->_getActiveModuleInfo();
             if (count($aIds)) {
-                $sSql = "select COUNT(*) from oxtplblocks where oxactive=1 and oxshopid=$sShpIdParam and oxmodule in ( " . implode(", ", oxDb::getInstance()->quoteArray(array_keys($aIds)) ) . " ) ";
-                $rs = $oDb->getOne( $sSql );
-                if ( $rs ) {
+                $sSql = "select COUNT(*) from oxtplblocks where oxactive=1 and oxshopid=$sShpIdParam and oxmodule in ( " . implode(", ", oxDb::getInstance()->quoteArray(array_keys($aIds))) . " ) ";
+                $rs = $oDb->getOne($sSql);
+                if ($rs) {
                     $this->_blIsTplBlocks = true;
                 }
             }
         }
 
-        if ( $this->_blIsTplBlocks ) {
+        if ($this->_blIsTplBlocks) {
             $aIds = $this->_getActiveModuleInfo();
             if (count($aIds)) {
-                $sSql = "select * from oxtplblocks where oxactive=1 and oxshopid=$sShpIdParam and oxtemplate=$sFileParam and oxmodule in ( " . implode(", ", oxDb::getInstance()->quoteArray(array_keys($aIds)) ) . " ) order by oxpos asc";
-                $oDb->setFetchMode( oxDb::FETCH_MODE_ASSOC );
-                $rs = $oDb->select( $sSql );
+                $sSql = "select * from oxtplblocks where oxactive=1 and oxshopid=$sShpIdParam and oxtemplate=$sFileParam and oxmodule in ( " . implode(", ", oxDb::getInstance()->quoteArray(array_keys($aIds))) . " ) order by oxpos asc";
+                $oDb->setFetchMode(oxDb::FETCH_MODE_ASSOC);
+                $rs = $oDb->select($sSql);
 
                 if ($rs != false && $rs->recordCount() > 0) {
                     while (!$rs->EOF) {
@@ -550,7 +531,7 @@ class oxUtilsView extends oxSuperCfg
             $oModulelist = oxNew('oxmodulelist');
             $this->_aActiveModuleInfo = $oModulelist->getActiveModuleInfo();
         }
+
         return $this->_aActiveModuleInfo;
     }
-
 }

@@ -1,37 +1,36 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   main
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
     /** @name database information */
-        $this->dbHost = '<dbHost_ce>'; // database host name
-        $this->dbName = '<dbName_ce>'; // database name
-        $this->dbUser = '<dbUser_ce>'; // database user name
-        $this->dbPwd  = '<dbPwd_ce>'; // database user password
-        $this->dbType = 'mysql';
-        $this->sShopURL     = '<sShopURL_ce>'; // eShop base url, required
-        $this->sSSLShopURL  = null;            // eShop SSL url, optional
-        $this->sAdminSSLURL = null;            // eShop Admin SSL url, optional
-        $this->sShopDir     = '<sShopDir_ce>';
-        $this->sCompileDir  = '<sCompileDir_ce>';
+    $this->dbHost = '<dbHost_ce>'; // database host name
+    $this->dbName = '<dbName_ce>'; // database name
+    $this->dbUser = '<dbUser_ce>'; // database user name
+    $this->dbPwd  = '<dbPwd_ce>'; // database user password
+    $this->dbType = 'mysql';
+    $this->sShopURL     = '<sShopURL_ce>'; // eShop base url, required
+    $this->sSSLShopURL  = null;            // eShop SSL url, optional
+    $this->sAdminSSLURL = null;            // eShop Admin SSL url, optional
+    $this->sShopDir     = '<sShopDir_ce>';
+    $this->sCompileDir  = '<sCompileDir_ce>';
 
     // UTF-8 mode in shop 0 - off, 1 - on
     $this->iUtfMode  = '<iUtfMode>';
@@ -187,3 +186,13 @@
      */
     $this->blUseCron = false;
 
+
+    /**
+     * Do not disable module if class from extension path does not exist.
+     */
+    $this->blDoNotDisableModuleOnError = false;
+
+    /**
+     * Enable temporarily in case you can't access the backend due to broken views
+     */
+    $this->blSkipViewUsage = false;

@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   views
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -27,14 +25,17 @@
  */
 class Tag extends aList
 {
+
     /**
      * List type
+     *
      * @var string
      */
     protected $_sListType = 'tag';
 
     /**
      * Marked which defines if current view is sortable or not
+     *
      * @var bool
      */
     protected $_blShowSorting = true;
@@ -55,6 +56,7 @@ class Tag extends aList
 
     /**
      * Page navigation
+     *
      * @var object
      */
     protected $_oPageNavigation = null;
@@ -85,7 +87,7 @@ class Tag extends aList
         $oArticleList = $this->getArticleList();
 
         // if tags are off or no articles - showing 404 header (#2139)
-        if ( !$this->showTags() || !$oArticleList) {
+        if (!$this->showTags() || !$oArticleList) {
             error_404_handler();
         }
 
@@ -112,11 +114,12 @@ class Tag extends aList
      */
     public function getAddUrlParams()
     {
-        $sAddParams  = parent::getAddUrlParams();
-        $sAddParams .= ($sAddParams?'&amp;':'') . "listtype={$this->_sListType}";
-        if ( $sParam = oxConfig::getParameter( 'searchtag', 1 ) ) {
-            $sAddParams .= "&amp;searchtag=" . rawurlencode( $sParam );
+        $sAddParams = parent::getAddUrlParams();
+        $sAddParams .= ($sAddParams ? '&amp;' : '') . "listtype={$this->_sListType}";
+        if ($sParam = oxRegistry::getConfig()->getRequestParameter('searchtag', true)) {
+            $sAddParams .= "&amp;searchtag=" . rawurlencode($sParam);
         }
+
         return $sAddParams;
     }
 
@@ -127,17 +130,17 @@ class Tag extends aList
      *
      * @return array
      */
-    protected function _loadArticles( $oCategory )
+    protected function _loadArticles($oCategory)
     {
         // load only articles which we show on screen
-        $iNrofCatArticles = (int) $this->getConfig()->getConfigParam( 'iNrofCatArticles' );
-        $iNrofCatArticles = $iNrofCatArticles?$iNrofCatArticles:1;
-        $oArtList = oxNew( 'oxarticlelist' );
-        $oArtList->setSqlLimit( $iNrofCatArticles * $this->_getRequestPageNr(), $iNrofCatArticles );
-        $oArtList->setCustomSorting( $this->getSortingSql( $this->getSortIdent() ) );
+        $iNrofCatArticles = (int) $this->getConfig()->getConfigParam('iNrofCatArticles');
+        $iNrofCatArticles = $iNrofCatArticles ? $iNrofCatArticles : 1;
+        $oArtList = oxNew('oxarticlelist');
+        $oArtList->setSqlLimit($iNrofCatArticles * $this->_getRequestPageNr(), $iNrofCatArticles);
+        $oArtList->setCustomSorting($this->getSortingSql($this->getSortIdent()));
         // load the articles
-        $this->_iAllArtCnt = $oArtList->loadTagArticles( $this->getTag(), oxRegistry::getLang()->getBaseLanguage());
-        $this->_iCntPages  = round( $this->_iAllArtCnt / $iNrofCatArticles + 0.49 );
+        $this->_iAllArtCnt = $oArtList->loadTagArticles($this->getTag(), oxRegistry::getLang()->getBaseLanguage());
+        $this->_iCntPages = round($this->_iAllArtCnt / $iNrofCatArticles + 0.49);
 
         return $oArtList;
     }
@@ -159,37 +162,7 @@ class Tag extends aList
      */
     protected function _getSeoObjectId()
     {
-        return md5("tag" . $this->getTag() );
-    }
-
-    /**
-     * Returns search sorting config
-     *
-     * @param string $sCnid sortable item id
-     *
-     * @deprecated since v4.7.3/5.0.3 (2013-01-07); dublicated code
-     *
-     * @return string
-     */
-    public function getSorting( $sCnid )
-    {
-        return parent::getSorting( $sCnid );
-    }
-
-    /**
-     * Sets search sorting config
-     *
-     * @param string $sCnid      sortable item id
-     * @param string $sSortBy    sort field
-     * @param string $sSortOrder sort order
-     *
-     * @deprecated since v4.7.3/5.0.3 (2013-01-07); dublicated code
-     *
-     * @return null
-     */
-    public function setItemSorting( $sCnid, $sSortBy, $sSortOrder  = null )
-    {
-        parent::setItemSorting( $sCnid, $sSortBy, $sSortOrder );
+        return md5("tag" . $this->getTag());
     }
 
     /**
@@ -199,9 +172,10 @@ class Tag extends aList
      */
     public function generatePageNavigationUrl()
     {
-        if ( ( oxRegistry::getUtils()->seoIsActive() && ( $sTag = $this->getTag() ) ) ) {
-            $sLink = oxRegistry::get("oxSeoEncoderTag")->getTagUrl( $sTag, oxRegistry::getLang()->getBaseLanguage() );
+        if ((oxRegistry::getUtils()->seoIsActive() && ($sTag = $this->getTag()))) {
+            $sLink = oxRegistry::get("oxSeoEncoderTag")->getTagUrl($sTag, oxRegistry::getLang()->getBaseLanguage());
         }
+
         return $sLink ? $sLink : oxUBase::generatePageNavigationUrl();
     }
 
@@ -214,17 +188,17 @@ class Tag extends aList
      *
      * @return string
      */
-    protected function _addPageNrParam( $sUrl, $iPage, $iLang = null)
+    protected function _addPageNrParam($sUrl, $iPage, $iLang = null)
     {
         $sSeoUrl = $blSeo = oxRegistry::getUtils()->seoIsActive();
-        if ( $blSeo && ( $sTag = $this->getTag() ) ) {
-            if ( $iPage && ( $sSeoUrl = oxRegistry::get("oxSeoEncoderTag")->getTagPageUrl( $sTag, $iPage, $iLang ) ) ) {
+        if ($blSeo && ($sTag = $this->getTag())) {
+            if ($iPage && ($sSeoUrl = oxRegistry::get("oxSeoEncoderTag")->getTagPageUrl($sTag, $iPage, $iLang))) {
                 // only if page number > 0
                 $sUrl = $sSeoUrl;
             }
         }
 
-        return ( !$blSeo || !$sSeoUrl ) ? oxUBase::_addPageNrParam( $sUrl, $iPage, $iLang ) : $sUrl;
+        return (!$blSeo || !$sSeoUrl) ? oxUBase::_addPageNrParam($sUrl, $iPage, $iLang) : $sUrl;
     }
 
     /**
@@ -234,9 +208,9 @@ class Tag extends aList
      */
     public function getArticleList()
     {
-        if ( $this->_aArticleList === null ) {
-            if ( ( $this->getTag() ) ) {
-                $this->_aArticleList = $this->_loadArticles( null );
+        if ($this->_aArticleList === null) {
+            if (($this->getTag())) {
+                $this->_aArticleList = $this->_loadArticles(null);
             }
         }
 
@@ -250,9 +224,10 @@ class Tag extends aList
      */
     public function getTag()
     {
-        if ( $this->_sTag === null ) {
-            $this->_sTag = oxConfig::getParameter("searchtag", 1);
+        if ($this->_sTag === null) {
+            $this->_sTag = oxRegistry::getConfig()->getRequestParameter("searchtag", false);
         }
+
         return $this->_sTag;
     }
 
@@ -263,14 +238,15 @@ class Tag extends aList
      */
     public function getTitle()
     {
-        if ( $this->_sTagTitle === null ) {
+        if ($this->_sTagTitle === null) {
             $this->_sTagTitle = false;
-            if ( ( $sTag = $this->getTag() ) ) {
+            if (($sTag = $this->getTag())) {
                 $oStr = getStr();
-                $sTitle = $oStr->ucfirst( $sTag );
-                $this->_sTagTitle = $oStr->htmlspecialchars( $sTitle );
+                $sTitle = $oStr->ucfirst($sTag);
+                $this->_sTagTitle = $oStr->htmlspecialchars($sTitle);
             }
         }
+
         return $this->_sTagTitle;
     }
 
@@ -281,16 +257,17 @@ class Tag extends aList
      */
     public function getTreePath()
     {
-        if ( ( $sTag = $this->getTag() ) ) {
+        if (($sTag = $this->getTag())) {
             $oStr = getStr();
 
-            $aPath[0] = oxNew( "oxcategory" );
-            $aPath[0]->setLink( false );
-            $aPath[0]->oxcategories__oxtitle = new oxField( oxRegistry::getLang()->translateString('TAGS') );
+            $aPath[0] = oxNew("oxcategory");
+            $aPath[0]->setLink(false);
+            $aPath[0]->oxcategories__oxtitle = new oxField(oxRegistry::getLang()->translateString('TAGS'));
 
-            $aPath[1] = oxNew( "oxcategory" );
-            $aPath[1]->setLink( false );
-            $aPath[1]->oxcategories__oxtitle = new oxField( $oStr->ucfirst( $sTag ) );
+            $aPath[1] = oxNew("oxcategory");
+            $aPath[1]->setLink(false);
+            $aPath[1]->oxcategories__oxtitle = new oxField($oStr->ucfirst($sTag));
+
             return $aPath;
         }
     }
@@ -304,9 +281,9 @@ class Tag extends aList
      *
      * @return string
      */
-    protected function _prepareMetaKeyword( $sKeywords, $blRemoveDuplicatedWords = true )
+    protected function _prepareMetaKeyword($sKeywords, $blRemoveDuplicatedWords = true)
     {
-        return parent::_collectMetaKeyword( $sKeywords );
+        return parent::_collectMetaKeyword($sKeywords);
     }
 
     /**
@@ -319,9 +296,9 @@ class Tag extends aList
      *
      * @return  string  $sString    converted string
      */
-    protected function _prepareMetaDescription( $sMeta, $iLength = 1024, $blDescTag = false )
+    protected function _prepareMetaDescription($sMeta, $iLength = 1024, $blDescTag = false)
     {
-        return parent::_collectMetaDescription( $sMeta, $iLength, $blDescTag );
+        return parent::_collectMetaDescription($sMeta, $iLength, $blDescTag);
     }
 
     /**
@@ -331,10 +308,10 @@ class Tag extends aList
      */
     public function getCanonicalUrl()
     {
-        if ( ( $iPage = $this->getActPage() ) ) {
-            return $this->_addPageNrParam( $this->generatePageNavigationUrl(), $iPage );
-        } elseif ( ( $sTag = $this->getTag() ) ) {
-            return oxRegistry::get("oxSeoEncoderTag")->getTagUrl( $sTag );
+        if (($iPage = $this->getActPage())) {
+            return $this->_addPageNrParam($this->generatePageNavigationUrl(), $iPage);
+        } elseif (($sTag = $this->getTag())) {
+            return oxRegistry::get("oxSeoEncoderTag")->getTagUrl($sTag);
         }
     }
 
@@ -348,15 +325,17 @@ class Tag extends aList
         $aPaths = array();
         $aCatPath = array();
 
-        $aCatPath['title'] = oxRegistry::getLang()->translateString( 'TAGS', oxRegistry::getLang()->getBaseLanguage(), false );
-        $aCatPath['link']  = oxRegistry::get("oxSeoEncoder")->getStaticUrl( $this->getViewConfig()->getSelfLink() . 'cl=tags' );
+        $iBaseLanguage = oxRegistry::getLang()->getBaseLanguage();
+        $sSelfLink = $this->getViewConfig()->getSelfLink();
+
+        $aCatPath['title'] = oxRegistry::getLang()->translateString('TAGS', $iBaseLanguage, false);
+        $aCatPath['link'] = oxRegistry::get("oxSeoEncoder")->getStaticUrl($sSelfLink . 'cl=tags');
         $aPaths[] = $aCatPath;
 
         $aCatPath['title'] = $this->getTitle();
-        $aCatPath['link']  = $this->getCanonicalUrl();
+        $aCatPath['link'] = $this->getCanonicalUrl();
         $aPaths[] = $aCatPath;
 
         return $aPaths;
     }
-
 }

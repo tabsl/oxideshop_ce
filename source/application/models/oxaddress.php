@@ -1,34 +1,31 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: oxaddress.php 17768 2009-04-02 10:52:12Z tomas $
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
  * Address handler
- *
- * @package model
  */
 class oxAddress extends oxBase
 {
+
     /**
      * Current class name
      *
@@ -44,6 +41,25 @@ class oxAddress extends oxBase
     protected $_blSelected = false;
 
     /**
+     * @var oxState
+     */
+    protected $_oStateObject = null;
+
+    /**
+     * Returns oxState object
+     *
+     * @return oxState
+     */
+    protected function _getStateObject()
+    {
+        if (is_null($this->_oStateObject)) {
+            $this->_oStateObject = oxNew('oxState');
+        }
+
+        return $this->_oStateObject;
+    }
+
+    /**
      * Class constructor
      *
      * @return null
@@ -51,7 +67,7 @@ class oxAddress extends oxBase
     public function __construct()
     {
         parent::__construct();
-        $this->init( 'oxaddress' );
+        $this->init('oxaddress');
     }
 
     /**
@@ -72,15 +88,15 @@ class oxAddress extends oxBase
     public function toString()
     {
         $sFirstName = $this->oxaddress__oxfname->value;
-        $sLastName  = $this->oxaddress__oxlname->value;
-        $sStreet    = $this->oxaddress__oxstreet->value;
-        $sStreetNr  = $this->oxaddress__oxstreetnr->value;
-        $sCity      = $this->oxaddress__oxcity->value;
+        $sLastName = $this->oxaddress__oxlname->value;
+        $sStreet = $this->oxaddress__oxstreet->value;
+        $sStreetNr = $this->oxaddress__oxstreetnr->value;
+        $sCity = $this->oxaddress__oxcity->value;
 
         //format it
         $sAddress = "";
         if ($sFirstName || $sLastName) {
-            $sAddress = $sFirstName. ($sFirstName?" ":"") . "$sLastName, ";
+            $sAddress = $sFirstName . ($sFirstName ? " " : "") . "$sLastName, ";
         }
         $sAddress .= "$sStreet $sStreetNr $sCity";
 
@@ -100,13 +116,44 @@ class oxAddress extends oxBase
     }
 
     /**
-     * Returns string representation of address state
+     * Return address state id
+     *
+     * @deprecated since v5.2 (2014-01-10); Naming changed use function getStateId()
      *
      * @return string
      */
     public function getState()
     {
+        return $this->getStateId();
+    }
+
+    /**
+     * Get state id for current address
+     *
+     * @return mixed
+     */
+    public function getStateId()
+    {
         return $this->oxaddress__oxstateid->value;
+    }
+
+
+    /**
+     * Get state title
+     *
+     * @param string $sId state ID
+     *
+     * @return string
+     */
+    public function getStateTitle($sId = null)
+    {
+        $oState = $this->_getStateObject();
+
+        if (is_null($sId)) {
+            $sId = $this->getStateId();
+        }
+
+        return $oState->getTitleById($sId);
     }
 
     /**
@@ -121,8 +168,6 @@ class oxAddress extends oxBase
 
     /**
      * Sets address state as selected
-     *
-     * @return null
      */
     public function setSelected()
     {

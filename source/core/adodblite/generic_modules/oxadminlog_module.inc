@@ -10,7 +10,7 @@ class oxadminlog_ADOConnection extends mysql_oxadminlog_EXTENDER
 
             $blInsert = true;
 
-            $myConfig = oxConfig::getInstance();
+            $myConfig = oxRegistry::getConfig();
             if ( is_array( $aLogSkipTags = $myConfig->getConfigParam( 'aLogSkipTags' ) ) ) {
                 foreach( $aLogSkipTags as $sSkipThis ) {
                     if( strpos( $sSearch, $sSkipThis ) !== false ) {
@@ -30,8 +30,8 @@ class oxadminlog_ADOConnection extends mysql_oxadminlog_EXTENDER
                 }
 
 
-                    $sQ = "insert into oxadminlog ( oxuserid, oxsql )
-                           values ( '{$sUserId}', " . $this->quote( $sSearch ) . " ) ";
+                $sQ = "insert into oxadminlog ( oxuserid, oxsql )
+                       values ( '{$sUserId}', " . $this->quote( $sSearch ) . " ) ";
 
                 // write information
                 parent::Execute( $sQ );

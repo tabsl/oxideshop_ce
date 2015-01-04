@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   views
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -31,14 +29,17 @@
  */
 class ForgotPwd extends oxUBase
 {
+
     /**
      * Current class template name.
+     *
      * @var string
      */
     protected $_sThisTemplate = 'page/account/forgotpwd.tpl';
 
     /**
      * Send forgot E-Mail.
+     *
      * @var string
      */
     protected $_sForgotEmail = null;
@@ -59,6 +60,7 @@ class ForgotPwd extends oxUBase
 
     /**
      * Sign if to load and show bargain action
+     *
      * @var bool
      */
     protected $_blBargainAction = true;
@@ -69,22 +71,20 @@ class ForgotPwd extends oxUBase
      *
      * Template variables:
      * <b>sendForgotMail</b>
-     *
-     * @return null
      */
     public function forgotPassword()
     {
-        $sEmail = oxConfig::getParameter( 'lgn_usr' );
+        $sEmail = oxRegistry::getConfig()->getRequestParameter('lgn_usr');
         $this->_sForgotEmail = $sEmail;
-        $oEmail = oxNew( 'oxemail' );
+        $oEmail = oxNew('oxemail');
 
         // problems sending passwd reminder ?
         $iSuccess = false;
-        if ( $sEmail ) {
-            $iSuccess = $oEmail->sendForgotPwdEmail( $sEmail );
+        if ($sEmail) {
+            $iSuccess = $oEmail->sendForgotPwdEmail($sEmail);
         }
-        if ( $iSuccess !== true ) {
-            $sError = ($iSuccess === false)? 'ERROR_MESSAGE_PASSWORD_EMAIL_INVALID' : 'MESSAGE_NOT_ABLE_TO_SEND_EMAIL';
+        if ($iSuccess !== true) {
+            $sError = ($iSuccess === false) ? 'ERROR_MESSAGE_PASSWORD_EMAIL_INVALID' : 'MESSAGE_NOT_ABLE_TO_SEND_EMAIL';
             oxRegistry::get("oxUtilsView")->addErrorToDisplay($sError, false, true);
             $this->_sForgotEmail = false;
         }
@@ -98,38 +98,38 @@ class ForgotPwd extends oxUBase
      */
     public function updatePassword()
     {
-        $sNewPass  = oxConfig::getParameter( 'password_new', true );
-        $sConfPass = oxConfig::getParameter( 'password_new_confirm', true );
+        $sNewPass = oxRegistry::getConfig()->getRequestParameter('password_new', true);
+        $sConfPass = oxRegistry::getConfig()->getRequestParameter('password_new_confirm', true);
 
-        $oUser = oxNew( 'oxuser' );
-        if ( ( $oExcp = $oUser->checkPassword( $sNewPass, $sConfPass, true ) ) ) {
-            switch ( $oExcp->getMessage() ) {
-                case 'ERROR_MESSAGE_INPUT_EMPTYPASS':
-                case 'ERROR_MESSAGE_PASSWORD_TOO_SHORT':
-                    return oxRegistry::get("oxUtilsView")->addErrorToDisplay('ERROR_MESSAGE_PASSWORD_TOO_SHORT', false, true);
-                default:
-                    return oxRegistry::get("oxUtilsView")->addErrorToDisplay('ERROR_MESSAGE_PASSWORD_DO_NOT_MATCH', false, true);
-            }
+        $oUser = oxNew('oxuser');
+
+        /** @var oxInputValidator $oInputValidator */
+        $oInputValidator = oxRegistry::get('oxInputValidator');
+        if (($oExcp = $oInputValidator->checkPassword($oUser, $sNewPass, $sConfPass, true))) {
+            return oxRegistry::get("oxUtilsView")->addErrorToDisplay($oExcp->getMessage(), false, true);
         }
 
         // passwords are fine - updating and loggin user in
-        if ( $oUser->loadUserByUpdateId( $this->getUpdateId() ) ) {
+        if ($oUser->loadUserByUpdateId($this->getUpdateId())) {
 
             // setting new pass ..
-            $oUser->setPassword( $sNewPass );
+            $oUser->setPassword($sNewPass);
 
             // resetting update pass params
-            $oUser->setUpdateKey( true );
+            $oUser->setUpdateKey(true);
 
             // saving ..
             $oUser->save();
 
             // forcing user login
-            oxSession::setVar( 'usr', $oUser->getId() );
+            oxRegistry::getSession()->setVariable('usr', $oUser->getId());
+
             return 'forgotpwd?success=1';
         } else {
             // expired reminder
-            return oxRegistry::get("oxUtilsView")->addErrorToDisplay( 'ERROR_MESSAGE_PASSWORD_LINK_EXPIRED', false, true );
+            $oUtilsView = oxRegistry::get("oxUtilsView");
+
+            return $oUtilsView->addErrorToDisplay('ERROR_MESSAGE_PASSWORD_LINK_EXPIRED', false, true);
         }
     }
 
@@ -140,7 +140,7 @@ class ForgotPwd extends oxUBase
      */
     public function updateSuccess()
     {
-        return (bool) oxConfig::getParameter( 'success' );
+        return (bool) oxRegistry::getConfig()->getRequestParameter('success');
     }
 
     /**
@@ -160,7 +160,7 @@ class ForgotPwd extends oxUBase
      */
     public function getUpdateId()
     {
-        return oxConfig::getParameter( 'uid' );
+        return oxRegistry::getConfig()->getRequestParameter('uid');
     }
 
     /**
@@ -170,8 +170,8 @@ class ForgotPwd extends oxUBase
      */
     public function isExpiredLink()
     {
-        if ( ( $sKey = $this->getUpdateId() ) ) {
-            $blExpired = oxNew( 'oxuser' )->isExpiredUpdateId( $sKey );
+        if (($sKey = $this->getUpdateId())) {
+            $blExpired = oxNew('oxuser')->isExpiredUpdateId($sKey);
         }
 
         return $blExpired;
@@ -197,10 +197,29 @@ class ForgotPwd extends oxUBase
         $aPaths = array();
         $aPath = array();
 
-        $aPath['title'] = oxRegistry::getLang()->translateString( 'FORGOT_PASSWORD', oxRegistry::getLang()->getBaseLanguage(), false );
-        $aPath['link']  = $this->getLink();
+        $iBaseLanguage = oxRegistry::getLang()->getBaseLanguage();
+        $aPath['title'] = oxRegistry::getLang()->translateString('FORGOT_PASSWORD', $iBaseLanguage, false);
+        $aPath['link'] = $this->getLink();
         $aPaths[] = $aPath;
 
         return $aPaths;
+    }
+
+    /**
+     * Get password reminder page title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        $sTitle = 'FORGOT_PASSWORD';
+
+        if ($this->showUpdateScreen()) {
+            $sTitle = 'NEW_PASSWORD';
+        } elseif ($this->updateSuccess()) {
+            $sTitle = 'CHANGE_PASSWORD';
+        }
+
+        return oxRegistry::getLang()->translateString($sTitle, oxRegistry::getLang()->getBaseLanguage(), false);
     }
 }

@@ -1,24 +1,22 @@
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   out
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: oxajax.js 35529 2011-05-23 07:31:20Z vilma $
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 ( function ( $ ) {
 
@@ -156,6 +154,16 @@
                 $.each(params['additionalData'], function(i, f) {inputs[i] = f;});
             }
 
+            // sorting array to pass parameters alphabetically
+            var aInputs = {};
+            var keys = Array();
+            for ( var key in inputs ) {
+                if ( inputs.hasOwnProperty( key ) ) {
+                    keys.push( key );
+                }
+            }
+            keys.sort().forEach( function( i ) { aInputs[i] = inputs[i]; } )
+
             var sLoadingScreen = null;
             if (params['targetEl']) {
                 sLoadingScreen = self.loadingScreen.start(params['targetEl'], params['iconPosEl']);
@@ -166,11 +174,13 @@
             }
 
             jQuery.ajax({
-                data    : inputs,
+                data    : aInputs,
                 url     : action,
                 type    : type,
                 timeout : 30000,
-
+                beforeSend: function( jqXHR, settings ) {
+                    settings.url = settings.url.replace( "&&", "&" );
+                },
                 error   : function(jqXHR, textStatus, errorThrown) {
                     if (sLoadingScreen) {
                         self.loadingScreen.stop(sLoadingScreen);

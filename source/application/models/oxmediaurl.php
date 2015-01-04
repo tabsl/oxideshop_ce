@@ -1,34 +1,32 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
  * Media URL handler
  *
- * @package model
  */
 class oxMediaUrl extends oxI18n
 {
+
     /**
      * Current class name
      *
@@ -42,7 +40,7 @@ class oxMediaUrl extends oxI18n
     public function __construct()
     {
         parent::__construct();
-        $this->init( 'oxmediaurls' );
+        $this->init('oxmediaurls');
     }
 
     /**
@@ -54,7 +52,7 @@ class oxMediaUrl extends oxI18n
     {
         $sUrl = $this->oxmediaurls__oxurl->value;
         //youtube link
-        if (  strpos( $sUrl, 'youtube.com' ) || strpos( $sUrl, 'youtu.be' ) ) {
+        if (strpos($sUrl, 'youtube.com') || strpos($sUrl, 'youtu.be')) {
             return $this->_getYoutubeHtml();
         }
 
@@ -69,7 +67,7 @@ class oxMediaUrl extends oxI18n
      *
      * @return string
      */
-    public function getHtmlLink( $blNewPage = true )
+    public function getHtmlLink($blNewPage = true)
     {
         $sForceBlank = $blNewPage ? ' target="_blank"' : '';
         $sDesc = $this->oxmediaurls__oxdesc->value;
@@ -87,7 +85,7 @@ class oxMediaUrl extends oxI18n
      */
     public function getLink()
     {
-        if ( $this->oxmediaurls__oxisuploaded->value ) {
+        if ($this->oxmediaurls__oxisuploaded->value) {
             $sUrl = $this->getConfig()->isSsl() ? $this->getConfig()->getSslShopUrl() : $this->getConfig()->getShopUrl();
             $sUrl .= 'out/media/';
             $sUrl .= basename($this->oxmediaurls__oxurl->value);
@@ -115,7 +113,7 @@ class oxMediaUrl extends oxI18n
      *
      * @return bool
      */
-    public function delete( $sOXID = null )
+    public function delete($sOXID = null)
     {
         $sFilePath = $this->getConfig()->getConfigParam('sShopDir') . "/out/media/" .
                      basename($this->oxmediaurls__oxurl->value);
@@ -126,7 +124,7 @@ class oxMediaUrl extends oxI18n
             }
         }
 
-        return parent::delete( $sOXID );
+        return parent::delete($sOXID);
     }
 
     /**
@@ -138,20 +136,19 @@ class oxMediaUrl extends oxI18n
     {
         $sUrl = $this->oxmediaurls__oxurl->value;
         $sDesc = $this->oxmediaurls__oxdesc->value;
-        
-        if ( strpos( $sUrl, 'youtube.com' ) ) {
-            $sYoutubeUrl = str_replace( "www.youtube.com/watch?v=", "www.youtube.com/embed/", $sUrl );
-            $sYoutubeUrl = preg_replace( '/&amp;/', '?', $sYoutubeUrl, 1 );
+
+        if (strpos($sUrl, 'youtube.com')) {
+            $sYoutubeUrl = str_replace("www.youtube.com/watch?v=", "www.youtube.com/embed/", $sUrl);
+            $sYoutubeUrl = preg_replace('/&amp;/', '?', $sYoutubeUrl, 1);
         }
-        if ( strpos( $sUrl, 'youtu.be' ) ) {
-            $sYoutubeUrl = str_replace( "youtu.be/", "www.youtube.com/embed/", $sUrl );
+        if (strpos($sUrl, 'youtu.be')) {
+            $sYoutubeUrl = str_replace("youtu.be/", "www.youtube.com/embed/", $sUrl);
         }
 
         $sYoutubeTemplate = '%s<br><iframe width="425" height="344" src="%s" frameborder="0" allowfullscreen></iframe>';
-        $sYoutubeHtml = sprintf( $sYoutubeTemplate, $sDesc, $sYoutubeUrl, $sYoutubeUrl );
+        $sYoutubeHtml = sprintf($sYoutubeTemplate, $sDesc, $sYoutubeUrl, $sYoutubeUrl);
 
         return $sYoutubeHtml;
     }
-
 
 }

@@ -1,35 +1,33 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
  * Manufacturer list manager.
  * Collects list of manufacturers according to collection rules (activ, etc.).
  *
- * @package model
  */
 class oxManufacturerList extends oxList
 {
+
     /**
      * Manufacturer root.
      *
@@ -59,53 +57,46 @@ class oxManufacturerList extends oxList
     protected $_oClickedManufacturer = null;
 
     /**
-     * Class constructor, sets callback so that Shopowner is able to
-     * add any information to the article.
-     *
-     * @param string $sObjectsInListName optional parameter, not used
+     * Calls parent constructor and defines if Article vendor count is shown
      *
      * @return null
      */
-    public function __construct( $sObjectsInListName = 'oxmanufacturer')
+    public function __construct()
     {
-        $this->setShowManufacturerArticleCnt( $this->getConfig()->getConfigParam( 'bl_perfShowActionCatArticleCnt' ) );
-        parent::__construct( 'oxmanufacturer');
+        $this->setShowManufacturerArticleCnt($this->getConfig()->getConfigParam('bl_perfShowActionCatArticleCnt'));
+        parent::__construct('oxmanufacturer');
     }
 
     /**
      * Enables/disables manufacturer article count calculation
      *
      * @param bool $blShowManufacturerArticleCnt to show article count or not
-     *
-     * @return null
      */
-    public function setShowManufacturerArticleCnt( $blShowManufacturerArticleCnt = false )
+    public function setShowManufacturerArticleCnt($blShowManufacturerArticleCnt = false)
     {
         $this->_blShowManufacturerArticleCnt = $blShowManufacturerArticleCnt;
     }
 
     /**
      * Loads simple manufacturer list
-     *
-     * @return null
      */
     public function loadManufacturerList()
     {
         $oBaseObject = $this->getBaseObject();
 
         $sFieldList = $oBaseObject->getSelectFields();
-        $sViewName  = $oBaseObject->getViewName();
-        $this->getBaseObject()->setShowArticleCnt( $this->_blShowManufacturerArticleCnt );
+        $sViewName = $oBaseObject->getViewName();
+        $this->getBaseObject()->setShowArticleCnt($this->_blShowManufacturerArticleCnt);
 
         $sWhere = '';
-        if ( !$this->isAdmin() ) {
-            $sWhere  = $oBaseObject->getSqlActiveSnippet();
-            $sWhere  = $sWhere?" where $sWhere and ":' where ';
+        if (!$this->isAdmin()) {
+            $sWhere = $oBaseObject->getSqlActiveSnippet();
+            $sWhere = $sWhere ? " where $sWhere and " : ' where ';
             $sWhere .= "{$sViewName}.oxtitle != '' ";
         }
 
         $sSelect = "select {$sFieldList} from {$sViewName} {$sWhere} order by {$sViewName}.oxtitle";
-        $this->selectString( $sSelect );
+        $this->selectString($sSelect);
     }
 
     /**
@@ -114,32 +105,30 @@ class oxManufacturerList extends oxList
      * @param string $sLinkTarget  Name of class, responsible for category rendering
      * @param string $sActCat      Active category
      * @param string $sShopHomeUrl base shop url ($myConfig->getShopHomeURL())
-     *
-     * @return null
      */
-    public function buildManufacturerTree( $sLinkTarget, $sActCat, $sShopHomeUrl )
+    public function buildManufacturerTree($sLinkTarget, $sActCat, $sShopHomeUrl)
     {
         //Load manufacturer list
         $this->loadManufacturerList();
 
 
         //Create fake manufacturer root category
-        $this->_oRoot = oxNew( "oxManufacturer" );
-        $this->_oRoot->load( "root" );
+        $this->_oRoot = oxNew("oxManufacturer");
+        $this->_oRoot->load("root");
 
         //category fields
-        $this->_addCategoryFields( $this->_oRoot );
+        $this->_addCategoryFields($this->_oRoot);
         $this->_aPath[] = $this->_oRoot;
 
-        foreach ( $this as $sVndId => $oManufacturer ) {
+        foreach ($this as $sVndId => $oManufacturer) {
 
             // storing active manufacturer object
-            if ( $sVndId == $sActCat ) {
-                $this->setClickManufacturer( $oManufacturer );
+            if ($sVndId == $sActCat) {
+                $this->setClickManufacturer($oManufacturer);
             }
 
-            $this->_addCategoryFields( $oManufacturer );
-            if ( $sActCat == $oManufacturer->oxmanufacturers__oxid->value ) {
+            $this->_addCategoryFields($oManufacturer);
+            if ($sActCat == $oManufacturer->oxmanufacturers__oxid->value) {
                 $this->_aPath[] = $oManufacturer;
             }
         }
@@ -171,28 +160,24 @@ class oxManufacturerList extends oxList
      * Adds category specific fields to manufacturer object
      *
      * @param object $oManufacturer manufacturer object
-     *
-     * @return null
      */
-    protected function _addCategoryFields( $oManufacturer )
+    protected function _addCategoryFields($oManufacturer)
     {
-        $oManufacturer->oxcategories__oxid    = new oxField( $oManufacturer->oxmanufacturers__oxid->value );
-        $oManufacturer->oxcategories__oxicon  = $oManufacturer->oxmanufacturers__oxicon;
+        $oManufacturer->oxcategories__oxid = new oxField($oManufacturer->oxmanufacturers__oxid->value);
+        $oManufacturer->oxcategories__oxicon = $oManufacturer->oxmanufacturers__oxicon;
         $oManufacturer->oxcategories__oxtitle = $oManufacturer->oxmanufacturers__oxtitle;
-        $oManufacturer->oxcategories__oxdesc  = $oManufacturer->oxmanufacturers__oxshortdesc;
+        $oManufacturer->oxcategories__oxdesc = $oManufacturer->oxmanufacturers__oxshortdesc;
 
-        $oManufacturer->setIsVisible( true );
-        $oManufacturer->setHasVisibleSubCats( false );
+        $oManufacturer->setIsVisible(true);
+        $oManufacturer->setHasVisibleSubCats(false);
     }
 
     /**
      * Sets active (open) manufacturer object
      *
      * @param oxmanufacturer $oManufacturer active manufacturer
-     *
-     * @return null
      */
-    public function setClickManufacturer( $oManufacturer )
+    public function setClickManufacturer($oManufacturer)
     {
         $this->_oClickedManufacturer = $oManufacturer;
     }
@@ -209,13 +194,11 @@ class oxManufacturerList extends oxList
 
     /**
      * Processes manufacturer category URLs
-     *
-     * @return null
      */
     protected function _seoSetManufacturerData()
     {
         // only when SEO id on and in front end
-        if ( oxRegistry::getUtils()->seoIsActive() && !$this->isAdmin()) {
+        if (oxRegistry::getUtils()->seoIsActive() && !$this->isAdmin()) {
 
             $oEncoder = oxRegistry::get("oxSeoEncoderManufacturer");
 
@@ -226,7 +209,7 @@ class oxManufacturerList extends oxList
 
             // encoding manufacturer category
             foreach ($this as $sVndId => $value) {
-                $oEncoder->getManufacturerUrl( $this->_aArray[$sVndId] );
+                $oEncoder->getManufacturerUrl($this->_aArray[$sVndId]);
             }
         }
     }

@@ -1,3 +1,4 @@
+[{block name="widget_locator_sort"}]
 [{if $oView->showSorting()}]
     [{assign var="_listType" value=$oView->getListDisplayType()}]
     [{assign var="_additionalParams" value=$oView->getAdditionalParams()}]
@@ -20,12 +21,13 @@
         <ul class="drop FXgradGreyLight shadow">
             [{foreach from=$oView->getSortColumns() item=sColumnName}]
                 <li class="desc">
-                    <a href="[{ $oView->getLink()|oxaddparams:"ldtype=$_listType&amp;_artperpage=$_artPerPage&amp;$_sortColumnVarName=$sColumnName&amp;$_sortDirectionVarName=desc&amp;pgNr=0&amp;$_additionalParams"}]" [{if $oView->getListOrderDirection() == 'desc' && $sColumnName == $oView->getListOrderBy()}] class="selected"[{/if}]><span>[{ oxmultilang ident=$sColumnName|upper }]</span></a>
+                    <a href="[{$oView->getBaseLink()|oxaddparams:"ldtype=$_listType&amp;_artperpage=$_artPerPage&amp;$_sortColumnVarName=$sColumnName&amp;$_sortDirectionVarName=desc&amp;pgNr=0&amp;$_additionalParams"}]" [{if $oView->getListOrderDirection() == 'desc' && $sColumnName == $oView->getListOrderBy()}] class="selected"[{/if}]><span>[{ oxmultilang ident=$sColumnName|upper }]</span></a>
                 </li>
                 <li class="asc">
-                    <a href="[{ $oView->getLink()|oxaddparams:"ldtype=$_listType&amp;_artperpage=$_artPerPage&amp;$_sortColumnVarName=$sColumnName&amp;$_sortDirectionVarName=asc&amp;pgNr=0&amp;$_additionalParams"}]" [{if $oView->getListOrderDirection() == 'asc' && $sColumnName == $oView->getListOrderBy()}] class="selected"[{/if}]><span>[{ oxmultilang ident=$sColumnName|upper }]</span></a>
+                    <a href="[{$oView->getBaseLink()|oxaddparams:"ldtype=$_listType&amp;_artperpage=$_artPerPage&amp;$_sortColumnVarName=$sColumnName&amp;$_sortDirectionVarName=asc&amp;pgNr=0&amp;$_additionalParams"}]" [{if $oView->getListOrderDirection() == 'asc' && $sColumnName == $oView->getListOrderBy()}] class="selected"[{/if}]><span>[{ oxmultilang ident=$sColumnName|upper }]</span></a>
                 </li>
             [{/foreach}]
         </ul>
     </div>
 [{/if}]
+[{/block}]

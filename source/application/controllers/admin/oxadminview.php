@@ -1,45 +1,43 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   admin
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
  * Main "view" class.
  * Organizes multilanguage, parameters fetching, DB managing, file checking
  * and processing, etc.
- * @package admin
  */
 class oxAdminView extends oxView
 {
+
     /**
      * Fixed types - enums in database.
      *
      * @var array
      */
     protected $_aSumType = array(
-                                0 => 'abs',
-                                1 => '%',
-                                2 => 'itm'
-                                );
+        0 => 'abs',
+        1 => '%',
+        2 => 'itm'
+    );
 
     /**
      * Current class template name.
@@ -68,7 +66,7 @@ class oxAdminView extends oxView
      *
      * @var integer
      */
-    protected $_iEditLang   = 0;
+    protected $_iEditLang = 0;
 
     /**
      * Active shop title
@@ -100,6 +98,7 @@ class oxAdminView extends oxView
 
     /**
      * Active shop object
+     *
      * @return
      */
     protected $_oEditShop = null;
@@ -117,12 +116,12 @@ class oxAdminView extends oxView
     public function __construct()
     {
         $myConfig = $this->getConfig();
-        $myConfig->setConfigParam( 'blAdmin', true );
-        $this->setAdminMode( true );
+        $myConfig->setConfigParam('blAdmin', true);
+        $this->setAdminMode(true);
 
-        if ( $oShop = $this->_getEditShop( $myConfig->getShopId() ) ) {
+        if ($oShop = $this->_getEditShop($myConfig->getShopId())) {
             // passing shop info
-            $this->_sShopTitle   = $oShop->oxshops__oxname->getRawValue();
+            $this->_sShopTitle = $oShop->oxshops__oxname->getRawValue();
             $this->_sShopVersion = $oShop->oxshops__oxversion->value;
 
         }
@@ -135,17 +134,18 @@ class oxAdminView extends oxView
      *
      * @return oxshop
      */
-    protected function _getEditShop( $sShopId )
+    protected function _getEditShop($sShopId)
     {
-        if ( !$this->_oEditShop ) {
+        if (!$this->_oEditShop) {
             $this->_oEditShop = $this->getConfig()->getActiveShop();
-            if ( $this->_oEditShop->getId() != $sShopId ) {
-                $oEditShop = oxNew( 'oxshop' );
-                if ( $oEditShop->load( $sShopId ) ) {
+            if ($this->_oEditShop->getId() != $sShopId) {
+                $oEditShop = oxNew('oxshop');
+                if ($oEditShop->load($sShopId)) {
                     $this->_oEditShop = $oEditShop;
                 }
             }
         }
+
         return $this->_oEditShop;
     }
 
@@ -153,16 +153,14 @@ class oxAdminView extends oxView
      * Sets some shop configuration parameters (such as language),
      * creates some list object (depends on subclass) and executes
      * parent method parent::Init().
-     *
-     * @return null
      */
     public function init()
     {
         $myConfig = $this->getConfig();
 
         // authorization check
-        if ( !$this->_authorize() ) {
-            oxRegistry::getUtils()->redirect( 'index.php', true, 302 );
+        if (!$this->_authorize()) {
+            oxRegistry::getUtils()->redirect('index.php', true, 302);
             exit;
         }
 
@@ -174,7 +172,7 @@ class oxAdminView extends oxView
 
         parent::init();
 
-            $this->_aViewData['malladmin'] = oxSession::getVar( 'malladmin' );
+        $this->_aViewData['malladmin'] = oxRegistry::getSession()->getVariable('malladmin');
     }
 
     /**
@@ -185,33 +183,33 @@ class oxAdminView extends oxView
      *
      * @return object
      */
-    public function addGlobalParams( $oShop = null)
+    public function addGlobalParams($oShop = null)
     {
         $mySession = $this->getSession();
-        $myConfig  = $this->getConfig();
+        $myConfig = $this->getConfig();
         $oLang = oxRegistry::getLang();
 
-        $oShop = parent::addGlobalParams( $oShop );
+        $oShop = parent::addGlobalParams($oShop);
 
         // override cause of admin dir
-        $sURL = $myConfig->getConfigParam( 'sShopURL' ). $myConfig->getConfigParam( 'sAdminDir' ) . "/";
+        $sURL = $myConfig->getConfigParam('sShopURL') . $myConfig->getConfigParam('sAdminDir') . "/";
 
         if ($myConfig->getConfigParam('sAdminSSLURL')) {
             $sURL = $myConfig->getConfigParam('sAdminSSLURL');
         }
 
         $oViewConf = $this->getViewConfig();
-        $oViewConf->setViewConfigParam( 'selflink', oxRegistry::get("oxUtilsUrl")->processUrl($sURL.'index.php?editlanguage='.$this->_iEditLang, false) );
-        $oViewConf->setViewConfigParam( 'ajaxlink', str_replace( '&amp;', '&', oxRegistry::get("oxUtilsUrl")->processUrl( $sURL.'oxajax.php?editlanguage='.$this->_iEditLang, false ) ) );
-        $oViewConf->setViewConfigParam( 'sServiceUrl', $this->getServiceUrl() );
-        $oViewConf->setViewConfigParam( 'blLoadDynContents', $myConfig->getConfigParam( 'blLoadDynContents' ) );
-        $oViewConf->setViewConfigParam( 'sShopCountry', $myConfig->getConfigParam( 'sShopCountry' ) );
+        $oViewConf->setViewConfigParam('selflink', oxRegistry::get("oxUtilsUrl")->processUrl($sURL . 'index.php?editlanguage=' . $this->_iEditLang, false));
+        $oViewConf->setViewConfigParam('ajaxlink', str_replace('&amp;', '&', oxRegistry::get("oxUtilsUrl")->processUrl($sURL . 'oxajax.php?editlanguage=' . $this->_iEditLang, false)));
+        $oViewConf->setViewConfigParam('sServiceUrl', $this->getServiceUrl());
+        $oViewConf->setViewConfigParam('blLoadDynContents', $myConfig->getConfigParam('blLoadDynContents'));
+        $oViewConf->setViewConfigParam('sShopCountry', $myConfig->getConfigParam('sShopCountry'));
 
         // set langugae in admin
-        $iDynInterfaceLanguage = $myConfig->getConfigParam( 'iDynInterfaceLanguage' );
+        $iDynInterfaceLanguage = $myConfig->getConfigParam('iDynInterfaceLanguage');
         //$this->_aViewData['adminlang'] = isset( $iDynInterfaceLanguage )?$iDynInterfaceLanguage:$myConfig->getConfigParam( 'iAdminLanguage' );
-        $this->_aViewData['adminlang'] = isset( $iDynInterfaceLanguage )?$iDynInterfaceLanguage:$oLang->getTplLanguage();
-        $this->_aViewData['charset']   = $this->getCharSet();
+        $this->_aViewData['adminlang'] = isset($iDynInterfaceLanguage) ? $iDynInterfaceLanguage : $oLang->getTplLanguage();
+        $this->_aViewData['charset'] = $this->getCharSet();
 
         //setting active currency object
         $this->_aViewData["oActCur"] = $myConfig->getActShopCurrencyObject();
@@ -236,28 +234,28 @@ class oxAdminView extends oxView
      *
      * @return string
      */
-    public function getServiceUrl( $sLangAbbr = null )
+    public function getServiceUrl($sLangAbbr = null)
     {
-        if ( $this->_sServiceUrl === null ) {
+        if ($this->_sServiceUrl === null) {
 
             $sProtocol = $this->_getServiceProtocol();
 
 
 
-                $sUrl = $sProtocol . '://admin.oxid-esales.com/CE/';
+            $sUrl = $sProtocol . '://admin.oxid-esales.com/CE/';
 
-            $sCountry = $this->_getCountryByCode( $this->getConfig()->getConfigParam( 'sShopCountry' ) );
+            $sCountry = $this->_getCountryByCode($this->getConfig()->getConfigParam('sShopCountry'));
 
-            if ( !$sLangAbbr ) {
+            if (!$sLangAbbr) {
                 $oLang = oxRegistry::getLang();
-                $sLangAbbr = $oLang->getLanguageAbbr( $oLang->getTplLanguage() );
+                $sLangAbbr = $oLang->getLanguageAbbr($oLang->getTplLanguage());
             }
 
-            if ( $sLangAbbr != "de" ) {
+            if ($sLangAbbr != "de") {
                 $sLangAbbr = "en";
             }
 
-            $this->_sServiceUrl = $sUrl . $this->_getShopVersionNr()."/{$sCountry}/{$sLangAbbr}/";
+            $this->_sServiceUrl = $sUrl . $this->_getShopVersionNr() . "/{$sCountry}/{$sLangAbbr}/";
         }
 
         return $this->_sServiceUrl;
@@ -272,43 +270,42 @@ class oxAdminView extends oxView
     {
         $myConfig = $this->getConfig();
 
-        if ( $sShopID = $myConfig->getShopId() ) {
+        if ($sShopID = $myConfig->getShopId()) {
             $sQ = "select oxversion from oxshops where oxid = '$sShopID' ";
-            $sVersion = oxDb::getDb()->getOne( $sQ, false, false );
+            $sVersion = oxDb::getDb()->getOne($sQ, false, false);
         }
 
-        $sVersion = preg_replace( "/(^[^0-9]+)(.+)$/", "$2", $sVersion );
-        return trim( $sVersion );
+        $sVersion = preg_replace("/(^[^0-9]+)(.+)$/", "$2", $sVersion);
+
+        return trim($sVersion);
     }
 
     /**
      * Sets-up navigation parameters
      *
      * @param string $sNode active view id
-     *
-     * @return null
      */
-    protected function _setupNavigation( $sNode )
+    protected function _setupNavigation($sNode)
     {
         // navigation according to class
-        if ( $sNode ) {
+        if ($sNode) {
 
             $myAdminNavig = $this->getNavigation();
 
             // active tab
-            $iActTab = oxConfig::getParameter( 'actedit' );
-            $iActTab = $iActTab?$iActTab:$this->_iDefEdit;
+            $iActTab = oxRegistry::getConfig()->getRequestParameter('actedit');
+            $iActTab = $iActTab ? $iActTab : $this->_iDefEdit;
 
-            $sActTab = $iActTab?"&actedit=$iActTab":'';
+            $sActTab = $iActTab ? "&actedit=$iActTab" : '';
 
             // store navigation history
             $this->_addNavigationHistory($sNode);
 
             // list url
-            $this->_aViewData['listurl'] = $myAdminNavig->getListUrl( $sNode ).$sActTab;
+            $this->_aViewData['listurl'] = $myAdminNavig->getListUrl($sNode) . $sActTab;
 
             // edit url
-            $this->_aViewData['editurl'] = $myAdminNavig->getEditUrl( $sNode, $iActTab ).$sActTab;
+            $this->_aViewData['editurl'] = $myAdminNavig->getEditUrl($sNode, $iActTab) . $sActTab;
         }
     }
 
@@ -316,10 +313,8 @@ class oxAdminView extends oxView
      * Store navigation history parameters to cookie
      *
      * @param string $sNode active view id
-     *
-     * @return null
      */
-    protected function _addNavigationHistory( $sNode )
+    protected function _addNavigationHistory($sNode)
     {
         $myUtilsServer = oxRegistry::get("oxUtilsServer");
 
@@ -350,35 +345,35 @@ class oxAdminView extends oxView
         $oLang = oxRegistry::getLang();
 
         // sets up navigation data
-        $this->_setupNavigation( oxConfig::getParameter( 'cl' ) );
+        $this->_setupNavigation(oxRegistry::getConfig()->getRequestParameter('cl'));
 
         // active object id
         $sOxId = $this->getEditObjectId();
-        $this->_aViewData['oxid'] = ( !$sOxId )?-1:$sOxId;
+        $this->_aViewData['oxid'] = (!$sOxId) ? -1 : $sOxId;
         // add Sumtype to all templates
         $this->_aViewData['sumtype'] = $this->_aSumType;
 
         // active shop title
         $this->_aViewData['actshop'] = $this->_sShopTitle;
-        $this->_aViewData["shopid"]  = $myConfig->getShopId();
+        $this->_aViewData["shopid"] = $myConfig->getShopId();
 
         // loading active shop
-        if ( $sActShopId = oxSession::getVar( 'actshop' ) ) {
+        if ($sActShopId = oxRegistry::getSession()->getVariable('actshop')) {
             // load object
-            $this->_aViewData['actshopobj'] =  $this->_getEditShop( $sActShopId );
+            $this->_aViewData['actshopobj'] = $this->_getEditShop($sActShopId);
         }
 
         // add language data to all templates
-        $this->_aViewData['actlang']      = $iLanguage = $oLang->getBaseLanguage();
+        $this->_aViewData['actlang'] = $iLanguage = $oLang->getBaseLanguage();
         $this->_aViewData['editlanguage'] = $this->_iEditLang;
-        $this->_aViewData['languages'] = $oLang->getLanguageArray( $iLanguage );
+        $this->_aViewData['languages'] = $oLang->getLanguageArray($iLanguage);
 
         // setting maximum upload size
-        list( $this->_aViewData['iMaxUploadFileSize'], $this->_aViewData['sMaxFormattedFileSize']) = $this->_getMaxUploadFileInfo( @ini_get("upload_max_filesize") );
+        list($this->_aViewData['iMaxUploadFileSize'], $this->_aViewData['sMaxFormattedFileSize']) = $this->_getMaxUploadFileInfo(@ini_get("upload_max_filesize"));
 
         // "save-on-tab"
-        if ( !isset( $this->_aViewData['updatelist'] ) ) {
-            $this->_aViewData['updatelist'] = oxConfig::getParameter( 'updatelist' );
+        if (!isset($this->_aViewData['updatelist'])) {
+            $this->_aViewData['updatelist'] = oxRegistry::getConfig()->getRequestParameter('updatelist');
         }
 
         return $sReturn;
@@ -392,40 +387,40 @@ class oxAdminView extends oxView
      *
      * @return array
      */
-    protected function _getMaxUploadFileInfo( $iMaxFileSize, $blFormatted = false )
+    protected function _getMaxUploadFileInfo($iMaxFileSize, $blFormatted = false)
     {
-        $iMaxFileSize = $iMaxFileSize?$iMaxFileSize:'2M';
+        $iMaxFileSize = $iMaxFileSize ? $iMaxFileSize : '2M';
 
         // processing config
-        $iMaxFileSize = trim( $iMaxFileSize );
-        $sParam = strtolower( $iMaxFileSize{ strlen( $iMaxFileSize )-1 } );
-        switch( $sParam ) {
+        $iMaxFileSize = trim($iMaxFileSize);
+        $sParam = strtolower($iMaxFileSize{strlen($iMaxFileSize) - 1});
+        switch ($sParam) {
             case 'g':
                 $iMaxFileSize *= 1024;
+            // no break
             case 'm':
                 $iMaxFileSize *= 1024;
+            // no break
             case 'k':
                 $iMaxFileSize *= 1024;
         }
 
         // formatting
-        $aMarkers = array ( 'KB', 'MB', 'GB' );
+        $aMarkers = array('KB', 'MB', 'GB');
         $sFormattedMaxSize = '';
 
-        $iSize = floor( $iMaxFileSize / 1024 );
-        while ( $iSize && current( $aMarkers ) ) {
-            $sFormattedMaxSize = $iSize . " " . current( $aMarkers );
-            $iSize = floor( $iSize / 1024 );
-            next( $aMarkers );
+        $iSize = floor($iMaxFileSize / 1024);
+        while ($iSize && current($aMarkers)) {
+            $sFormattedMaxSize = $iSize . " " . current($aMarkers);
+            $iSize = floor($iSize / 1024);
+            next($aMarkers);
         }
 
-        return array( $iMaxFileSize, $sFormattedMaxSize );
+        return array($iMaxFileSize, $sFormattedMaxSize);
     }
 
     /**
      * Clears cache
-     *
-     * @return string
      */
     public function save()
     {
@@ -435,17 +430,15 @@ class oxAdminView extends oxView
      * Reset output cache
      *
      * @param bool $blForceReset if true, forces reset
-     *
-     * @return null
      */
-    public function resetContentCache( $blForceReset = null )
+    public function resetContentCache($blForceReset = null)
     {
-        $blDeleteCacheOnLogout = $this->getConfig()->getConfigParam( 'blClearCacheOnLogout' );
+        $blDeleteCacheOnLogout = $this->getConfig()->getConfigParam('blClearCacheOnLogout');
 
-        if ( !$blDeleteCacheOnLogout || $blForceReset ) {
+        if (!$blDeleteCacheOnLogout || $blForceReset) {
 
 
-                oxRegistry::getUtils()->oxResetFileCache();
+            oxRegistry::getUtils()->oxResetFileCache();
 
         }
     }
@@ -456,32 +449,37 @@ class oxAdminView extends oxView
      *
      * @param string $sCounterType counter type
      * @param string $sValue       reset value
-     *
-     * @return null
      */
-    public function resetCounter( $sCounterType, $sValue = null )
+    public function resetCounter($sCounterType, $sValue = null)
     {
-        $blDeleteCacheOnLogout = $this->getConfig()->getConfigParam( 'blClearCacheOnLogout' );
+        $blDeleteCacheOnLogout = $this->getConfig()->getConfigParam('blClearCacheOnLogout');
         $myUtilsCount = oxRegistry::get("oxUtilsCount");
 
-        if ( !$blDeleteCacheOnLogout ) {
-            switch ( $sCounterType ) {
+        if (!$blDeleteCacheOnLogout) {
+            switch ($sCounterType) {
                 case 'priceCatArticle':
-                    $myUtilsCount->resetPriceCatArticleCount( $sValue );
+                    $myUtilsCount->resetPriceCatArticleCount($sValue);
                     break;
                 case 'catArticle':
-                    $myUtilsCount->resetCatArticleCount( $sValue );
+                    $myUtilsCount->resetCatArticleCount($sValue);
                     break;
                 case 'vendorArticle':
-                    $myUtilsCount->resetVendorArticleCount( $sValue );
+                    $myUtilsCount->resetVendorArticleCount($sValue);
                     break;
                 case 'manufacturerArticle':
-                    $myUtilsCount->resetManufacturerArticleCount( $sValue );
+                    $myUtilsCount->resetManufacturerArticleCount($sValue);
                     break;
             }
+            $this->_resetContentCache();
         }
     }
 
+    /**
+     * Resets cache.
+     */
+    protected function _resetContentCache()
+    {
+    }
 
     /**
      * Checks if current $sUserId user is not an admin and checks if user is able to be edited by logged in user.
@@ -491,7 +489,7 @@ class oxAdminView extends oxView
      *
      * @return bool
      */
-    protected function _allowAdminEdit( $sUserId )
+    protected function _allowAdminEdit($sUserId)
     {
 
         //otherwise return true
@@ -505,26 +503,26 @@ class oxAdminView extends oxView
      *
      * @return boolean
      */
-    protected function _getCountryByCode( $sCountryCode )
+    protected function _getCountryByCode($sCountryCode)
     {
         $myConfig = $this->getConfig();
 
         //default country
         $sCountry = 'international';
 
-        if ( !empty( $sCountryCode ) ) {
+        if (!empty($sCountryCode)) {
             $aLangIds = oxRegistry::getLang()->getLanguageIds();
             $iEnglishId = array_search("en", $aLangIds);
-            if ( false !== $iEnglishId ) {
-                $sViewName = getViewName( "oxcountry", $iEnglishId );
-                $sQ = "select oxtitle from {$sViewName} where oxisoalpha2 = " . oxDb::getDb()->quote( $sCountryCode );
-                $sCountryName = oxDb::getDb()->getOne( $sQ, false, false );
-                if ( $sCountryName ) {
+            if (false !== $iEnglishId) {
+                $sViewName = getViewName("oxcountry", $iEnglishId);
+                $sQ = "select oxtitle from {$sViewName} where oxisoalpha2 = " . oxDb::getDb()->quote($sCountryCode);
+                $sCountryName = oxDb::getDb()->getOne($sQ, false, false);
+                if ($sCountryName) {
                     $sCountry = $sCountryName;
                 }
             } else {
                 // handling when english language is deleted
-                switch ( $sCountryCode ) {
+                switch ($sCountryCode) {
                     case 'de':
                         return 'germany';
                     default:
@@ -532,7 +530,8 @@ class oxAdminView extends oxView
                 }
             }
         }
-        return strtolower( $sCountry );
+
+        return strtolower($sCountry);
     }
 
     /**
@@ -543,10 +542,10 @@ class oxAdminView extends oxView
     protected function _authorize()
     {
         return ( bool ) (
-                $this->getSession()->checkSessionChallenge()
-                && count( oxRegistry::get("oxUtilsServer")->getOxCookie() )
-                && oxRegistry::getUtils()->checkAccessRights()
-            );
+            $this->getSession()->checkSessionChallenge()
+            && count(oxRegistry::get("oxUtilsServer")->getOxCookie())
+            && oxRegistry::getUtils()->checkAccessRights()
+        );
     }
 
     /**
@@ -556,9 +555,10 @@ class oxAdminView extends oxView
      */
     public function getNavigation()
     {
-        if ( self::$_oNaviTree == null ) {
-            self::$_oNaviTree = oxNew( 'oxnavigationtree' );
+        if (self::$_oNaviTree == null) {
+            self::$_oNaviTree = oxNew('oxnavigationtree');
         }
+
         return self::$_oNaviTree;
     }
 
@@ -569,35 +569,32 @@ class oxAdminView extends oxView
      */
     public function getViewId()
     {
-        $sClassName = strtolower( get_class( $this ) );
-        return $this->getNavigation()->getClassId( $sClassName );
+        $sClassName = strtolower(get_class($this));
+
+        return $this->getNavigation()->getClassId($sClassName);
     }
 
     /**
      * Changing active shop
-     *
-     * @return string
      */
     public function chshp()
     {
-        $sActShop = oxConfig::getParameter( 'shp' );
-        oxSession::setVar( "shp", $sActShop );
-        oxSession::setVar( 'currentadminshop', $sActShop );
+        $sActShop = oxRegistry::getConfig()->getRequestParameter('shp');
+        oxRegistry::getSession()->setVariable("shp", $sActShop);
+        oxRegistry::getSession()->setVariable('currentadminshop', $sActShop);
     }
 
     /**
      * Marks seo entires as expired, cleans up tag clouds cache
      *
      * @param string $sShopId Shop id
-     *
-     * @return null
      */
-    public function resetSeoData( $sShopId )
+    public function resetSeoData($sShopId)
     {
-        $aTypes = array( 'oxarticle', 'oxcategory', 'oxvendor', 'oxcontent', 'dynamic', 'oxmanufacturer' );
+        $aTypes = array('oxarticle', 'oxcategory', 'oxvendor', 'oxcontent', 'dynamic', 'oxmanufacturer');
         $oEncoder = oxRegistry::get("oxSeoEncoder");
-        foreach ( $aTypes as $sType ) {
-            $oEncoder->markAsExpired( null, $sShopId, 1, null, "oxtype = '{$sType}'" );
+        foreach ($aTypes as $sType) {
+            $oEncoder->markAsExpired(null, $sShopId, 1, null, "oxtype = '{$sType}'");
         }
 
         // resetting tag cache
@@ -622,11 +619,12 @@ class oxAdminView extends oxView
      */
     public function getEditObjectId()
     {
-        if ( null === ( $sId = $this->_sEditObjectId ) ) {
-            if ( null === ( $sId = oxConfig::getParameter( "oxid" ) ) ) {
-                $sId = oxSession::getVar( "saved_oxid" );
+        if (null === ($sId = $this->_sEditObjectId)) {
+            if (null === ($sId = oxRegistry::getConfig()->getRequestParameter("oxid"))) {
+                $sId = oxRegistry::getSession()->getVariable("saved_oxid");
             }
         }
+
         return $sId;
     }
 
@@ -634,10 +632,8 @@ class oxAdminView extends oxView
      * Sets editable object id
      *
      * @param string $sId object id
-     *
-     * @return string
      */
-    public function setEditObjectId( $sId )
+    public function setEditObjectId($sId)
     {
         $this->_sEditObjectId = $sId;
         $this->_aViewData["updatelist"] = 1;

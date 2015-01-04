@@ -2,14 +2,13 @@
 <html>
 <head>
     <title>Elements</title>
-    <link rel="stylesheet" type="text/css" href="../../../source/out/azure/src/css/checkout.css">
-    <link rel="stylesheet" type="text/css" href="../../../source/out/azure/src/css/superfish.css">
-    <link rel="stylesheet" type="text/css" href="../../../source/out/azure/src/css/anythingslider.css">
-    <link rel="stylesheet" type="text/css" href="../../../source/out/azure/src/css/reset.css">
-    <link rel="stylesheet" type="text/css" href="../../../source/out/azure/src/css/typography.css">
-    <link rel="stylesheet" type="text/css" href="../../../source/out/azure/src/css/layout.css">
-    <link rel="stylesheet" type="text/css" href="../../../source/out/azure/src/css/fxstyles.css">
-    <link rel="stylesheet" type="text/css" href="../../../source/out/azure/src/css/elements.css">
+    <link rel="stylesheet" type="text/css" href="../../../source/out/azure/src/css/libs/anythingslider.css" />
+    <link rel="stylesheet" type="text/css" href="../../../source/out/azure/src/css/libs/jscrollpane.css" />
+    <link rel="stylesheet" type="text/css" href="../../../source/out/azure/src/css/libs/superfish.css" />
+    <link rel="stylesheet" type="text/css" href="../../../source/out/azure/src/css/ie7.css" />
+    <link rel="stylesheet" type="text/css" href="../../../source/out/azure/src/css/ie8.css" />
+    <link rel="stylesheet" type="text/css" href="../../../source/out/azure/src/css/oxid.css" />
+    <link rel="stylesheet" type="text/css" href="../../../source/out/azure/src/css/reset.css" />
 </head>
 <style>
 body {background:url(bg.png);}
@@ -140,7 +139,7 @@ body {background:url(bg.png);}
                <li><a href="#">Level 1</a></li>
                <li><a href="#">Level 1</a></li>
                <li class="current sfHover">
-                   <a href="#" class="current sf-with-ul">Level 1<span class="sf-sub-indicator"> »</span></a>
+                   <a href="#" class="current sf-with-ul">Level 1<span class="sf-sub-indicator"> Â»</span></a>
                    <ul style="float: none; width: 12em; display: block; visibility: visible; margin-left: -39px;">
                        <li class="current" style="white-space: normal; float: left; width: 100%;"><a href="#" class="current" style="float: none; width: auto;">Level 2</a></li>
                        <li style="white-space: normal; float: left; width: 100%;"><a href="#" style="float: none; width: auto;">Level 2</a></li>
@@ -162,11 +161,11 @@ body {background:url(bg.png);}
                 <div class="basketFlyout corners" id="basketFlyout" style="display: block;">
                     <p class="title"> <strong>3 Items in Cart:</strong> <img class="closePop" alt="" src="../../../source/out/azure/img/x.png"></p>
                     <ul>
-                        <li><a title="Product 1" href="#"> <span class="item">Product 1</span> <strong class="price">1,1 €</strong></a></li>
-                        <li><a title="Product 2" href="#"> <span class="item">Product 2</span> <strong class="price">22,22 €</strong></a></li>
-                        <li><a title="Product 3" href="#"> <span class="item">Product 3</span> <strong class="price">333,333 €</strong></a></li>
+                        <li><a title="Product 1" href="#"> <span class="item">Product 1</span> <strong class="price">1,1 â‚¬</strong></a></li>
+                        <li><a title="Product 2" href="#"> <span class="item">Product 2</span> <strong class="price">22,22 â‚¬</strong></a></li>
+                        <li><a title="Product 3" href="#"> <span class="item">Product 3</span> <strong class="price">333,333 â‚¬</strong></a></li>
                     </ul>
-                    <p class="totals"><span class="item">Total</span><strong class="price">123,123 €</strong></p>
+                    <p class="totals"><span class="item">Total</span><strong class="price">123,123 â‚¬</strong></p>
                     <hr>
                     <p class="functions clear">
                         <a class="submitButton largeButton" href="#">Checkout</a>
@@ -195,8 +194,8 @@ body {background:url(bg.png);}
         </div>
 		<h2 class="testHeadSub">Search</h2>
 		<div id="header" class="clear" style="margin-bottom:0px;height:50px;">
-		    <div class="searchBox" style="top:0px;left:43%">		        
-		        <input type="text" value="Search" title="Search" name="searchparam" id="searchParam" class="textbox innerLabel">		        
+		    <div class="searchBox" style="top:0px;left:43%">
+		        <input type="text" value="Search" title="Search" name="searchparam" id="searchParam" class="textbox innerLabel">
 		        <input type="button" value="" class="searchSubmit">
 		    </div>
 		</div>
@@ -343,11 +342,11 @@ body {background:url(bg.png);}
                         <div align="center"><a href="#" class="articleBoxImage"><img alt="" src="../../../source/out/pictures_ee/icon/spleene_spx_1_ico.jpg"></a></div>
                     </li>
                     <li class="articleTitle titleOn">
-                        <a href="#">Product 1 <br><strong>1,1 €</strong></a>
+                        <a href="#">Product 1 <br><strong>1,1 â‚¬</strong></a>
                     </li>
                     <!-- pr 2 -->
                     <li class="articleTitle titleOn">
-                        <a href="#">Product 2 <br><strong>22,22 €</strong></a>
+                        <a href="#">Product 2 <br><strong>22,22 â‚¬</strong></a>
                     </li>
                 </ul>
             </div>
@@ -406,14 +405,14 @@ body {background:url(bg.png);}
            <img height="220" width="7" alt="" class="promoShadow shadowLeft" src="../../../source/out/azure/img/promo-shadowleft.png">
            <img height="220" width="7" alt="" class="promoShadow shadowRight" src="../../../source/out/azure/img/promo-shadowright.png">
            <div class="anythingSlider anythingSlider-default activeSlider" style="width: 940px; height: 220px;">
-               <span class="arrow back" style="display: none; opacity: 0.7;"><a href="#">«</a></span>
-               <span class="arrow forward" style="display: none; opacity: 0.7;"><a href="#">»</a></span>
+               <span class="arrow back" style="display: none; opacity: 0.7;"><a href="#">Â«</a></span>
+               <span class="arrow forward" style="display: none; opacity: 0.7;"><a href="#">Â»</a></span>
                <div class="anythingWindow">
                    <ul id="promotionSlider" class="anythingBase" style="width: 5640px;">
                        <li style="width: 940px; height: 220px;" class="cloned panel">
                            <span style="width: 100%; height: 100%;">
                                <span class="promoBox" style="visibility: hidden;">
-                                    <strong class="promoPrice" style="height: 17px; line-height: 17px;">269,00 €</strong>
+                                    <strong class="promoPrice" style="height: 17px; line-height: 17px;">269,00 â‚¬</strong>
                                     <strong class="promoTitle">Wetsuit NPX ASSASSIN</strong>
                                 </span>
                                <img height="220" width="940" src="../../../source/out/pictures_ee/promo/surfer_wave(1)_promo.jpg">
@@ -437,14 +436,14 @@ body {background:url(bg.png);}
            <img height="220" width="7" alt="" class="promoShadow shadowLeft" src="../../../source/out/azure/img/promo-shadowleft.png">
            <img height="220" width="7" alt="" class="promoShadow shadowRight" src="../../../source/out/azure/img/promo-shadowright.png">
            <div class="anythingSlider anythingSlider-default activeSlider" style="width: 940px; height: 220px;">
-               <span class="arrow back" style="display: block; opacity: 0.7;"><a href="#">«</a></span>
-               <span class="arrow forward" style="display: block; opacity: 0.7;"><a href="#">»</a></span>
+               <span class="arrow back" style="display: block; opacity: 0.7;"><a href="#">Â«</a></span>
+               <span class="arrow forward" style="display: block; opacity: 0.7;"><a href="#">Â»</a></span>
                <div class="anythingWindow">
                    <ul id="promotionSlider" class="anythingBase" style="width: 5640px;">
                        <li style="width: 940px; height: 220px;" class="cloned panel">
                            <span style="width: 100%; height: 100%;">
                                <span class="promoBox" style="visibility: visible;">
-                                    <strong class="promoPrice" style="height: 17px; line-height: 17px;">123,00 €</strong>
+                                    <strong class="promoPrice" style="height: 17px; line-height: 17px;">123,00 â‚¬</strong>
                                     <strong class="promoTitle">Promo Product 1</strong>
                                </span>
                                <img height="220" width="940" src="../../../source/out/pictures_ee/promo/surfer_wave(1)_promo.jpg">
@@ -477,8 +476,8 @@ body {background:url(bg.png);}
                         <div class="specBoxInfo">
                             <div id="priceBargain_1" class="price ">
                                 <div class="hoverInfo" style="">
-                                    <span class="priceOld">RRP <del>999,99 €</del></span>
-                                    <span class="priceValue">123,90 € *</span>
+                                    <span class="priceOld">RRP <del>999,99 â‚¬</del></span>
+                                    <span class="priceValue">123,90 â‚¬ *</span>
                                     <a title="add to Cart" class="toCart button" href="#">add to Cart</a>
                                 </div>
                             </div>
@@ -503,8 +502,8 @@ body {background:url(bg.png);}
         <div id="page" class="pageLayout sidebarRight">
             <div id="content">
                 <div class="itemSlider">
-                <a rel="nofollow" href="#" class="prevItem slideNav"><strong>Our<br>brands</strong><span>«</span></a>
-                <a rel="nofollow" href="#" class="nextItem slideNav"><span>»</span></a>
+                <a rel="nofollow" href="#" class="prevItem slideNav"><strong>Our<br>brands</strong><span>Â«</span></a>
+                <a rel="nofollow" href="#" class="nextItem slideNav"><span>Â»</span></a>
                 <div id="manufacturerSlider" style="visibility: visible; overflow: hidden; position: relative; z-index: 2; left: 0px; width: 744px;">
                     <ul style="margin: 0pt; padding: 0pt; position: relative; list-style-type: none; z-index: 1; width: 2728px; left: 0px;">
                         <li style="overflow: hidden; float: left; width: 124px; height: 148px;">
@@ -558,16 +557,16 @@ body {background:url(bg.png);}
 
            <br>
            <h3 class="lightHead sectionHead clear">Light section Headline</h3>
-           
+
            <h3 class="blockHead">Block headline</h3>
             <div class="status error corners">
                 <p>Error message</p>
-            </div>                          
-   
+            </div>
+
             <div class="status success corners">
                 <p>Success message</p>
-            </div>                          
-           <br>       
+            </div>
+           <br>
            <div class="widgetBoxBottomRound bottomRound">
             lore lore lore
            </div>
@@ -629,7 +628,7 @@ body {background:url(bg.png);}
                     </li>
                     <li class="oxInValid">
                         <label>Simple label:</label><input type="text">
-                        <p class="oxValidateError" style="display: block;">                            
+                        <p class="oxValidateError" style="display: block;">
                             <span style="display: inline;">Error message</span>
                         </p>
                     </li>
@@ -646,17 +645,17 @@ body {background:url(bg.png);}
                             <option>Test data</option>
                             <option>Test data</option>
                         </select>
-                        <p class="oxValidateError" style="display: block;">                            
+                        <p class="oxValidateError" style="display: block;">
                             <span style="display: inline;">Error message</span>
-                        </p>                        
+                        </p>
                     </li>
                     <li><label class="req">Required label:</label><textarea class="areabox"></textarea></li>
                     <li class="oxInValid"><label class="req">Required label:</label><textarea class="areabox"></textarea>
-                        <p class="oxValidateError" style="display: block;">                            
+                        <p class="oxValidateError" style="display: block;">
                             <span style="display: inline;">Error message</span>
-                        </p>       
-                                    
-                    </li>                    
+                        </p>
+
+                    </li>
                     <li class="formNote">Form note text text text text text text</li>
                     <li class="formSubmit">
                         <button class="submitButton" type="button">Form submit button</button>
@@ -665,8 +664,8 @@ body {background:url(bg.png);}
                 </ul>
             </form>
        </div>
-    </div>       
-    
+    </div>
+
     <hr>
     <h2 class="testHeadSub">Order steps</h2>
     <div id="page" class="pageLayout">
@@ -805,7 +804,7 @@ body {background:url(bg.png);}
                     <h3>Option 3</h3>
                     <p>Description</p>
                  </div>
-            </div>                        
+            </div>
             <h3 class="section">
                 <strong>Section title</strong>
                 <button class="submitButton largeButton" type="button">button label</button>
@@ -814,34 +813,35 @@ body {background:url(bg.png);}
             <div id="thankyouPage">
                 <h3 class="blockHead">Thankyou page title</h3>
             </div>
-            <br>            
-            <div class="checkoutCollumns clear">
-                <div class="collumn">
-                    <h3 class="blockHead">Collumn 1</h3>
+            <br>
+            <br>
+            <div class="checkoutColumns clear">
+                <div class="column">
+                    <h3 class="blockHead">Column 1</h3>
                     <p>
                         Description
                     </p>
                 </div>
-                <div class="collumn">
-                    <h3 class="blockHead">Collumn 2</h3>
+                <div class="column">
+                    <h3 class="blockHead">Column 2</h3>
                     <p>
                         Description
                     </p>
                 </div>
             </div>
-            
+
             <div class="lineBox clear">
                 <form id="orderConfirmAgbTop">
-                    <span class="agb">                
+                    <span class="agb">
                         <input type="checkbox" value="1" name="ord_agb" class="checkbox" id="checkAgbTop">
                         I agree to the <a class="fontunderline" href="#" rel="nofollow">Terms and Conditions</a>.&nbsp;
                         I have been informed about my <a href="#" rel="nofollow">Right to Cancel</a>.
                         <p class="errorMsg" style="display:block">Please read and confirm our terms and conditions.</p>
-                        
+
                     </span>
                     <button class="submitButton largeButton nextStep" type="button">Submit Order</button>
                 </form>
-            </div>            
+            </div>
             <div class="lineBox clear">
                 <span class="title">Check the bottom<span>
                 </span></span>
@@ -860,18 +860,18 @@ body {background:url(bg.png);}
 
             <table id="basket" class="basketitems">
                 <colgroup>
-                    <col width="30">            
+                    <col width="30">
                     <col width="110">
                     <col>
-                    <col width="120">            
+                    <col width="120">
                     <col width="60">
                     <col width="90">
                     <col width="60">
                     <col width="90">
-                </colgroup>         
+                </colgroup>
                 <thead>
                     <tr>
-                        <th></th>                
+                        <th></th>
                         <th></th>
                         <th>Product</th>
                         <th>Wrapping</th>
@@ -882,7 +882,7 @@ body {background:url(bg.png);}
                     </tr>
                 </thead>
                 <tr id="cartItem_1">
-                    <td class="checkbox"><input type="checkbox" value="1"></td>                
+                    <td class="checkbox"><input type="checkbox" value="1"></td>
                     <td class="basketImage">
                         <a rel="nofollow" href="#" class="image">
                             <img alt="Transport container BARREL" src="../../../source/out/pictures_ee/icon/mikejucker_textilcontainer_1_ico.jpg">
@@ -894,37 +894,37 @@ body {background:url(bg.png);}
                         </div>
                         <div>
                             Art.No.: 3788
-                        </div>                                        
+                        </div>
                     </td>
                     <td>
                         <a title="add" href="#" rel="nofollow" class="wrappingTrigger">add</a>
-                    </td>                
+                    </td>
                     <td class="quantity">
                         <p>
-                            <strong>Details:</strong> 
+                            <strong>Details:</strong>
                             <input type="text" value="ghh" class="textbox persParam">
-                        </p>                    
+                        </p>
                         <p>
                             <input type="text" size="2" value="1" class="textbox" id="am_1">
                         </p>
                     </td>
-                    <td>24,95&nbsp;€</td>
+                    <td>24,95&nbsp;â‚¬</td>
                     <td>19%</td>
-                    <td class="total">24,95&nbsp;€</td>
-                </tr>   
+                    <td class="total">24,95&nbsp;â‚¬</td>
+                </tr>
                 <tr>
-                    <td></td>                  
+                    <td></td>
                     <td></td>
                     <td colspan="3" id="orderCardTitle">
                         Greeting Card "The bomb"<br>
                         <b>Your Message:</b><br>
                         <div id="orderCardText"></div>
                     </td>
-                    <td class="orderprice" id="orderCardPrice">2,50&nbsp;€</td>
+                    <td class="orderprice" id="orderCardPrice">2,50&nbsp;â‚¬</td>
                     <td class="vat_order"></td>
-                    <td align="right" class="totalprice" id="orderCardTotalPrice">2,50&nbsp;€</td>
-                </tr>   
-            </table>     
+                    <td align="right" class="totalprice" id="orderCardTotalPrice">2,50&nbsp;â‚¬</td>
+                </tr>
+            </table>
             <div class="clear">
                 <div class="basketFunctions" id="basketFn">
                 <input type="checkbox" title="All" id="checkAll" name="checkAll">
@@ -936,23 +936,23 @@ body {background:url(bg.png);}
                    <table>
                        <tr>
                             <th scope="col">Total Products (net):</th>
-                            <td>25,16&nbsp;€</td>
+                            <td>25,16&nbsp;â‚¬</td>
                         </tr>
                         <tr>
                             <th scope="col">plus VAT&nbsp;19% Amount:</th>
-                            <td>4,78&nbsp;€</td>
-                        </tr>            
+                            <td>4,78&nbsp;â‚¬</td>
+                        </tr>
                         <tr>
                             <th scope="col">Total Products (gross):</th>
-                            <td>29,94&nbsp;€</td>
+                            <td>29,94&nbsp;â‚¬</td>
                         </tr>
                         <tr>
                             <th scope="col">Gift Wrapping/Greeting Card</th>
-                            <td>5,45 €</td>
+                            <td>5,45 â‚¬</td>
                         </tr>
                         <tr>
                             <th scope="col"><b>Grand Total:</b></th>
-                            <td><b>35,39&nbsp;€</b></td>
+                            <td><b>35,39&nbsp;â‚¬</b></td>
                         </tr>
                     </table>
                 </div>
@@ -981,14 +981,14 @@ body {background:url(bg.png);}
             <div class="agb">
                 <h3 class="section">
                     <strong>Terms and Conditions and Right to Cancel</strong>
-                </h3>                                
+                </h3>
                 <input type="checkbox" class="checkbox">
                 I agree to the <a class="fontunderline" href="#" rel="nofollow" id="test_OrderOpenAGBBottom">Terms and Conditions</a>.&nbsp;
                 I have been informed about my <a href="#" rel="nofollow" id="test_OrderOpenWithdrawalBottom">Right to Cancel</a>.
-                <p class="errorMsg" style="display: block;">Please read and confirm our terms and conditions.</p>                     
-            </div>                   
+                <p class="errorMsg" style="display: block;">Please read and confirm our terms and conditions.</p>
+            </div>
         </div>
-        
+
    </div>
    </div>
 
@@ -1200,23 +1200,23 @@ body {background:url(bg.png);}
                 <li class="productData">
                     <a title="" class="titleBlock title fn" href="#" id="productList_1"> Product 1 <div class="gridPicture"><img alt="" src="../../../source/out/pictures_ee/0/core_gts_1_th.jpg"></div></a>
                     <div class="priceBlock">
-                        <span class="priceOld"> RRP <del>999,00 €</del></span>
-                        <strong>123,00 € *</strong>
+                        <span class="priceOld"> RRP <del>999,00 â‚¬</del></span>
+                        <strong>123,00 â‚¬ *</strong>
                         <a title="To cart" class="toCart button" href="#">To cart</a>
                     </div>
                 </li>
                 <li class="productData">
                     <a title="" class="titleBlock title fn" href="#" id="productList_2"> Product 2 <div class="gridPicture"><img alt="" src="../../../source/out/pictures_ee/0/nkb_evo_2010_1_th.jpg"></div></a>
                     <div class="priceBlock">
-                        <strong>123,00 € *</strong>
-                        <span class="pricePerUnit" id="productPricePerUnit_1">30 g | 0,42 €/g</span>
+                        <strong>123,00 â‚¬ *</strong>
+                        <span class="pricePerUnit" id="productPricePerUnit_1">30 g | 0,42 â‚¬/g</span>
                         <a title="To cart" class="toCart button" href="#">To cart</a>
                     </div>
                 </li>
                 <li class="productData">
                     <a title="" class="titleBlock title fn" href="#" id="productList_3"> Product 3 <div class="gridPicture"><img alt="" src="../../../source/out/pictures_ee/0/core_riot_xr_1_th"></div></a>
                     <div class="priceBlock">
-                        <strong>123,00 € *</strong>
+                        <strong>123,00 â‚¬ *</strong>
                         <a class="toCart button" href="#">more Info</a>
                     </div>
                 </li>
@@ -1239,8 +1239,8 @@ body {background:url(bg.png);}
                             <div class="selectorsBox"></div>
                             <div class="priceBox">
                                 <div class="content">
-                                    <span class="oldPrice">RRP <del>999,00 €</del></span>
-                                        <span class="price">879,00 € *</span>
+                                    <span class="oldPrice">RRP <del>999,00 â‚¬</del></span>
+                                        <span class="price">879,00 â‚¬ *</span>
                                 </div>
                             </div>
                             <div class="buttonBox"><button class="submitButton largeButton" type="submit">To cart</button></div>
@@ -1257,7 +1257,7 @@ body {background:url(bg.png);}
                             <div class="selectorsBox"></div>
                             <div class="priceBox">
                                 <div class="content">
-                                    <span class="price">879,00 € *</span>
+                                    <span class="price">879,00 â‚¬ *</span>
                                 </div>
                             </div>
                             <div class="buttonBox"><button class="submitButton largeButton" type="submit">To cart</button></div>
@@ -1286,8 +1286,8 @@ body {background:url(bg.png);}
                             <div class="description">The sports version of the GT</div>
                         </div>
                         <div class="functions">
-                            <span class="oldPrice">RRP <del>999,00 €</del></span>
-                            <span class="price" id="productPrice_productList_1">879,00 € *</span>
+                            <span class="oldPrice">RRP <del>999,00 â‚¬</del></span>
+                            <span class="price" id="productPrice_productList_1">879,00 â‚¬ *</span>
                             <div class="tobasketFunction clear">
                                 <input type="text" class="textbox" autocomplete="off" size="3" value="1" name="am" id="amountToBasket_productList_1">
                                 <button class="submitButton largeButton" type="submit" id="toBasket_productList_1">add to Cart</button>
@@ -1298,7 +1298,7 @@ body {background:url(bg.png);}
             </ul>
         </div>
     </div>
-    
+
     <h2 class="testHeadSub">List paging</h2>
     <div id="page" class="pageLayout sidebarRight">
         <div id="content">
@@ -1351,7 +1351,7 @@ body {background:url(bg.png);}
                                         <span title="100" class="value-title"></span>
                                     </li>
                                     <li class="s1">
-                                        <a title="Rate this product !" href="#review" rel="nofollow" class="ox-write-review ox-rateindex-1"></a>                                        
+                                        <a title="Rate this product !" href="#review" rel="nofollow" class="ox-write-review ox-rateindex-1"></a>
                                     </li>
                                     <li class="s2">
                                         <a title="Rate this product !" href="#review" rel="nofollow" class="ox-write-review ox-rateindex-2"></a>
@@ -1378,14 +1378,14 @@ body {background:url(bg.png);}
                                     <p class="selectorLabel underlined">
                                         <label>Size:</label>
                                         <span>Please choose</span>
-                                    </p>    
+                                    </p>
                                     <input type="hidden" value="" name="varselid[0]">
                                     <ul class="drop vardrop FXgradGreyLight shadow" style="width: 210px; display: none;">
                                         <li class="">
                                             <a class="" href="#" rel="8a34d35131d5f014799a4115a815116d">W 32/L 32</a>
                                         </li>
-                                    </ul> 
-                                </div>                                                                    
+                                    </ul>
+                                </div>
                                 <div id="selectlist_1" class="dropDown">
                                     <p class="selectorLabel">
                                         <label>Color:</label>
@@ -1406,21 +1406,21 @@ body {background:url(bg.png);}
                                             <a class="" href="#" rel="9594eec95be70e7b1710f730fdda33d9">Green</a>
                                         </li>
                                     </ul>
-                                </div>                    
+                                </div>
                             </div>
                             <div class="tobasket" style="top:230px;width:500px">
                                 <p class="oldPrice">
-                                    <strong>RRP <del>999,00 €</del></strong>
+                                    <strong>RRP <del>999,00 â‚¬</del></strong>
                                 </p>
                                 <div class="tobasketFunction clear">
-                                    <label class="price" id="productPrice">                                                                
-                                        <strong>879,00 € *</strong>
-                                    </label>                      
+                                    <label class="price" id="productPrice">
+                                        <strong>879,00 â‚¬ *</strong>
+                                    </label>
                                     <a id="amountPrice" href="#priceinfo" class="selector corners FXgradBlueDark" style="left: 82px; position: static;"><img alt="Select" longdesc="../../../source/out/azure/img/selectbutton.png" src="../../../source/out/azure/img/selectbutton.png"></a>
-                                                                                 
-                                    <input type="text" class="textbox" autocomplete="off" size="3" value="1" name="am" id="amountToBasket">                                  
-                                    <button class="submitButton largeButton" type="submit" id="toBasket">add to Cart</button>   
-                                    <button class="submitButton largeButton" disabled="disabled" type="submit" id="toBasket">add to Cart</button>                                                                     
+
+                                    <input type="text" class="textbox" autocomplete="off" size="3" value="1" name="am" id="amountToBasket">
+                                    <button class="submitButton largeButton" type="submit" id="toBasket">add to Cart</button>
+                                    <button class="submitButton largeButton" disabled="disabled" type="submit" id="toBasket">add to Cart</button>
                                 </div>
                                 <div class="additionalInfo clear">
                                     <span class="stockFlag onStock">Ready for shipping</span>
@@ -1437,28 +1437,28 @@ body {background:url(bg.png);}
                                   <div class="socialButton"> </div>
                                 </div>
                             </div>
-                                                                                      
+
                             <div class="tobasket" style="top:230px;left:440px;width:500px">
                                 <p class="oldPrice">
-                                    <strong>RRP <del>999,00 €</del></strong>
+                                    <strong>RRP <del>999,00 â‚¬</del></strong>
                                 </p>
                                 <div class="tobasketFunction clear">
-                                    <label class="price" id="productPrice">                                                                
-                                        <strong>879,00 € *</strong>
-                                    </label>                      
+                                    <label class="price" id="productPrice">
+                                        <strong>879,00 â‚¬ *</strong>
+                                    </label>
                                     <a id="amountPrice" href="#priceinfo" class="selector corners FXgradBlueDark selected" style="left: 92px; position: absolute;"><img alt="Select" longdesc="../../../source/out/azure/img/selectbutton-on.png" src="../../../source/out/azure/img/selectbutton-on.png"></a>
                                     <ul id="priceinfo" class="pricePopup Links corners shadow" style="top: 13px; left: 82px; width: 220px; display: block;">
                                         <li><span><h4>Block price</h4></span></li>
                                         <li><label>from</label><span>pcs</span></li>
-                                        <li><label>5</label><span>27,90 €</span></li>
-                                        <li><label>10</label><span>25,90 €</span></li>
-                                        <li><label>20</label><span>21,90 €</span></li>
-                                    </ul>                                                                                 
-                                    <input type="text" class="textbox" autocomplete="off" size="3" value="1" name="am" id="amountToBasket">                                  
-                                    <button class="submitButton largeButton" type="submit" id="toBasket">add to Cart</button>                                                                        
-                                </div>                                                                                         
+                                        <li><label>5</label><span>27,90 â‚¬</span></li>
+                                        <li><label>10</label><span>25,90 â‚¬</span></li>
+                                        <li><label>20</label><span>21,90 â‚¬</span></li>
+                                    </ul>
+                                    <input type="text" class="textbox" autocomplete="off" size="3" value="1" name="am" id="amountToBasket">
+                                    <button class="submitButton largeButton" type="submit" id="toBasket">add to Cart</button>
+                                </div>
                             </div>
-                                                                                      
+
                         </div>
                         <div class="information" style="float:left;width:300px">
                             <h1 id="productTitle">
@@ -1466,8 +1466,8 @@ body {background:url(bg.png);}
                             </h1>
                             <a id="productLinks" href="#priceinfo" class="selector corners FXgradBlueDark" style="top: -3px; left: 151px;"><img alt="Select" longdesc="../../../source/out/azure/img/selectbutton-on.png" src="../../../source/out/azure/img/selectbutton-on.png"></a>
                             <ul class="actionLinks corners shadow" style="top: -7px; left: 0px; padding-top: 31px; width: 270px; display: block; height: auto; opacity: 1;">
-                                <li> 
-                                    <span>  
+                                <li>
+                                    <span>
                                         <a rel="nofollow" href="#" class="" id="addToCompare">compare</a>
                                     </span>
                                 </li>
@@ -1480,12 +1480,12 @@ body {background:url(bg.png);}
                                     </span>
                                 </li>
                                 <li><span><a rel="nofollow" href="#" id="linkToNoticeList">Add to Wish List</a></span></li>
-                                <li><span><a rel="nofollow" href="#" id="linkToWishList">Add to Gift Registry</a></span></li>                                            
+                                <li><span><a rel="nofollow" href="#" id="linkToWishList">Add to Gift Registry</a></span></li>
                                 <li><a href="#" rel="nofollow" class="priceAlarmLink" id="priceAlarmLink"><b>[!]</b> Price Alert</a></li>
-                            </ul>     
-                                                                           
-                        </div>  
-                                              
+                            </ul>
+
+                        </div>
+
                     </div>
                     </form>
                 </div>
@@ -1499,45 +1499,45 @@ body {background:url(bg.png);}
                 <div id="detailsMain">
                     <div class="otherPictures">
                         <div class="shadowLine"></div>
-                        <ul class="clear">                    
+                        <ul class="clear">
                             <li>
                                 <a href="#" class="cloud-zoom-gallery">
                                     <span class="marker"><img alt="" src="../../../source/out/azure/img/marker.png"></span>
-                                    <span class="artIcon"><img alt="" src="../../../source/out/pictures_ee/1/img_0027_1_ico.jpg"></span>                
+                                    <span class="artIcon"><img alt="" src="../../../source/out/pictures_ee/1/img_0027_1_ico.jpg"></span>
                                 </a>
                             </li>
                             <li>
                                 <a href="#" class="cloud-zoom-gallery">
                                     <span class="marker"><img alt="" src="../../../source/out/azure/img/marker.png"></span>
-                                    <span class="artIcon"><img alt="" src="../../../source/out/pictures_ee/2/img_0030_ico.jpg"></span>                
+                                    <span class="artIcon"><img alt="" src="../../../source/out/pictures_ee/2/img_0030_ico.jpg"></span>
                                 </a>
                             </li>
                             <li>
                                 <a href="#" class="cloud-zoom-gallery">
                                     <span class="marker"><img alt="" src="../../../source/out/azure/img/marker.png"></span>
-                                    <span class="artIcon"><img alt="" src="../../../source/out/pictures_ee/3/img_0032_ico.jpg"></span>                
+                                    <span class="artIcon"><img alt="" src="../../../source/out/pictures_ee/3/img_0032_ico.jpg"></span>
                                 </a>
                             </li>
                             <li>
                                 <a href="#" class="cloud-zoom-gallery" >
                                     <span class="marker"><img alt="" src="../../../source/out/azure/img/marker.png"></span>
-                                    <span class="artIcon"><img alt="" src="../../../source/out/pictures_ee/4/img_0019_1_ico.jpg"></span>                
+                                    <span class="artIcon"><img alt="" src="../../../source/out/pictures_ee/4/img_0019_1_ico.jpg"></span>
                                 </a>
                             </li>
                             <li>
                                 <a href="#" class="cloud-zoom-gallery">
                                     <span class="marker"><img alt="" src="../../../source/out/azure/img/marker.png"></span>
-                                    <span class="artIcon"><img alt="" src="../../../source/out/pictures_ee/5/img_0022_ico.jpg"></span>                
+                                    <span class="artIcon"><img alt="" src="../../../source/out/pictures_ee/5/img_0022_ico.jpg"></span>
                                 </a>
                             </li>
                             <li>
                                 <a href="#" class="cloud-zoom-gallery">
                                     <span class="marker"><img alt="" src="../../../source/out/azure/img/marker.png"></span>
-                                    <span class="artIcon"><img alt="" src="../../../source/out/pictures_ee/6/img_0024_ico.jpg"></span>                
+                                    <span class="artIcon"><img alt="" src="../../../source/out/pictures_ee/6/img_0024_ico.jpg"></span>
                                 </a>
                             </li>
                         </ul>
-                    </div>                          
+                    </div>
                 </div>
             </div>
         </div>
@@ -1591,7 +1591,7 @@ body {background:url(bg.png);}
                                             <a class="artlink" href="#">
                                                 Sticker set MIX  <span class="amount"> - 1 qty.</span>
                                             </a>
-                                        </td>   
+                                        </td>
                                         <td align="right"></td>
                                     </tr>
                                 </table>
@@ -1599,12 +1599,12 @@ body {background:url(bg.png);}
                         </tr>
                     </table>
                 </li>
-            </ul> 
-            
-              
+            </ul>
+
+
         </div>
-    </div> 
-    
+    </div>
+
     <h2 class="testHead">Compare</h2>
     <div id="page" class="pageLayout sidebarRight">
         <div id="content">
@@ -1625,7 +1625,7 @@ body {background:url(bg.png);}
                         <tr>
                             <td id="cmpAttrTitle_2" class="firstCol" style="height: 44px;">Area of Application:</td>
                         </tr>
-                        </table>    
+                        </table>
                     </div>
                 </td>
                 <td style="vertical-align:top;">
@@ -1636,7 +1636,7 @@ body {background:url(bg.png);}
                                     <td valign="top">
                                         <div class="lineBox clear">
                                             <span>Move</span>
-                                            <a class="navigation moveNext" href="#" rel="nofollow">»</a>
+                                            <a class="navigation moveNext" href="#" rel="nofollow">Â»</a>
                                         </div>
                                         <div class="compareItem">
                                             <a rel="product" class="picture url" href="#">
@@ -1654,7 +1654,7 @@ body {background:url(bg.png);}
                                                 <div class="tobasket">
                                                     <div class="tobasketFunction clear">
                                                         <label class="price" id="productPrice">
-                                                            <strong>1.019,00 €</strong>
+                                                            <strong>1.019,00 â‚¬</strong>
                                                         </label>
                                                         <p class="fn clear">
                                                             <input type="text" title="Quantity:" class="textbox" autocomplete="off" size="3" value="1" name="am">
@@ -1667,11 +1667,11 @@ body {background:url(bg.png);}
                                     </td>
                                     <td valign="top">
                                         <div class="lineBox clear">
-                                            <a class="navigation movePrev" href="#" rel="nofollow">«</a>
+                                            <a class="navigation movePrev" href="#" rel="nofollow">Â«</a>
                                             <span>Move</span>
-                                            <a class="navigation moveNext" href="#" rel="nofollow">»</a>
+                                            <a class="navigation moveNext" href="#" rel="nofollow">Â»</a>
                                         </div>
-                                        <div class="compareItem">                    
+                                        <div class="compareItem">
                                             <a rel="product" class="picture url" href="#">
                                                 <img alt="Kite RRD PASSION 2010 " src="../../../source/out/pictures_ee/0/rrd_passion_2010_1_th.jpg" class="photo">
                                             </a>
@@ -1687,7 +1687,7 @@ body {background:url(bg.png);}
                                                 <div class="tobasket">
                                                     <div class="tobasketFunction clear">
                                                         <label class="price" id="productPrice">
-                                                            <strong>589,00 €</strong>
+                                                            <strong>589,00 â‚¬</strong>
                                                         </label>
                                                         <p class="fn clear">
                                                             <input type="text" title="Quantity:" class="textbox" autocomplete="off" size="3" value="1" name="am">
@@ -1696,7 +1696,7 @@ body {background:url(bg.png);}
                                                     </div>
                                                 </div>
                                             </form>
-                                        </div>                            
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -1740,7 +1740,7 @@ body {background:url(bg.png);}
     </table>
 </div>
 </div>
-    
+
     <hr>
     <h1 class="testHead">Footer</h1>
 

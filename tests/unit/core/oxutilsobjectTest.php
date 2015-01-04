@@ -1,29 +1,24 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
-
-require_once realpath( "." ).'/unit/OxidTestCase.php';
-require_once realpath( "." ).'/unit/test_config.inc.php';
 
 class modOxUtilsObject_oxUtilsObject extends oxUtilsObject
 {
@@ -45,6 +40,7 @@ class modOxUtilsObject_oxUtilsObject extends oxUtilsObject
  */
 class _oxutils_test
 {
+
     /**
      * Does nothing
      *
@@ -56,13 +52,14 @@ class _oxutils_test
      *
      * @return null
      */
-    public function __construct( $a = false, $b = false, $c = false, $d = false, $e = false )
+    public function __construct($a = false, $b = false, $c = false, $d = false, $e = false)
     {
     }
 }
 
 class oxModuleUtilsObject extends oxUtilsObject
 {
+
     public function getActiveModuleChain($aClassChain)
     {
         return parent::_getActiveModuleChain($aClassChain);
@@ -72,6 +69,7 @@ class oxModuleUtilsObject extends oxUtilsObject
 
 class Unit_Core_oxutilsobjectTest extends OxidTestCase
 {
+
     /**
      * Tear down the fixture.
      *
@@ -81,9 +79,17 @@ class Unit_Core_oxutilsobjectTest extends OxidTestCase
     {
         oxRemClassModule('modOxUtilsObject_oxUtilsObject');
 
+        $oConfigFile = new OxConfigFile(OX_BASE_PATH . "config.inc.php");
+        OxRegistry::set("OxConfigFile", $oConfigFile);
+
 
         $oArticle = new oxarticle();
-        $oArticle->delete( 'testArticle' );
+        $oArticle->delete('testArticle');
+
+        $sFilePath = $this->getTestFilePath();
+        if (!empty($sFilePath) && file_exists($sFilePath)) {
+            unlink($sFilePath);
+        }
 
         parent::tearDown();
     }
@@ -95,34 +101,33 @@ class Unit_Core_oxutilsobjectTest extends OxidTestCase
      */
     public function testGetObject()
     {
-        $this->assertTrue( oxNew( '_oxutils_test' ) instanceof _oxutils_test );
-        $this->assertTrue( oxNew( '_oxutils_test', 1 ) instanceof _oxutils_test );
-        $this->assertTrue( oxNew( '_oxutils_test', 1, 2 ) instanceof _oxutils_test );
-        $this->assertTrue( oxNew( '_oxutils_test', 1, 2, 3 ) instanceof _oxutils_test );
-        $this->assertTrue( oxNew( '_oxutils_test', 1, 2, 3, 4 ) instanceof _oxutils_test );
+        $this->assertTrue(oxNew('_oxutils_test') instanceof _oxutils_test);
+        $this->assertTrue(oxNew('_oxutils_test', 1) instanceof _oxutils_test);
+        $this->assertTrue(oxNew('_oxutils_test', 1, 2) instanceof _oxutils_test);
+        $this->assertTrue(oxNew('_oxutils_test', 1, 2, 3) instanceof _oxutils_test);
+        $this->assertTrue(oxNew('_oxutils_test', 1, 2, 3, 4) instanceof _oxutils_test);
     }
 
     public function testOxNew()
     {
-        $myConfig = oxConfig::getInstance();
         // 20070808-AS - check known classnames
-        $oArticle = oxNew( 'oxarticle' );
-        $oArticle = oxNew( 'oxarticle', array( 'aaa' => 'bbb' ) );
-        $oArticle = oxNew( 'oxarticle', array( 'aaa' => 'bbb' ) );
+        $oArticle = oxNew('oxarticle');
+        $oArticle = oxNew('oxarticle', array('aaa' => 'bbb'));
+        $oArticle = oxNew('oxarticle', array('aaa' => 'bbb'));
 
-        $this->assertTrue( $oArticle instanceof oxarticle );
-        $this->assertTrue( isset( $oArticle->aaa ) );
-        $this->assertEquals( 'bbb', $oArticle->aaa );
+        $this->assertTrue($oArticle instanceof oxarticle);
+        $this->assertTrue(isset($oArticle->aaa));
+        $this->assertEquals('bbb', $oArticle->aaa);
         $sShopDir = "misc/";
 
         modConfig::getInstance()->setConfigParam("sShopDir", $sShopDir);
-        include_once $sShopDir."/modules/oxNewDummyModule.php";
+        include_once $sShopDir . "/modules/oxNewDummyModule.php";
 
         $aModules = array(strtolower('oxNewDummyModule') => 'oxNewDummyUserModule&oxNewDummyUserModule2');
         modConfig::getInstance()->setConfigParam("aModules", $aModules);
         oxUtilsObject::resetModuleVars();
 
-        $oNewDummyModule = oxNew("oxNewDummyModule" );
+        $oNewDummyModule = oxNew("oxNewDummyModule");
         $this->assertTrue($oNewDummyModule instanceof oxNewDummyModule);
 
         //the following code should work uncommented after #4301 is fixed
@@ -138,7 +143,7 @@ class Unit_Core_oxutilsobjectTest extends OxidTestCase
         modConfig::getInstance()->setConfigParam("aModules", $aModules);
         oxUtilsObject::resetModuleVars();
 
-        $oNewDummyModule = oxNew( "oxNewDummyModule" );
+        $oNewDummyModule = oxNew("oxNewDummyModule");
         $this->assertTrue($oNewDummyModule instanceof oxNewDummyModule);
 
         try {
@@ -151,36 +156,12 @@ class Unit_Core_oxutilsobjectTest extends OxidTestCase
         }
     }
 
-    /**
-     * oxnew test
-     */
-    public function testOxNewArticle()
-    {
-        $oUtilsObj = new oxutilsobject();
-
-        $oArticle    = $oUtilsObj->oxNewArticle( '2177', array( 'aaa' => 'bbb' ) );
-        $oNewArticle = $oUtilsObj->oxNewArticle( '2177' );
-
-        $this->assertEquals( $oArticle, $oNewArticle );
-    }
-    public function testOxNewArticleAndLoad()
-    {
-        $oUtilsObj = new oxutilsobject();
-
-        $oArticle = $oUtilsObj->oxnew( 'oxarticle' );
-        $oArticle->load( '2177' );
-
-        $oNewArticle = $oUtilsObj->oxNewArticle( '2177' );
-
-        $this->assertEquals( $oArticle->getId(), $oNewArticle->getId() );
-    }
-
     public function testGenerateUid()
     {
-      //no real test possible, but at least generated ids should be different
-      $id1 = oxUtilsObject::getInstance()->generateUid();
-      $id2 = oxUtilsObject::getInstance()->generateUid();
-      $this->assertNotEquals($id1, $id2);
+        //no real test possible, but at least generated ids should be different
+        $id1 = oxUtilsObject::getInstance()->generateUid();
+        $id2 = oxUtilsObject::getInstance()->generateUid();
+        $this->assertNotEquals($id1, $id2);
     }
 
 
@@ -197,7 +178,7 @@ class Unit_Core_oxutilsobjectTest extends OxidTestCase
         $aGotInstanceCache = $oTestInstance->getClassNameCache();
 
         $this->assertEquals(1, count($aGotInstanceCache));
-        $this->assertTrue($aGotInstanceCache["oxattribute"] instanceof oxAttribute );
+        $this->assertTrue($aGotInstanceCache["oxattribute"] instanceof oxAttribute);
     }
 
     public function testResetInstanceCacheAll()
@@ -217,12 +198,12 @@ class Unit_Core_oxutilsobjectTest extends OxidTestCase
     {
         $aModuleChain = array("oe/invoicepdf2/myorder");
 
-        $this->getProxyClass( "oxUtilsObject" );
-        $oUtilsObject = $this->getMock( 'oxUtilsObjectPROXY', array( 'getModuleVar' ) );
+        $this->getProxyClass("oxUtilsObject");
+        $oUtilsObject = $this->getMock('oxUtilsObjectPROXY', array('getModuleVar'));
         $oUtilsObject->expects($this->at(0))->method('getModuleVar')->with($this->equalTo('aDisabledModules'))->will($this->returnValue(array("invoicepdf")));
         $oUtilsObject->expects($this->at(1))->method('getModuleVar')->with($this->equalTo('aModulePaths'))->will($this->returnValue(array("invoicepdf2" => "oe/invoicepdf2", "invoicepdf" => "oe/invoicepdf")));
 
-        $this->assertEquals( $aModuleChain, $oUtilsObject->UNITgetActiveModuleChain( $aModuleChain ) );
+        $this->assertEquals($aModuleChain, $oUtilsObject->UNITgetActiveModuleChain($aModuleChain));
     }
 
     public function testGetActiveModuleChainIfDisabled()
@@ -230,12 +211,12 @@ class Unit_Core_oxutilsobjectTest extends OxidTestCase
         $aModuleChain = array("oe/invoicepdf/myorder");
         $aModuleChainResult = array();
 
-        $this->getProxyClass( "oxUtilsObject" );
-        $oUtilsObject = $this->getMock( 'oxUtilsObjectPROXY', array( 'getModuleVar' ) );
+        $this->getProxyClass("oxUtilsObject");
+        $oUtilsObject = $this->getMock('oxUtilsObjectPROXY', array('getModuleVar'));
         $oUtilsObject->expects($this->at(0))->method('getModuleVar')->with($this->equalTo('aDisabledModules'))->will($this->returnValue(array("invoicepdf")));
         $oUtilsObject->expects($this->at(1))->method('getModuleVar')->with($this->equalTo('aModulePaths'))->will($this->returnValue(array("invoicepdf" => "oe/invoicepdf")));
 
-        $this->assertEquals( $aModuleChainResult, $oUtilsObject->UNITgetActiveModuleChain( $aModuleChain ) );
+        $this->assertEquals($aModuleChainResult, $oUtilsObject->UNITgetActiveModuleChain($aModuleChain));
     }
 
     public function testGetActiveModuleChainIfDisabledWithoutPath()
@@ -243,50 +224,28 @@ class Unit_Core_oxutilsobjectTest extends OxidTestCase
         $aModuleChain = array("invoicepdf/myorder");
         $aModuleChainResult = array();
 
-        $this->getProxyClass( "oxUtilsObject" );
-        $oUtilsObject = $this->getMock( 'oxUtilsObjectPROXY', array( 'getModuleVar' ) );
+        $this->getProxyClass("oxUtilsObject");
+        $oUtilsObject = $this->getMock('oxUtilsObjectPROXY', array('getModuleVar'));
         $oUtilsObject->expects($this->at(0))->method('getModuleVar')->with($this->equalTo('aDisabledModules'))->will($this->returnValue(array("invoicepdf")));
         $oUtilsObject->expects($this->at(1))->method('getModuleVar')->with($this->equalTo('aModulePaths'))->will($this->returnValue(array("invoicepdf2" => "oe/invoicepdf2")));
 
-        $this->assertEquals( $aModuleChainResult, $oUtilsObject->UNITgetActiveModuleChain( $aModuleChain ) );
+        $this->assertEquals($aModuleChainResult, $oUtilsObject->UNITgetActiveModuleChain($aModuleChain));
     }
 
     public function testDisableModule()
     {
-        $aDisabledModules = array('test1');
-        $aModulePaths     = array("invoicepdf2" => "oe/invoicepdf2", "invoicepdf" => "oe/invoicepdf");
-        //modConfig::getInstance()->setConfigParam( "aDisabledModules", $aDisabledModules );
-        //modConfig::getInstance()->setConfigParam( "aModulePaths", $aModulePaths );
+        $sModuleId = 'testId';
 
-        oxRegistry::getConfig()->setConfigParam("aDisabledModules", $aDisabledModules );
-        oxRegistry::getConfig()->setConfigParam("aModulePaths", $aModulePaths);
-        $sModule = "oe/invoicepdf2/myorder";
-        $aDisabledModulesResult = array('test1', 'invoicepdf2');
+        $oModule = new oxModule();
+        $oModule->load($sModuleId);
 
-        $oUtilsObject = $this->getProxyClass( "oxUtilsObject" );
-        $oUtilsObject->UNITdisableModule( $sModule );
-        modConfig::getInstance()->getConfigParam( "aDisabledModules" );
-        $this->assertEquals( $aDisabledModulesResult, modConfig::getInstance()->getConfigParam( "aDisabledModules" ) );
-    }
+        $oModuleInstaller = $this->getMock('oxModuleInstaller', array('deactivate'));
+        $oModuleInstaller->expects($this->once())->method('deactivate')->with($oModule);
 
-    public function testDisableModuleUnknownPath()
-    {
-        $aDisabledModules = array('test1');
-        $aModulePaths     = array("invoicepdf2" => "oe/invoicepdf2");
-        //$this->setConfigParam( "aDisabledModules", $aDisabledModules );
-        //$this->setConfigParam( "aModulePaths", $aModulePaths );
+        oxTestModules::addModuleObject('oxModuleInstaller', $oModuleInstaller);
 
-        oxRegistry::getConfig()->setConfigParam("aDisabledModules", $aDisabledModules );
-        oxRegistry::getConfig()->setConfigParam("aModulePaths", $aModulePaths );
-
-        $sModule = "invoicepdf/myorder";
-        $aDisabledModulesExpect = array('test1', 'invoicepdf');
-
-        $oUtilsObject = $this->getProxyClass( "oxUtilsObject" );
-        $oUtilsObject->UNITdisableModule( $sModule );
-
-        $aRes = oxRegistry::getConfig()->getConfigParam( "aDisabledModules" );
-        $this->assertEquals( $aDisabledModulesExpect, $aRes );
+        $oUtilsObject = $this->getProxyClass("oxUtilsObject");
+        $oUtilsObject->UNITdisableModule($sModuleId);
     }
 
     public function testSetGetCache()
@@ -296,13 +255,13 @@ class Unit_Core_oxutilsobjectTest extends OxidTestCase
         $oSubj = $this->getProxyClass("oxUtilsObject");
 
         $oSubj->UNITsetToCache("testKey", $sTest);
-        $this->assertEquals($sTest, $oSubj->UNITgetFromCache("testKey") );
+        $this->assertEquals($sTest, $oSubj->UNITgetFromCache("testKey"));
     }
 
     public function testGetModuleVarFromDB()
     {
         $oSubj = $this->getProxyClass("oxUtilsObject");
-        $this->assertEquals(Array("a7c40f631fc920687.20179984"), $oSubj->UNITgetModuleVarFromDB("aHomeCountry") );
+        $this->assertEquals(Array("a7c40f631fc920687.20179984"), $oSubj->UNITgetModuleVarFromDB("aHomeCountry"));
     }
 
     public function testGetCacheFileName()
@@ -311,12 +270,92 @@ class Unit_Core_oxutilsobjectTest extends OxidTestCase
         $sBaseShop = oxRegistry::getConfig()->getBaseShopId();
 
         $sExpt = "config." . $sBaseShop . ".testval.txt";
-        $this->assertEquals($sExpt, basename( $oSubj->UNITgetCacheFileName("testVal") ) );
+        $this->assertEquals($sExpt, basename($oSubj->UNITgetCacheFileName("testVal")));
     }
 
     public function testGetCacheDir()
     {
         $oSubj = $this->getProxyClass("oxUtilsObject");
-        $this->assertContains("tmp", $oSubj->UNITgetCacheDir() );
+        $this->assertContains("tmp", $oSubj->UNITgetCacheDir());
+    }
+
+    public function testGetClassName_classExist_moduleClassReturn()
+    {
+        $sClassName = 'oxorder';
+        $sClassNameWhichExtends = $sClassNameExpect = 'oemodulenameoxorder';
+        $oUtilsObject = $this->_prepareFakeModule($sClassName, $sClassNameWhichExtends);
+
+        $this->assertSame($sClassNameExpect, $oUtilsObject->getClassName($sClassName));
+    }
+
+    public function testGetClassName_classNotExist_originalClassReturn()
+    {
+        $sClassName = $sClassNameExpect = 'oxorder';
+        $sClassNameWhichExtends = 'oemodulenameoxorder_different2';
+        $oUtilsObject = $this->_prepareFakeModule($sClassName, $sClassNameWhichExtends);
+
+        $this->assertSame($sClassNameExpect, $oUtilsObject->getClassName($sClassName));
+    }
+
+    public function testGetClassName_classNotExistDoDisableModuleOnError_originalClassReturn()
+    {
+        $this->_setConfigFileParam('blDoNotDisableModuleOnError', false);
+
+        $sClassName = $sClassNameExpect = 'oxorder';
+        $sClassNameWhichExtends = 'oemodulenameoxorder_different3';
+        $oUtilsObject = $this->_prepareFakeModule($sClassName, $sClassNameWhichExtends);
+
+        $this->assertSame($sClassNameExpect, $oUtilsObject->getClassName($sClassName));
+    }
+
+    public function testGetClassName_classNotExistDoNotDisableModuleOnError_errorThrow()
+    {
+        $this->_setConfigFileParam('blDoNotDisableModuleOnError', true);
+
+        $sClassName = 'oxorder';
+        $sClassNameWhichExtends = 'oemodulenameoxorder_different4';
+        $oUtilsObject = $this->_prepareFakeModule($sClassName, $sClassNameWhichExtends);
+
+        try {
+            $oUtilsObject->getClassName($sClassName);
+        } catch (Exception $e) {
+            $this->assertEquals('EXCEPTION_SYSTEMCOMPONENT_CLASSNOTFOUND', $e->getMessage(), 'Exception message wrong.');
+
+            return;
+        }
+
+        $this->fail('Should throw exception as class does not exist and config parameter set to not disable module on error');
+    }
+
+    private function _setConfigFileParam($sParamName, $sParamValue)
+    {
+        $oConfigFile = new OxConfigFile(OX_BASE_PATH . "config.inc.php");
+        $oConfigFile->$sParamName = $sParamValue;
+        OxRegistry::set("OxConfigFile", $oConfigFile);
+    }
+
+    private function _prepareFakeModule($sClassToExtend, $sClassNameWhichExtends)
+    {
+        $aModulesArray = array(
+            $sClassToExtend => $sClassNameWhichExtends,
+        );
+
+        $oUtilsObject = new oxUtilsObject();
+        $oUtilsObject->setModuleVar('aModules', $aModulesArray);
+
+        $sFilePath = $this->getTestFilePath();
+        file_put_contents($sFilePath, '<?php class oemodulenameoxorder_different extends oemodulenameoxorder_parent {}');
+
+        return $oUtilsObject;
+    }
+
+    /**
+     * Get path to test file.
+     *
+     * @return string
+     */
+    private function getTestFilePath()
+    {
+        return $this->getConfig()->getConfigParam('sShopDir') . 'modules/oemodulenameoxorder.php';
     }
 }

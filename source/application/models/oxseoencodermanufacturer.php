@@ -1,40 +1,31 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
  * Seo encoder base
  *
- * @package model
  */
 class oxSeoEncoderManufacturer extends oxSeoEncoder
 {
-    /**
-     * Singleton instance.
-     *
-     * @var oxmanufacturer
-     */
-    protected static $_instance = null;
 
     /**
      * Root manufacturer uri cache
@@ -42,18 +33,6 @@ class oxSeoEncoderManufacturer extends oxSeoEncoder
      * @var array
      */
     protected $_aRootManufacturerUri = null;
-
-    /**
-     * Singleton method
-     *
-     * @deprecated since v5.0 (2012-08-10); Use oxRegistry::get("oxSeoEncoderManufacturer") instead.
-     *
-     * @return oxSeoEncoderManufacturer
-     */
-    public static function getInstance()
-    {
-        return oxRegistry::get("oxSeoEncoderManufacturer");
-    }
 
     /**
      * Returns target "extension" (/)
@@ -74,36 +53,37 @@ class oxSeoEncoderManufacturer extends oxSeoEncoder
      *
      * @return string
      */
-    public function getManufacturerUri( $oManufacturer, $iLang = null, $blRegenerate = false )
+    public function getManufacturerUri($oManufacturer, $iLang = null, $blRegenerate = false)
     {
         if (!isset($iLang)) {
             $iLang = $oManufacturer->getLanguage();
         }
         // load from db
-        if ( $blRegenerate || !( $sSeoUrl = $this->_loadFromDb( 'oxmanufacturer', $oManufacturer->getId(), $iLang ) ) ) {
+        if ($blRegenerate || !($sSeoUrl = $this->_loadFromDb('oxmanufacturer', $oManufacturer->getId(), $iLang))) {
 
-            if ( $iLang != $oManufacturer->getLanguage() ) {
+            if ($iLang != $oManufacturer->getLanguage()) {
                 $sId = $oManufacturer->getId();
                 $oManufacturer = oxNew('oxmanufacturer');
-                $oManufacturer->loadInLang( $iLang, $sId );
+                $oManufacturer->loadInLang($iLang, $sId);
             }
 
             $sSeoUrl = '';
-            if ( $oManufacturer->getId() != 'root' ) {
-                if ( !isset( $this->_aRootManufacturerUri[$iLang] ) ) {
+            if ($oManufacturer->getId() != 'root') {
+                if (!isset($this->_aRootManufacturerUri[$iLang])) {
                     $oRootManufacturer = oxNew('oxmanufacturer');
-                    $oRootManufacturer->loadInLang( $iLang, 'root' );
-                    $this->_aRootManufacturerUri[$iLang] = $this->getManufacturerUri( $oRootManufacturer, $iLang );
+                    $oRootManufacturer->loadInLang($iLang, 'root');
+                    $this->_aRootManufacturerUri[$iLang] = $this->getManufacturerUri($oRootManufacturer, $iLang);
                 }
                 $sSeoUrl .= $this->_aRootManufacturerUri[$iLang];
             }
 
-            $sSeoUrl .= $this->_prepareTitle( $oManufacturer->oxmanufacturers__oxtitle->value, false, $oManufacturer->getLanguage() ) .'/';
-            $sSeoUrl  = $this->_processSeoUrl( $sSeoUrl, $oManufacturer->getId(), $iLang );
+            $sSeoUrl .= $this->_prepareTitle($oManufacturer->oxmanufacturers__oxtitle->value, false, $oManufacturer->getLanguage()) . '/';
+            $sSeoUrl = $this->_processSeoUrl($sSeoUrl, $oManufacturer->getId(), $iLang);
 
             // save to db
-            $this->_saveToDb( 'oxmanufacturer', $oManufacturer->getId(), $oManufacturer->getBaseStdLink($iLang), $sSeoUrl, $iLang );
+            $this->_saveToDb('oxmanufacturer', $oManufacturer->getId(), $oManufacturer->getBaseStdLink($iLang), $sSeoUrl, $iLang);
         }
+
         return $sSeoUrl;
     }
 
@@ -117,7 +97,7 @@ class oxSeoEncoderManufacturer extends oxSeoEncoder
      *
      * @return string
      */
-    public function getManufacturerPageUrl( $oManufacturer, $iPage, $iLang = null, $blFixed = null )
+    public function getManufacturerPageUrl($oManufacturer, $iPage, $iLang = null, $blFixed = null)
     {
         if (!isset($iLang)) {
             $iLang = $oManufacturer->getLanguage();
@@ -125,13 +105,14 @@ class oxSeoEncoderManufacturer extends oxSeoEncoder
         $sStdUrl = $oManufacturer->getBaseStdLink($iLang) . '&amp;pgNr=' . $iPage;
         $sParams = $sParams = (int) ($iPage + 1);
 
-        $sStdUrl = $this->_trimUrl( $sStdUrl, $iLang );
-        $sSeoUrl = $this->getManufacturerUri( $oManufacturer, $iLang ) . $sParams . "/";
+        $sStdUrl = $this->_trimUrl($sStdUrl, $iLang);
+        $sSeoUrl = $this->getManufacturerUri($oManufacturer, $iLang) . $sParams . "/";
 
-        if ( $blFixed === null ) {
-            $blFixed = $this->_isFixed( 'oxmanufacturers', $oManufacturer->getId(), $iLang );
+        if ($blFixed === null) {
+            $blFixed = $this->_isFixed('oxmanufacturers', $oManufacturer->getId(), $iLang);
         }
-        return $this->_getFullUrl( $this->_getPageUri( $oManufacturer, 'oxmanufacturers', $sStdUrl, $sSeoUrl, $sParams, $iLang, $blFixed ), $iLang );
+
+        return $this->_getFullUrl($this->_getPageUri($oManufacturer, 'oxmanufacturers', $sStdUrl, $sSeoUrl, $sParams, $iLang, $blFixed), $iLang);
     }
 
     /**
@@ -142,25 +123,24 @@ class oxSeoEncoderManufacturer extends oxSeoEncoder
      *
      * @return null
      */
-    public function getManufacturerUrl( $oManufacturer, $iLang = null )
+    public function getManufacturerUrl($oManufacturer, $iLang = null)
     {
         if (!isset($iLang)) {
             $iLang = $oManufacturer->getLanguage();
         }
-        return $this->_getFullUrl( $this->getManufacturerUri( $oManufacturer, $iLang ), $iLang );
+
+        return $this->_getFullUrl($this->getManufacturerUri($oManufacturer, $iLang), $iLang);
     }
 
     /**
      * Deletes manufacturer seo entry
      *
      * @param oxmanufacturer $oManufacturer Manufacturer object
-     *
-     * @return null
      */
-    public function onDeleteManufacturer( $oManufacturer )
+    public function onDeleteManufacturer($oManufacturer)
     {
         $oDb = oxDb::getDb();
-        $sIdQuoted = $oDb->quote( $oManufacturer->getId() );
+        $sIdQuoted = $oDb->quote($oManufacturer->getId());
         $oDb->execute("delete from oxseo where oxobjectid = $sIdQuoted and oxtype = 'oxmanufacturer'");
         $oDb->execute("delete from oxobject2seodata where oxobjectid = $sIdQuoted");
     }
@@ -173,13 +153,14 @@ class oxSeoEncoderManufacturer extends oxSeoEncoder
      *
      * @return string
      */
-    protected function _getAltUri( $sObjectId, $iLang )
+    protected function _getAltUri($sObjectId, $iLang)
     {
         $sSeoUrl = null;
-        $oManufacturer = oxNew( "oxmanufacturer" );
-        if ( $oManufacturer->loadInLang( $iLang, $sObjectId ) ) {
-            $sSeoUrl = $this->getManufacturerUri( $oManufacturer, $iLang, true );
+        $oManufacturer = oxNew("oxmanufacturer");
+        if ($oManufacturer->loadInLang($iLang, $sObjectId)) {
+            $sSeoUrl = $this->getManufacturerUri($oManufacturer, $iLang, true);
         }
+
         return $sSeoUrl;
     }
 }

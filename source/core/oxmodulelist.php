@@ -1,33 +1,34 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
- * Class handling shop module list.
+ * Modules list class.
  *
+ * @internal Do not make a module extension for this class.
+ * @see      http://wiki.oxidforge.org/Tutorials/Core_OXID_eShop_classes:_must_not_be_extended
  */
 class oxModuleList extends oxSuperCfg
 {
+
     /**
      * Modules info array
      *
@@ -37,21 +38,37 @@ class oxModuleList extends oxSuperCfg
     protected $_aModules = array();
 
     /**
+     * All module extensions.
+     *
+     * @var array
+     */
+    protected $_aModuleExtensions = null;
+
+    /**
      * List of files that should be skipped while scanning module dir.
      *
      * @var array
      */
-    protected $_aSkipFiles = array( 'functions.php', 'vendormetadata.php' );
+    protected $_aSkipFiles = array('functions.php', 'vendormetadata.php');
 
+    /**
+     * Return array of modules
+     *
+     * @return array
+     */
+    public function getList()
+    {
+        return $this->_aModules;
+    }
 
     /**
      * Get parsed modules
      *
      * @return array
      */
-    public function getAllModules()
+    public function getModulesWithExtendedClass()
     {
-        return $this->getConfig()->getAllModules();
+        return $this->getConfig()->getModulesWithExtendedClass();
     }
 
     /**
@@ -61,17 +78,18 @@ class oxModuleList extends oxSuperCfg
      */
     public function getActiveModuleInfo()
     {
-        $aModulePaths   = $this->getModulePaths();
+        $aModulePaths = $this->getModulePaths();
 
         // Extract module paths from extended classes
-        if ( !is_array($aModulePaths) || count($aModulePaths) < 1 ) {
+        if (!is_array($aModulePaths) || count($aModulePaths) < 1) {
             $aModulePaths = $this->extractModulePaths();
         }
 
         $aDisabledModules = $this->getDisabledModules();
-        if ( is_array($aDisabledModules) && count($aDisabledModules) > 0  && count($aModulePaths) > 0 ) {
+        if (is_array($aDisabledModules) && count($aDisabledModules) > 0 && count($aModulePaths) > 0) {
             $aModulePaths = array_diff_key($aModulePaths, array_flip($aDisabledModules));
         }
+
         return $aModulePaths;
     }
 
@@ -83,17 +101,17 @@ class oxModuleList extends oxSuperCfg
     public function getDisabledModuleInfo()
     {
         $aDisabledModules = $this->getDisabledModules();
-        $aModulePaths     = array();
+        $aModulePaths = array();
 
-        if ( is_array($aDisabledModules) && count($aDisabledModules) > 0 ) {
-            $aModulePaths   = $this->getModulePaths();
+        if (is_array($aDisabledModules) && count($aDisabledModules) > 0) {
+            $aModulePaths = $this->getModulePaths();
 
             // Extract module paths from extended classes
-            if ( !is_array($aModulePaths) || count($aModulePaths) < 1 ) {
+            if (!is_array($aModulePaths) || count($aModulePaths) < 1) {
                 $aModulePaths = $this->extractModulePaths();
             }
 
-            if ( is_array($aModulePaths) || count($aModulePaths) > 0 ) {
+            if (is_array($aModulePaths) || count($aModulePaths) > 0) {
                 $aModulePaths = array_intersect_key($aModulePaths, array_flip($aDisabledModules));
             }
         }
@@ -112,13 +130,13 @@ class oxModuleList extends oxSuperCfg
     }
 
     /**
-     * Get legacy modules list
+     * Get the list of modules
      *
      * @return array
      */
-    public function getLegacyModules()
+    public function getModules()
     {
-        return $this->getConfig()->getConfigParam('aLegacyModules');
+        return $this->getConfig()->getConfigParam('aModules');
     }
 
     /**
@@ -128,7 +146,7 @@ class oxModuleList extends oxSuperCfg
      */
     public function getDisabledModules()
     {
-        return $this->getConfig()->getConfigParam('aDisabledModules');
+        return (array) $this->getConfig()->getConfigParam('aDisabledModules');
     }
 
     /**
@@ -158,7 +176,7 @@ class oxModuleList extends oxSuperCfg
      */
     public function extractModulePaths()
     {
-        $aModules     = $this->getAllModules();
+        $aModules = $this->getModulesWithExtendedClass();
         $aModulePaths = array();
 
         if (is_array($aModules) && count($aModules) > 0) {
@@ -169,6 +187,7 @@ class oxModuleList extends oxSuperCfg
                 }
             }
         }
+
         return $aModulePaths;
     }
 
@@ -179,7 +198,7 @@ class oxModuleList extends oxSuperCfg
      */
     public function getModuleFiles()
     {
-        return $this->getConfig()->getConfigParam('aModuleFiles');
+        return (array) $this->getConfig()->getConfigParam('aModuleFiles');
     }
 
     /**
@@ -203,8 +222,8 @@ class oxModuleList extends oxSuperCfg
     public function getDisabledModuleClasses()
     {
         $aDisabledModules = $this->getDisabledModules();
-        $aModules         = $this->getAllModules();
-        $aModulePaths     = $this->getModulePaths();
+        $aModules = $this->getModulesWithExtendedClass();
+        $aModulePaths = $this->getModulePaths();
 
         $aDisabledModuleClasses = array();
         if (isset($aDisabledModules) && is_array($aDisabledModules)) {
@@ -214,9 +233,9 @@ class oxModuleList extends oxSuperCfg
                 if (!isset($sPath)) {
                     $sPath = $sId;
                 }
-                foreach ( $aModules as $sClass => $aModuleClasses ) {
-                    foreach ( $aModuleClasses as $sModuleClass ) {
-                        if (strpos($sModuleClass, $sPath."/") === 0 ) {
+                foreach ($aModules as $aModuleClasses) {
+                    foreach ($aModuleClasses as $sModuleClass) {
+                        if (strpos($sModuleClass, $sPath . "/") === 0) {
                             $aDisabledModuleClasses[] = $sModuleClass;
                         }
                     }
@@ -229,68 +248,37 @@ class oxModuleList extends oxSuperCfg
 
     /**
      * Removes extension metadata from shop.
-     *
-     * @return null
      */
     public function cleanup()
     {
-        $aDeletedExt = $this->getDeletedExtensions();
+        $aDeletedModules = $this->getDeletedExtensions();
 
         //collecting deleted extension IDs
-        $aDeletedExtIds = $this->getDeletedExtensionIds($aDeletedExt);
+        $aDeletedModuleIds = array_keys($aDeletedModules);
 
         // removing from aModules config array
-        $this->_removeFromModulesArray( $aDeletedExt );
+        $this->_removeExtensions($aDeletedModuleIds);
 
         // removing from aDisabledModules array
-        $this->_removeFromDisabledModulesArray( $aDeletedExtIds );
-
-        // removing from aLegacyModules array
-        $this->_removeFromLegacyModulesArray( $aDeletedExtIds );
+        $this->_removeFromDisabledModulesArray($aDeletedModuleIds);
 
         // removing from aModulePaths array
-        $this->_removeFromModulesPathsArray( $aDeletedExtIds );
+        $this->_removeFromModulesPathsArray($aDeletedModuleIds);
 
         // removing from aModuleEvents array
-        $this->_removeFromModulesEventsArray( $aDeletedExtIds );
+        $this->_removeFromModulesEventsArray($aDeletedModuleIds);
 
         // removing from aModuleVersions array
-        $this->_removeFromModulesVersionsArray( $aDeletedExtIds );
+        $this->_removeFromModulesVersionsArray($aDeletedModuleIds);
 
         // removing from aModuleFiles array
-        $this->_removeFromModulesFilesArray( $aDeletedExtIds );
+        $this->_removeFromModulesFilesArray($aDeletedModuleIds);
 
         // removing from aModuleTemplates array
-        $this->_removeFromModulesTemplatesArray( $aDeletedExtIds );
+        $this->_removeFromModulesTemplatesArray($aDeletedModuleIds);
 
         //removing from config tables and templates blocks table
-        $this->_removeFromDatabase( $aDeletedExtIds );
-    }
-
-    /**
-     * Returns deleted extension Ids
-     *
-     * @param array $aDeletedExt deleted extensions
-     *
-     * @return array
-     */
-    public function getDeletedExtensionIds($aDeletedExt)
-    {
-        $aDeletedExtIds = array();
-        if ( !empty($aDeletedExt) ) {
-            $oModule = oxNew('oxModule');
-            foreach ( $aDeletedExt as $sOxClass => $aDeletedModules ) {
-                foreach ( $aDeletedModules as $sModulePath ) {
-                    $aDeletedExtIds[] = $oModule->getIdByPath($sModulePath);
-                }
-            }
-        }
-
-        if ( !empty( $aDeletedExtIds ) ) {
-            $aDeletedExtIds = array_unique( $aDeletedExtIds );
-        }
-
-        return $aDeletedExtIds;
+        $this->_removeFromDatabase($aDeletedModuleIds);
     }
 
     /**
@@ -300,14 +288,20 @@ class oxModuleList extends oxSuperCfg
      */
     public function getDeletedExtensions()
     {
-        $aModules = $this->getAllModules();
+        $oModuleValidatorFactory = $this->getModuleValidatorFactory();
+        $oModuleMetadataValidator = $oModuleValidatorFactory->getModuleMetadataValidator();
+        $aModulesIds = $this->getModuleIds();
+        $oModule = $this->getModule();
         $aDeletedExt = array();
 
-        foreach ( $aModules as $sOxClass => $aModulesList ) {
-            foreach ( $aModulesList as $sModulePath ) {
-                $sExtPath = $this->getConfig()->getModulesDir() . $sModulePath.'.php';
-                if ( !file_exists( $sExtPath ) ) {
-                    $aDeletedExt[$sOxClass][] = $sModulePath;
+        foreach ($aModulesIds as $sModuleId) {
+            $oModule->setModuleData(array('id' => $sModuleId));
+            if (!$oModuleMetadataValidator->validate($oModule)) {
+                $aDeletedExt[$sModuleId]['files'] = array($sModuleId . '/metadata.php');
+            } else {
+                $aInvalidExtensions = $this->_getInvalidExtensions($sModuleId);
+                if ($aInvalidExtensions) {
+                    $aDeletedExt[$sModuleId]['extensions'] = $aInvalidExtensions;
                 }
             }
         }
@@ -326,7 +320,7 @@ class oxModuleList extends oxSuperCfg
      */
     public function diffModuleArrays($aAllModuleArray, $aRemModuleArray)
     {
-       if (is_array($aAllModuleArray) && is_array($aRemModuleArray)) {
+        if (is_array($aAllModuleArray) && is_array($aRemModuleArray)) {
             foreach ($aAllModuleArray as $sClass => $aModuleChain) {
                 if (!is_array($aModuleChain)) {
                     $aModuleChain = array($aModuleChain);
@@ -348,8 +342,7 @@ class oxModuleList extends oxSuperCfg
                     $aAllModuleArray[$sClass] = $aModuleChain;
                 }
             }
-
-       }
+        }
 
         return $aAllModuleArray;
     }
@@ -369,158 +362,140 @@ class oxModuleList extends oxSuperCfg
                 $aModules[$sClass] = implode('&', $aModuleChain);
             }
         }
+
         return $aModules;
     }
 
     /**
-     * Removes extension from modules array
+     * Returns oxModule object.
      *
-     * @param array $aDeletedExt Deleted extension array
-     *
-     * @return null
+     * @return oxModule
      */
-    protected function _removeFromModulesArray( $aDeletedExt )
+    public function getModule()
     {
-        $aExt = $this->getAllModules();
-        $aUpdatedExt = $this->diffModuleArrays( $aExt, $aDeletedExt );
-        $aUpdatedExt = $this->buildModuleChains( $aUpdatedExt );
+        return oxNew('oxModule');
+    }
 
-        $this->getConfig()->saveShopConfVar( 'aarr', 'aModules', $aUpdatedExt );
+    /**
+     * Removes extension by given modules ids.
+     *
+     * @param array $aModuleIds Modules ids which must be deleted from config.
+     */
+    protected function _removeExtensions($aModuleIds)
+    {
+        $aModuleExtensions = $this->getModulesWithExtendedClass();
+        $aExtensionsToDelete = array();
+        foreach ($aModuleIds as $sModuleId) {
+            $aExtensionsToDelete = array_merge_recursive($aExtensionsToDelete, $this->getModuleExtensions($sModuleId));
+        }
+
+        $aUpdatedExtensions = $this->diffModuleArrays($aModuleExtensions, $aExtensionsToDelete);
+        $aUpdatedExtensionsChains = $this->buildModuleChains($aUpdatedExtensions);
+
+        $this->getConfig()->saveShopConfVar('aarr', 'aModules', $aUpdatedExtensionsChains);
     }
 
     /**
      * Removes extension from disabled modules array
      *
      * @param array $aDeletedExtIds Deleted extension id's of array
-     *
-     * @return null
      */
-    protected function _removeFromDisabledModulesArray( $aDeletedExtIds )
+    protected function _removeFromDisabledModulesArray($aDeletedExtIds)
     {
         $oConfig = $this->getConfig();
         $aDisabledExtensionIds = $this->getDisabledModules();
         $aDisabledExtensionIds = array_diff($aDisabledExtensionIds, $aDeletedExtIds);
-        $oConfig->saveShopConfVar( 'arr', 'aDisabledModules', $aDisabledExtensionIds );
-    }
-
-    /**
-     * Removes extension from legacy modules array
-     *
-     * @param array $aDeletedExtIds deleted extensions ID's
-     *
-     * @return null
-     */
-    protected function _removeFromLegacyModulesArray( $aDeletedExtIds )
-    {
-        $aLegacyExt = $this->getLegacyModules();
-
-        foreach ( $aDeletedExtIds as $sDeletedExtId ) {
-            if ( isset($aLegacyExt[$sDeletedExtId]) ) {
-                unset( $aLegacyExt[$sDeletedExtId] );
-            }
-        }
-
-        $this->getConfig()->saveShopConfVar( 'aarr', 'aLegacyModules', $aLegacyExt );
+        $oConfig->saveShopConfVar('arr', 'aDisabledModules', $aDisabledExtensionIds);
     }
 
     /**
      * Removes extension from modules paths array
      *
      * @param array $aDeletedModule deleted extensions ID's
-     *
-     * @return null
      */
-    protected function _removeFromModulesPathsArray( $aDeletedModule )
+    protected function _removeFromModulesPathsArray($aDeletedModule)
     {
         $aModulePaths = $this->getModulePaths();
 
-        foreach ( $aDeletedModule as $sDeletedModuleId ) {
-            if ( isset($aModulePaths[$sDeletedModuleId]) ) {
-                unset( $aModulePaths[$sDeletedModuleId] );
+        foreach ($aDeletedModule as $sDeletedModuleId) {
+            if (isset($aModulePaths[$sDeletedModuleId])) {
+                unset($aModulePaths[$sDeletedModuleId]);
             }
         }
 
-        $this->getConfig()->saveShopConfVar( 'aarr', 'aModulePaths', $aModulePaths );
+        $this->getConfig()->saveShopConfVar('aarr', 'aModulePaths', $aModulePaths);
     }
 
     /**
      * Removes extension from modules versions array
      *
      * @param array $aDeletedModule deleted extensions ID's
-     *
-     * @return null
      */
-    protected function _removeFromModulesVersionsArray( $aDeletedModule )
+    protected function _removeFromModulesVersionsArray($aDeletedModule)
     {
         $aModuleVersions = $this->getModuleVersions();
 
-        foreach ( $aDeletedModule as $sDeletedModuleId ) {
-            if ( isset($aModuleVersions[$sDeletedModuleId]) ) {
-                unset( $aModuleVersions[$sDeletedModuleId] );
+        foreach ($aDeletedModule as $sDeletedModuleId) {
+            if (isset($aModuleVersions[$sDeletedModuleId])) {
+                unset($aModuleVersions[$sDeletedModuleId]);
             }
         }
 
-        $this->getConfig()->saveShopConfVar( 'aarr', 'aModuleVersions', $aModuleVersions );
+        $this->getConfig()->saveShopConfVar('aarr', 'aModuleVersions', $aModuleVersions);
     }
 
     /**
      * Removes extension from modules events array
      *
      * @param array $aDeletedModule deleted extensions ID's
-     *
-     * @return null
      */
-    protected function _removeFromModulesEventsArray( $aDeletedModule )
+    protected function _removeFromModulesEventsArray($aDeletedModule)
     {
         $aModuleEvents = $this->getModuleEvents();
 
-        foreach ( $aDeletedModule as $sDeletedModuleId ) {
-            if ( isset($aModuleEvents[$sDeletedModuleId]) ) {
-                unset( $aModuleEvents[$sDeletedModuleId] );
+        foreach ($aDeletedModule as $sDeletedModuleId) {
+            if (isset($aModuleEvents[$sDeletedModuleId])) {
+                unset($aModuleEvents[$sDeletedModuleId]);
             }
         }
 
-        $this->getConfig()->saveShopConfVar( 'aarr', 'aModuleEvents', $aModuleEvents );
+        $this->getConfig()->saveShopConfVar('aarr', 'aModuleEvents', $aModuleEvents);
     }
 
     /**
      * Removes extension from modules files array
      *
      * @param array $aDeletedModule deleted extensions ID's
-     *
-     * @return null
      */
-    protected function _removeFromModulesFilesArray( $aDeletedModule )
+    protected function _removeFromModulesFilesArray($aDeletedModule)
     {
         $aModuleFiles = $this->getModuleFiles();
 
-        foreach ( $aDeletedModule as $sDeletedModuleId ) {
-            if ( isset($aModuleFiles[$sDeletedModuleId]) ) {
-                unset( $aModuleFiles[$sDeletedModuleId] );
+        foreach ($aDeletedModule as $sDeletedModuleId) {
+            if (isset($aModuleFiles[$sDeletedModuleId])) {
+                unset($aModuleFiles[$sDeletedModuleId]);
             }
         }
 
-        $this->getConfig()->saveShopConfVar( 'aarr', 'aModuleFiles', $aModuleFiles );
+        $this->getConfig()->saveShopConfVar('aarr', 'aModuleFiles', $aModuleFiles);
     }
 
     /**
-     * Removes extension from legacy modules templates array
+     * Removes extension from modules templates array
      *
      * @param array $aDeletedModule deleted extensions ID's
-     *
-     * @return null
      */
-    protected function _removeFromModulesTemplatesArray( $aDeletedModule )
+    protected function _removeFromModulesTemplatesArray($aDeletedModule)
     {
         $aModuleTemplates = $this->getModuleTemplates();
 
-        foreach ( $aDeletedModule as $sDeletedModuleId ) {
-            if ( isset($aModuleTemplates[$sDeletedModuleId]) ) {
-                unset( $aModuleTemplates[$sDeletedModuleId] );
+        foreach ($aDeletedModule as $sDeletedModuleId) {
+            if (isset($aModuleTemplates[$sDeletedModuleId])) {
+                unset($aModuleTemplates[$sDeletedModuleId]);
             }
         }
 
-        $this->getConfig()->saveShopConfVar( 'aarr', 'aModuleTemplates', $aModuleTemplates );
+        $this->getConfig()->saveShopConfVar('aarr', 'aModuleTemplates', $aModuleTemplates);
     }
 
     /**
@@ -530,29 +505,29 @@ class oxModuleList extends oxSuperCfg
      *
      * @return null
      */
-    protected function _removeFromDatabase( $aDeletedExtIds )
+    protected function _removeFromDatabase($aDeletedExtIds)
     {
-        if ( !is_array($aDeletedExtIds) || !count($aDeletedExtIds) ) {
+        if (!is_array($aDeletedExtIds) || !count($aDeletedExtIds)) {
             return;
         }
 
         $oDb = oxDb::getDb();
 
         $aConfigIds = $sDelExtIds = array();
-        foreach ( $aDeletedExtIds as $sDeletedExtId ) {
-            $aConfigIds[] = $oDb->quote('module:'.$sDeletedExtId);
+        foreach ($aDeletedExtIds as $sDeletedExtId) {
+            $aConfigIds[] = $oDb->quote('module:' . $sDeletedExtId);
             $sDelExtIds[] = $oDb->quote($sDeletedExtId);
         }
 
-        $sConfigIds = implode( ', ', $aConfigIds );
-        $sDelExtIds = implode( ', ', $sDelExtIds );
+        $sConfigIds = implode(', ', $aConfigIds);
+        $sDelExtIds = implode(', ', $sDelExtIds);
 
         $aSql[] = "DELETE FROM oxconfig where oxmodule IN ($sConfigIds)";
         $aSql[] = "DELETE FROM oxconfigdisplay where oxcfgmodule IN ($sConfigIds)";
         $aSql[] = "DELETE FROM oxtplblocks where oxmodule IN ($sDelExtIds)";
 
-        foreach ( $aSql as $sQuery ) {
-            $oDb->execute( $sQuery );
+        foreach ($aSql as $sQuery) {
+            $oDb->execute($sQuery);
         }
     }
 
@@ -565,51 +540,107 @@ class oxModuleList extends oxSuperCfg
      *
      * @return array
      */
-    public function getModulesFromDir( $sModulesDir, $sVendorDir = null )
+    public function getModulesFromDir($sModulesDir, $sVendorDir = null)
     {
-        $sModulesDir  = oxRegistry::get('oxUtilsFile')->normalizeDir( $sModulesDir );
+        $sModulesDir = oxRegistry::get('oxUtilsFile')->normalizeDir($sModulesDir);
 
-        foreach ( glob( $sModulesDir.'*' ) as $sModuleDirPath ) {
+        foreach (glob($sModulesDir . '*') as $sModuleDirPath) {
 
-            $sModuleDirPath .= ( is_dir( $sModuleDirPath ) ) ?'/':'';
-            $sModuleDirName  = basename( $sModuleDirPath );
+            $sModuleDirPath .= (is_dir($sModuleDirPath)) ? '/' : '';
+            $sModuleDirName = basename($sModuleDirPath);
 
             // skipping some file
-            if ( in_array( $sModuleDirName, $this->_aSkipFiles ) || (!is_dir( $sModuleDirPath ) && substr($sModuleDirName, -4) != ".php")) {
+            if (in_array($sModuleDirName, $this->_aSkipFiles) || (!is_dir($sModuleDirPath) && substr($sModuleDirName, -4) != ".php")) {
                 continue;
             }
 
-            if ( $this->_isVendorDir( $sModuleDirPath ) ) {
+            if ($this->_isVendorDir($sModuleDirPath)) {
                 // scanning modules vendor directory
-                $this->getModulesFromDir( $sModuleDirPath, basename( $sModuleDirPath ) );
+                $this->getModulesFromDir($sModuleDirPath, basename($sModuleDirPath));
             } else {
                 // loading module info
-                $oModule = oxNew( 'oxModule' );
-                $sModuleDirName = ( !empty($sVendorDir) ) ? $sVendorDir.'/'.$sModuleDirName : $sModuleDirName;
-                $oModule->loadByDir( $sModuleDirName );
-                $sModuleId = $oModule->getId();
-                $this->_aModules[$sModuleId] = $oModule;
+                $oModule = $this->getModule();
+                $sModuleDirName = (!empty($sVendorDir)) ? $sVendorDir . '/' . $sModuleDirName : $sModuleDirName;
+                if ($oModule->loadByDir($sModuleDirName)) {
+                    $sModuleId = $oModule->getId();
+                    $this->_aModules[$sModuleId] = $oModule;
 
-                $aModulePaths = $this->getModulePaths();
+                    $aModulePaths = $this->getModulePaths();
 
-                if ( !is_array($aModulePaths) || !array_key_exists( $sModuleId, $aModulePaths ) ) {
-                    // saving module path info
-                    $this->_saveModulePath( $sModuleId, $sModuleDirName );
+                    if (!is_array($aModulePaths) || !array_key_exists($sModuleId, $aModulePaths)) {
+                        // saving module path info
+                        $this->_saveModulePath($sModuleId, $sModuleDirName);
 
-                    //checking if this is new module and if it extends any eshop class
-                    if ( !$this->_extendsClasses( $sModuleDirName ) ) {
-                        // if not - marking it as disabled by default
-                        $oModule->deactivate();
+                        //checking if this is new module and if it extends any eshop class
+                        if (!$this->_extendsClasses($sModuleDirName)) {
+                            // if not - marking it as disabled by default
+
+                            /** @var oxModuleCache $oModuleCache */
+                            $oModuleCache = oxNew('oxModuleCache', $oModule);
+                            /** @var oxModuleInstaller $oModuleInstaller */
+                            $oModuleInstaller = oxNew('oxModuleInstaller', $oModuleCache);
+
+                            $oModuleInstaller->deactivate($oModule);
+                        }
                     }
                 }
             }
         }
         // sorting by name
-        if ( $this->_aModules !== null ) {
+        if ($this->_aModules !== null) {
             uasort($this->_aModules, array($this, '_sortModules'));
         }
 
         return $this->_aModules;
+    }
+
+    /**
+     * Gets module validator factory.
+     *
+     * @return oxModuleValidatorFactory
+     */
+    public function getModuleValidatorFactory()
+    {
+        return oxNew('oxModuleValidatorFactory');
+    }
+
+    /**
+     * Returns module ids which have extensions or files.
+     *
+     * @return array
+     */
+    public function getModuleIds()
+    {
+        $aModuleIdsFromExtensions = $this->_getModuleIdsFromExtensions($this->getModulesWithExtendedClass());
+        $aModuleIdsFromFiles = array_keys($this->getModuleFiles());
+
+        return array_unique(array_merge($aModuleIdsFromExtensions, $aModuleIdsFromFiles));
+    }
+
+    /**
+     * Returns module extensions.
+     *
+     * @param string $sModuleId
+     *
+     * @return array
+     */
+    public function getModuleExtensions($sModuleId)
+    {
+        if (!isset($this->_aModuleExtensions)) {
+            $aModuleExtension = $this->getConfig()->getModulesWithExtendedClass();
+            $oModule = $this->getModule();
+            $aExtension = array();
+            foreach ($aModuleExtension as $sOxClass => $aFiles) {
+                foreach ($aFiles as $sFilePath) {
+                    $sId = $oModule->getIdByPath($sFilePath);
+                    $aExtension[$sId][$sOxClass][] = $sFilePath;
+                }
+            }
+
+            $this->_aModuleExtensions = $aExtension;
+        }
+
+        return $this->_aModuleExtensions[$sModuleId] ? $this->_aModuleExtensions[$sModuleId] : array();
     }
 
     /**
@@ -620,7 +651,7 @@ class oxModuleList extends oxSuperCfg
      *
      * @return bool
      */
-    protected function _sortModules( $oModule1, $oModule2 )
+    protected function _sortModules($oModule1, $oModule2)
     {
         return strcasecmp($oModule1->getTitle(), $oModule2->getTitle());
     }
@@ -632,9 +663,9 @@ class oxModuleList extends oxSuperCfg
      *
      * @return bool
      */
-    protected function _isVendorDir( $sModuleDir )
+    protected function _isVendorDir($sModuleDir)
     {
-        if ( is_dir( $sModuleDir ) && file_exists( $sModuleDir . 'vendormetadata.php' ) ) {
+        if (is_dir($sModuleDir) && file_exists($sModuleDir . 'vendormetadata.php')) {
             return true;
         }
 
@@ -648,13 +679,13 @@ class oxModuleList extends oxSuperCfg
      *
      * @return bool
      */
-    protected function _extendsClasses ( $sModuleDir )
+    protected function _extendsClasses($sModuleDir)
     {
-        $aModules = $this->getConfig()->getConfigParam( 'aModules' );
+        $aModules = $this->getConfig()->getConfigParam('aModules');
         if (is_array($aModules)) {
-            $sModules = implode( '&', $aModules );
+            $sModules = implode('&', $aModules);
 
-            if ( preg_match("@(^|&+)".$sModuleDir."\b@", $sModules ) ) {
+            if (preg_match("@(^|&+)" . $sModuleDir . "\b@", $sModules)) {
                 return true;
             }
         }
@@ -667,15 +698,57 @@ class oxModuleList extends oxSuperCfg
      *
      * @param string $sModuleId   Module ID
      * @param string $sModulePath Module path
-     *
-     * @return null
      */
-    protected function _saveModulePath( $sModuleId, $sModulePath )
+    protected function _saveModulePath($sModuleId, $sModulePath)
     {
         $aModulePaths = $this->getModulePaths();
 
         $aModulePaths[$sModuleId] = $sModulePath;
-        $this->getConfig()->saveShopConfVar( 'aarr', 'aModulePaths', $aModulePaths );
+        $this->getConfig()->saveShopConfVar('aarr', 'aModulePaths', $aModulePaths);
     }
 
+    /**
+     * Returns module ids which have extensions.
+     *
+     * @param array $aData Data
+     *
+     * @return array
+     */
+    private function _getModuleIdsFromExtensions($aData)
+    {
+        $aModuleIds = array();
+        $oModule = $this->getModule();
+        foreach ($aData as $aModule) {
+            foreach ($aModule as $sFilePath) {
+                $sModuleId = $oModule->getIdByPath($sFilePath);
+                $aModuleIds[] = $sModuleId;
+            }
+        }
+
+        return $aModuleIds;
+    }
+
+    /**
+     * Returns invalid extensions array by module id.
+     *
+     * @param string $sModuleId Module id
+     *
+     * @return array
+     */
+    private function _getInvalidExtensions($sModuleId)
+    {
+        $aModules = $this->getModuleExtensions($sModuleId);
+        $aDeletedExt = array();
+
+        foreach ($aModules as $sOxClass => $aModulesList) {
+            foreach ($aModulesList as $sModulePath) {
+                $sExtPath = $this->getConfig()->getModulesDir() . $sModulePath . '.php';
+                if (!file_exists($sExtPath)) {
+                    $aDeletedExt[$sOxClass][] = $sModulePath;
+                }
+            }
+        }
+
+        return $aDeletedExt;
+    }
 }

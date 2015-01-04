@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   admin
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: deliveryset_main.php 25466 2010-02-01 14:12:07Z alfonsas $
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -27,11 +25,20 @@
  * There is possibility to change deliveryset name, article, user
  * and etc.
  * Admin Menu: Shop settings -> Shipping & Handling -> Main Sets.
- * @package admin
  */
 class Module_Config extends Shop_Config
 {
+
     protected $_sModule = 'shop_config.tpl';
+
+    /**
+     * Add additional config type for modules.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->_aConfParams['password'] = 'confpassword';
+    }
 
     /**
      * Executes parent method parent::render(), creates deliveryset category tree,
@@ -41,33 +48,33 @@ class Module_Config extends Shop_Config
      */
     public function render()
     {
-        $myConfig  = $this->getConfig();
+        $myConfig = $this->getConfig();
 
-        $sModuleId  = $this->_sModuleId = $this->getEditObjectId();
+        $sModuleId = $this->_sModuleId = $this->getEditObjectId();
         $sShopId = $myConfig->getShopId();
 
-        $oModule = oxNew( 'oxModule' );
+        $oModule = oxNew('oxModule');
 
-        if ( $sModuleId && $oModule->load( $sModuleId ) ) {
+        if ($sModuleId && $oModule->load($sModuleId)) {
             try {
                 $aDbVariables = $this->_loadMetadataConfVars($oModule->getInfo("settings"));
 
                 $this->_aViewData["var_constraints"] = $aDbVariables['constraints'];
-                $this->_aViewData["var_grouping"]    = $aDbVariables['grouping'];
+                $this->_aViewData["var_grouping"] = $aDbVariables['grouping'];
                 $iCount = 0;
                 foreach ($this->_aConfParams as $sType => $sParam) {
                     $this->_aViewData[$sParam] = $aDbVariables['vars'][$sType];
                     $iCount += count($aDbVariables['vars'][$sType]);
                 }
             } catch (oxException $oEx) {
-                oxRegistry::get("oxUtilsView")->addErrorToDisplay( $oEx );
+                oxRegistry::get("oxUtilsView")->addErrorToDisplay($oEx);
                 $oEx->debugOut();
             }
         } else {
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay( new oxException('EXCEPTION_MODULE_NOT_LOADED') );
+            oxRegistry::get("oxUtilsView")->addErrorToDisplay(new oxException('EXCEPTION_MODULE_NOT_LOADED'));
         }
 
-        $this->_aViewData["oModule"] =  $oModule;
+        $this->_aViewData["oModule"] = $oModule;
 
         return 'module_config.tpl';
     }
@@ -95,56 +102,62 @@ class Module_Config extends Shop_Config
      */
     public function _loadMetadataConfVars($aModuleSettings)
     {
-        $oConfig  = $this->getConfig();
+        $oConfig = $this->getConfig();
 
         $aConfVars = array(
-            "bool"    => array(),
-            "str"     => array(),
-            "arr"     => array(),
-            "aarr"    => array(),
-            "select"  => array(),
+            "bool"     => array(),
+            "str"      => array(),
+            "arr"      => array(),
+            "aarr"     => array(),
+            "select"   => array(),
+            "password" => array(),
         );
         $aVarConstraints = array();
-        $aGrouping       = array();
-        
+        $aGrouping = array();
+
         $aDbVariables = $this->loadConfVars($oConfig->getShopId(), $this->_getModuleForConfigVars());
 
-        if ( is_array($aModuleSettings) ) {
+        if (is_array($aModuleSettings)) {
 
-            foreach ( $aModuleSettings as $aValue ) {
-
-                $sName       = $aValue["name"];
-                $sType       = $aValue["type"];
+            foreach ($aModuleSettings as $aValue) {
+                $sName = $aValue["name"];
+                $sType = $aValue["type"];
                 $sValue = null;
-                //$sValue      = is_null($oConfig->getConfigParam($sName))?$aValue["value"]:$oConfig->getConfigParam($sName);
-                if (is_null($oConfig->getConfigParam($sName)) ) {
-                    switch ($aValue["type"]){
+                if (is_null($oConfig->getConfigParam($sName))) {
+                    switch ($aValue["type"]) {
                         case "arr":
-                            $sValue = $this->_arrayToMultiline( unserialize( $aValue["value"] ) );
+                            $sValue = $this->_arrayToMultiline($aValue["value"]);
                             break;
                         case "aarr":
-                            $sValue = $this->_aarrayToMultiline( unserialize( $aValue["value"] ) );
+                            $sValue = $this->_aarrayToMultiline($aValue["value"]);
+                            break;
+                        case "bool":
+                            $sValue = filter_var($aValue["value"], FILTER_VALIDATE_BOOLEAN);
+                            break;
+                        default:
+                            $sValue = $aValue["value"];
                             break;
                     }
-                    $sValue = getStr()->htmlentities( $sValue );
+                    $sValue = getStr()->htmlentities($sValue);
                 } else {
-                    $sValue = $aDbVariables['vars'][$sType][$sName];
+                    $sDbType = $this->_getDbConfigTypeName($sType);
+                    $sValue = $aDbVariables['vars'][$sDbType][$sName];
                 }
-                
-                $sGroup      = $aValue["group"];
+
+                $sGroup = $aValue["group"];
 
                 $sConstraints = "";
-                if ( $aValue["constraints"] ) {
+                if ($aValue["constraints"]) {
                     $sConstraints = $aValue["constraints"];
-                } elseif ( $aValue["constrains"] ) {
+                } elseif ($aValue["constrains"]) {
                     $sConstraints = $aValue["constrains"];
                 }
 
                 $aConfVars[$sType][$sName] = $sValue;
-                $aVarConstraints[$sName]   = $this->_parseConstraint( $sType, $sConstraints );
+                $aVarConstraints[$sName] = $this->_parseConstraint($sType, $sConstraints);
                 if ($sGroup) {
                     if (!isset($aGrouping[$sGroup])) {
-                        $aGrouping[$sGroup] = array($sName=>$sType);
+                        $aGrouping[$sGroup] = array($sName => $sType);
                     } else {
                         $aGrouping[$sGroup][$sName] = $sType;
                     }
@@ -162,33 +175,49 @@ class Module_Config extends Shop_Config
 
     /**
      * Saves shop configuration variables
-     *
-     * @return null
      */
     public function saveConfVars()
     {
-        $myConfig = $this->getConfig();
+        $oConfig = $this->getConfig();
 
 
-        $sModuleId  = $this->_sModuleId = $this->getEditObjectId();
-        $sShopId = $myConfig->getShopId();
+        $sModuleId = $this->_sModuleId = $this->getEditObjectId();
+        $sShopId = $oConfig->getShopId();
 
         $sModuleId = $this->_getModuleForConfigVars();
 
         foreach ($this->_aConfParams as $sType => $sParam) {
-            $aConfVars = oxConfig::getParameter($sParam);
+            $aConfVars = $oConfig->getRequestParameter($sParam);
             if (is_array($aConfVars)) {
-                foreach ( $aConfVars as $sName => $sValue ) {
-                    $myConfig->saveShopConfVar(
-                            $sType,
-                            $sName,
-                            $this->_serializeConfVar($sType, $sName, $sValue),
-                            $sShopId,
-                            $sModuleId
+                foreach ($aConfVars as $sName => $sValue) {
+                    $sDbType = $this->_getDbConfigTypeName($sType);
+                    $oConfig->saveShopConfVar(
+                        $sDbType,
+                        $sName,
+                        $this->_serializeConfVar($sDbType, $sName, $sValue),
+                        $sShopId,
+                        $sModuleId
                     );
                 }
             }
         }
+    }
+
+    /**
+     * Convert metadata type to DB type.
+     *
+     * @param string $sType Metadata type.
+     *
+     * @return string
+     */
+    private function _getDbConfigTypeName($sType)
+    {
+        $sDbType = $sType;
+        if ($sType === 'password') {
+            $sDbType = 'str';
+        }
+
+        return $sDbType;
     }
 
 }

@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: OxConfigFile 43119 12.6.6 tomas $
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -27,6 +25,7 @@
  */
 class OxConfigFile
 {
+
     /**
      * Performs variable loading from configuration file by including the php file.
      * It works with current configuration file format well,
@@ -34,8 +33,6 @@ class OxConfigFile
      * this method is a subject to be changed.
      *
      * @param string $sFileName Configuration file name
-     *
-     * @return null
      */
     private function _loadVars($sFileName)
     {
@@ -73,8 +70,6 @@ class OxConfigFile
      *
      * @param string $sVarName Variable name
      * @param string $sValue   Variable value
-     *
-     * @return null
      */
     public function setVar($sVarName, $sValue)
     {
@@ -106,16 +101,14 @@ class OxConfigFile
     }
 
     /**
-      * Sets custom config file to include
-      *
-      * @param string $sFileName custom configuration file name
-      *
-      * @return null
-      */
-    public function setFile( $sFileName )
+     * Sets custom config file to include
+     *
+     * @param string $sFileName custom configuration file name
+     */
+    public function setFile($sFileName)
     {
-        if ( is_readable( $sFileName ) ) {
-            $this->_loadVars( $sFileName );
+        if (is_readable($sFileName)) {
+            $this->_loadVars($sFileName);
         }
     }
 }

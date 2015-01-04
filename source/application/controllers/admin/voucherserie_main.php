@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   admin
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -27,10 +25,10 @@
  * There is possibility to change voucherserie name, description, valid terms
  * and etc.
  * Admin Menu: Shop Settings -> Vouchers -> Main.
- * @package admin
  */
 class VoucherSerie_Main extends DynExportBase
 {
+
     /**
      * Export class name
      *
@@ -64,11 +62,11 @@ class VoucherSerie_Main extends DynExportBase
         parent::render();
 
         $soxId = $this->_aViewData["oxid"] = $this->getEditObjectId();
-        if ( $soxId != "-1" && isset( $soxId ) ) {
+        if ($soxId != "-1" && isset($soxId)) {
             // load object
-            $oVoucherSerie = oxNew( "oxvoucherserie" );
-            $oVoucherSerie->load( $soxId );
-            $this->_aViewData["edit"]   = $oVoucherSerie;
+            $oVoucherSerie = oxNew("oxvoucherserie");
+            $oVoucherSerie->load($soxId);
+            $this->_aViewData["edit"] = $oVoucherSerie;
 
         }
 
@@ -86,13 +84,13 @@ class VoucherSerie_Main extends DynExportBase
 
         // Parameter Processing
         $soxId = $this->getEditObjectId();
-        $aSerieParams   = oxConfig::getParameter("editval");
+        $aSerieParams = oxRegistry::getConfig()->getRequestParameter("editval");
 
         // Voucher Serie Processing
-        $oVoucherSerie = oxNew( "oxvoucherserie" );
+        $oVoucherSerie = oxNew("oxvoucherserie");
         // if serie already exist use it
-        if ( $soxId != "-1" ) {
-            $oVoucherSerie->load( $soxId );
+        if ($soxId != "-1") {
+            $oVoucherSerie->load($soxId);
         } else {
             $aSerieParams["oxvoucherseries__oxid"] = null;
         }
@@ -101,11 +99,11 @@ class VoucherSerie_Main extends DynExportBase
 
         $aSerieParams["oxvoucherseries__oxdiscount"] = abs($aSerieParams["oxvoucherseries__oxdiscount"]);
 
-        $oVoucherSerie->assign( $aSerieParams );
+        $oVoucherSerie->assign($aSerieParams);
         $oVoucherSerie->save();
 
         // set oxid if inserted
-        $this->setEditObjectId( $oVoucherSerie->getId() );
+        $this->setEditObjectId($oVoucherSerie->getId());
     }
 
     /**
@@ -115,15 +113,13 @@ class VoucherSerie_Main extends DynExportBase
      */
     public function getStatus()
     {
-        if ( $oSerie = $this->_getVoucherSerie() ) {
-           return $oSerie->countVouchers();
+        if ($oSerie = $this->_getVoucherSerie()) {
+            return $oSerie->countVouchers();
         }
     }
 
     /**
      * Overriding parent function, doing nothing..
-     *
-     * @return null
      */
     public function prepareExport()
     {
@@ -137,34 +133,33 @@ class VoucherSerie_Main extends DynExportBase
      */
     protected function _getVoucherSerie()
     {
-        if ( $this->_oVoucherSerie == null ) {
-            $oVoucherSerie = oxNew( "oxvoucherserie" );
-            $sId = oxConfig::getParameter( "voucherid" );
-            if ( $oVoucherSerie->load( $sId ? $sId : oxSession::getVar( "voucherid" ) ) ) {
+        if ($this->_oVoucherSerie == null) {
+            $oVoucherSerie = oxNew("oxvoucherserie");
+            $sId = oxRegistry::getConfig()->getRequestParameter("voucherid");
+            if ($oVoucherSerie->load($sId ? $sId : oxRegistry::getSession()->getVariable("voucherid"))) {
                 $this->_oVoucherSerie = $oVoucherSerie;
             }
         }
+
         return $this->_oVoucherSerie;
     }
 
     /**
      * Prepares Export
-     *
-     * @return null
      */
     public function start()
     {
         $this->_aViewData['refresh'] = 0;
-        $this->_aViewData['iStart']  = 0;
+        $this->_aViewData['iStart'] = 0;
         $iEnd = $this->prepareExport();
-        oxSession::setVar( "iEnd", $iEnd );
+        oxRegistry::getSession()->setVariable("iEnd", $iEnd);
         $this->_aViewData['iEnd'] = $iEnd;
 
         // saving export info
-        oxSession::setVar( "voucherid", oxConfig::getParameter( "voucherid" ) );
-        oxSession::setVar( "voucherAmount", abs( (int) oxConfig::getParameter( "voucherAmount" ) ) );
-        oxSession::setVar( "randomVoucherNr", oxConfig::getParameter( "randomVoucherNr" ) );
-        oxSession::setVar( "voucherNr", oxConfig::getParameter( "voucherNr" ) );
+        oxRegistry::getSession()->setVariable("voucherid", oxRegistry::getConfig()->getRequestParameter("voucherid"));
+        oxRegistry::getSession()->setVariable("voucherAmount", abs((int) oxRegistry::getConfig()->getRequestParameter("voucherAmount")));
+        oxRegistry::getSession()->setVariable("randomVoucherNr", oxRegistry::getConfig()->getRequestParameter("randomVoucherNr"));
+        oxRegistry::getSession()->setVariable("voucherNr", oxRegistry::getConfig()->getRequestParameter("voucherNr"));
     }
 
     /**

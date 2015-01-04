@@ -1,32 +1,28 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
-
-require_once realpath( "." ).'/unit/OxidTestCase.php';
-require_once realpath( "." ).'/unit/test_config.inc.php';
 
 class Unit_Core_oxfieldTest extends OxidTestCase
 {
+
     public function test_construct()
     {
         $oField = new oxField('ssss<');
@@ -67,13 +63,13 @@ class Unit_Core_oxfieldTest extends OxidTestCase
 
         $sRawValue = '05.05.2008 10:02:02';
         $sValue = '05.05.2008 10:02:02';
-        if ( oxLang::getInstance()->getBaseLanguage() == 1 ) {
+        if (oxRegistry::getLang()->getBaseLanguage() == 1) {
             $sRawValue = '2008-05-05 10:02:02';
             $sValue = '2008-05-05 10:02:02';
         }
 
-        $this->assertEquals( $sRawValue, $oField->rawValue);
-        $this->assertEquals( $sValue, $oField->value);
+        $this->assertEquals($sRawValue, $oField->rawValue);
+        $this->assertEquals($sValue, $oField->value);
     }
 
     public function testConvertToPseudoHtml()
@@ -116,6 +112,6 @@ class Unit_Core_oxfieldTest extends OxidTestCase
     public function testToString()
     {
         $oField = new oxField(451);
-        $this->assertSame("451", (string)$oField);
+        $this->assertSame("451", (string) $oField);
     }
 }

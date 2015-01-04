@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   views
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -28,19 +26,23 @@
  */
 class News extends oxUBase
 {
+
     /**
      * Newslist
+     *
      * @var object
      */
     protected $_oNewsList = null;
     /**
      * Current class login template name.
+     *
      * @var string
      */
     protected $_sThisTemplate = 'page/info/news.tpl';
 
     /**
      * Sign if to load and show bargain action
+     *
      * @var bool
      */
     protected $_blBargainAction = true;
@@ -48,12 +50,14 @@ class News extends oxUBase
 
     /**
      * Page navigation
+     *
      * @var object
      */
     protected $_oPageNavigation = null;
 
     /**
      * Number of possible pages.
+     *
      * @var integer
      */
     protected $_iCntPages = null;
@@ -65,20 +69,20 @@ class News extends oxUBase
      */
     public function getNews()
     {
-        if ( $this->_oNewsList === null ) {
+        if ($this->_oNewsList === null) {
             $this->_oNewsList = false;
 
-            $iPerPage = (int) $this->getConfig()->getConfigParam( 'iNrofCatArticles' );
+            $iPerPage = (int) $this->getConfig()->getConfigParam('iNrofCatArticles');
             $iPerPage = $iPerPage ? $iPerPage : 10;
 
-            $oActNews = oxNew( 'oxnewslist' );
+            $oActNews = oxNew('oxnewslist');
 
-            if ( $iCnt = $oActNews->getCount() ) {
+            if ($iCnt = $oActNews->getCount()) {
 
-                 $this->_iCntPages = round( $iCnt / $iPerPage + 0.49 );
+                $this->_iCntPages = round($iCnt / $iPerPage + 0.49);
 
-                 $oActNews->loadNews( $this->getActPage() * $iPerPage, $iPerPage );
-                 $this->_oNewsList = $oActNews;
+                $oActNews->loadNews($this->getActPage() * $iPerPage, $iPerPage);
+                $this->_oNewsList = $oActNews;
             }
         }
 
@@ -94,10 +98,14 @@ class News extends oxUBase
     public function getBreadCrumb()
     {
         $aPaths = array();
-        $aPath  = array();
+        $aPath = array();
 
-        $aPath['title'] = oxRegistry::getLang()->translateString( 'LATEST_NEWS_AND_UPDATES_AT', oxRegistry::getLang()->getBaseLanguage(), false );
-        $aPath['link']  = $this->getLink();
+        $oLang = oxRegistry::getLang();
+        $iBaseLanguage = $oLang->getBaseLanguage();
+        $sTranslatedString = $oLang->translateString('LATEST_NEWS_AND_UPDATES_AT', $iBaseLanguage, false);
+
+        $aPath['title'] = $sTranslatedString . ' ' . $this->getConfig()->getActiveShop()->oxshops__oxname->value;
+        $aPath['link'] = $this->getLink();
 
         $aPaths[] = $aPath;
 
@@ -111,7 +119,7 @@ class News extends oxUBase
      */
     public function getPageNavigation()
     {
-        if ( $this->_oPageNavigation === null ) {
+        if ($this->_oPageNavigation === null) {
             $this->_oPageNavigation = false;
             $this->_oPageNavigation = $this->generatePageNavigation();
         }
@@ -119,4 +127,17 @@ class News extends oxUBase
         return $this->_oPageNavigation;
     }
 
+    /**
+     * Page title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        $oLang = oxRegistry::getLang();
+        $iBaseLanguage = $oLang->getBaseLanguage();
+        $sTranslatedString = $oLang->translateString('LATEST_NEWS_AND_UPDATES_AT', $iBaseLanguage, false);
+
+        return $sTranslatedString . ' ' . $this->getConfig()->getActiveShop()->oxshops__oxname->value;
+    }
 }

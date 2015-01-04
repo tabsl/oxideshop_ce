@@ -1,58 +1,38 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
  * Class, responsible for retrieving correct vat for users and articles
  *
- * @package model
  */
 class oxVatSelector extends oxSuperCfg
 {
+
     /**
      * State is VAT calculation for category is set
+     *
      * @var bool
      */
     protected $_blCatVatSet = null;
-
-    /**
-     * oxVatSelector instance
-     *
-     * @var oxVatSelector
-     */
-    protected static $_instance = null;
-
-    /**
-     * Returns singleton oxVatSelector object instance or create new if needed
-     *
-     * @deprecated since v5.0 (2012-08-10); Use oxRegistry::get("oxVatSelector") instead.
-     *
-     * @return oxVatSelector
-     */
-    public static function getInstance()
-    {
-        return oxRegistry::get("oxVatSelector");
-    }
 
     /**
      * keeps loaded user Vats for later reusage
@@ -70,12 +50,13 @@ class oxVatSelector extends oxSuperCfg
      * @throws oxObjectException if wrong country
      * @return double | false
      */
-    public function getUserVat( oxUser $oUser, $blCacheReset = false )
+    public function getUserVat(oxUser $oUser, $blCacheReset = false)
     {
         if (!$blCacheReset) {
             $sId = $oUser->getId();
-            if ( array_key_exists( $sId, self::$_aUserVatCache ) &&
-                 self::$_aUserVatCache[$sId] !== null) {
+            if (array_key_exists($sId, self::$_aUserVatCache) &&
+                self::$_aUserVatCache[$sId] !== null
+            ) {
                 return self::$_aUserVatCache[$sId];
             }
         }
@@ -87,7 +68,7 @@ class oxVatSelector extends oxSuperCfg
         if ($sCountryId) {
             $oCountry = oxNew('oxcountry');
             if (!$oCountry->load($sCountryId)) {
-                throw oxNew( "oxObjectException" );
+                throw oxNew("oxObjectException");
             }
             if ($oCountry->isForeignCountry()) {
                 $ret = $this->_getForeignCountryUserVat($oUser, $oCountry);
@@ -95,6 +76,7 @@ class oxVatSelector extends oxSuperCfg
         }
 
         self::$_aUserVatCache[$oUser->getId()] = $ret;
+
         return $ret;
     }
 
@@ -106,12 +88,13 @@ class oxVatSelector extends oxSuperCfg
      *
      * @return mixed
      */
-    protected function _getForeignCountryUserVat(oxUser $oUser, oxCountry $oCountry )
+    protected function _getForeignCountryUserVat(oxUser $oUser, oxCountry $oCountry)
     {
         if ($oCountry->isInEU()) {
             if ($oUser->oxuser__oxustid->value) {
                 return 0;
             }
+
             return false;
         }
 
@@ -130,15 +113,15 @@ class oxVatSelector extends oxSuperCfg
         $oDb = oxDb::getDb();
         $sCatT = getViewName('oxcategories');
 
-        if ( $this->_blCatVatSet === null ) {
+        if ($this->_blCatVatSet === null) {
             $sSelect = "SELECT oxid FROM $sCatT WHERE oxvat IS NOT NULL LIMIT 1";
 
             //no category specific vats in shop?
             //then for performance reasons we just return false
-            $this->_blCatVatSet = (bool) $oDb->getOne( $sSelect );
+            $this->_blCatVatSet = (bool) $oDb->getOne($sSelect);
         }
 
-        if ( !$this->_blCatVatSet ) {
+        if (!$this->_blCatVatSet) {
             return false;
         }
 
@@ -146,7 +129,7 @@ class oxVatSelector extends oxSuperCfg
         $sSql = "SELECT c.oxvat
                  FROM $sCatT AS c, $sO2C AS o2c
                  WHERE c.oxid=o2c.oxcatnid AND
-                       o2c.oxobjectid = ".$oDb->quote( $oArticle->getId() )." AND
+                       o2c.oxobjectid = " . $oDb->quote($oArticle->getId()) . " AND
                        c.oxvat IS NOT NULL
                  ORDER BY o2c.oxtime ";
 
@@ -170,17 +153,20 @@ class oxVatSelector extends oxSuperCfg
         startProfile("_assignPriceInternal");
         // article has its own VAT ?
 
-        if ( ( $dArticleVat = $oArticle->getCustomVAT() ) !== null ) {
+        if (($dArticleVat = $oArticle->getCustomVAT()) !== null) {
             stopProfile("_assignPriceInternal");
+
             return $dArticleVat;
         }
-        if ( ( $dArticleVat = $this->_getVatForArticleCategory($oArticle) ) !== false ) {
+        if (($dArticleVat = $this->_getVatForArticleCategory($oArticle)) !== false) {
             stopProfile("_assignPriceInternal");
+
             return $dArticleVat;
         }
 
         stopProfile("_assignPriceInternal");
-        return $this->getConfig()->getConfigParam( 'dDefaultVAT' );
+
+        return $this->getConfig()->getConfigParam('dDefaultVAT');
     }
 
     /**
@@ -193,9 +179,9 @@ class oxVatSelector extends oxSuperCfg
      *
      * @return double
      */
-    public function getBasketItemVat(oxArticle $oArticle, $oBasket )
+    public function getBasketItemVat(oxArticle $oArticle, $oBasket)
     {
-        return $this->getArticleVat( $oArticle );
+        return $this->getArticleVat($oArticle);
     }
 
     /**
@@ -207,9 +193,10 @@ class oxVatSelector extends oxSuperCfg
      */
     public function getArticleUserVat(oxArticle $oArticle)
     {
-        if ( ( $oUser = $oArticle->getArticleUser() ) ) {
-            return $this->getUserVat( $oUser );
+        if (($oUser = $oArticle->getArticleUser())) {
+            return $this->getUserVat($oUser);
         }
+
         return false;
     }
 
@@ -222,7 +209,7 @@ class oxVatSelector extends oxSuperCfg
      *
      * @return string
      */
-    protected function _getVatCountry(oxUser $oUser = null)
+    protected function _getVatCountry(oxUser $oUser)
     {
         $blUseShippingCountry = $this->getConfig()->getConfigParam("blShippingCountryVat");
 
@@ -237,5 +224,4 @@ class oxVatSelector extends oxSuperCfg
 
         return $oUser->oxuser__oxcountryid->value;
     }
-
 }

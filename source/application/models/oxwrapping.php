@@ -1,35 +1,33 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
  * Wrapping manager.
  * Performs Wrapping data/objects loading, deleting.
  *
- * @package model
  */
 class oxWrapping extends oxI18n
 {
+
     /**
      * Class name
      *
@@ -67,20 +65,18 @@ class oxWrapping extends oxI18n
     public function __construct()
     {
         $oConfig = $this->getConfig();
-        $this->setWrappingVat( $oConfig->getConfigParam( 'dDefaultVAT' ) );
-        $this->setWrappingVatOnTop( $oConfig->getConfigParam( 'blWrappingVatOnTop' ) );
+        $this->setWrappingVat($oConfig->getConfigParam('dDefaultVAT'));
+        $this->setWrappingVatOnTop($oConfig->getConfigParam('blWrappingVatOnTop'));
         parent::__construct();
-        $this->init( 'oxwrapping' );
+        $this->init('oxwrapping');
     }
 
     /**
      * Wrapping Vat setter
      *
      * @param double $dVat vat
-     *
-     * @return null
      */
-    public function setWrappingVat( $dVat )
+    public function setWrappingVat($dVat)
     {
         $this->_dVat = $dVat;
     }
@@ -89,28 +85,10 @@ class oxWrapping extends oxI18n
      * Wrapping VAT config setter
      *
      * @param bool $blOnTop wrapping vat config
-     *
-     * @return null
      */
-    public function setWrappingVatOnTop( $blOnTop )
+    public function setWrappingVatOnTop($blOnTop)
     {
         $this->_blWrappingVatOnTop = $blOnTop;
-    }
-
-    /**
-     * Assigns oxwrapping object data and calculates dprice/fprice
-     *
-     * @param array $dbRecord object data
-     *
-     * @return null
-     */
-    public function assign( $dbRecord )
-    {
-        // loading object from database
-        parent::assign( $dbRecord );
-
-        // setting image path
-        $myConfig = $this->getConfig();
     }
 
     /**
@@ -120,20 +98,20 @@ class oxWrapping extends oxI18n
      *
      * @return object
      */
-    public function getWrappingPrice( $dAmount = 1 )
+    public function getWrappingPrice($dAmount = 1)
     {
-        if ( $this->_oPrice === null ) {
-            $this->_oPrice = oxNew( 'oxprice' );
+        if ($this->_oPrice === null) {
+            $this->_oPrice = oxNew('oxprice');
 
-            if ( !$this->_blWrappingVatOnTop ) {
+            if (!$this->_blWrappingVatOnTop) {
                 $this->_oPrice->setBruttoPriceMode();
             } else {
                 $this->_oPrice->setNettoPriceMode();
             }
 
             $oCur = $this->getConfig()->getActShopCurrencyObject();
-            $this->_oPrice->setPrice( $this->oxwrapping__oxprice->value * $oCur->rate, $this->_dVat );
-            $this->_oPrice->multiply( $dAmount );
+            $this->_oPrice->setPrice($this->oxwrapping__oxprice->value * $oCur->rate, $this->_dVat);
+            $this->_oPrice->multiply($dAmount);
         }
 
         return $this->_oPrice;
@@ -146,14 +124,14 @@ class oxWrapping extends oxI18n
      *
      * @return array $oEntries wrapping list
      */
-    public function getWrappingList( $sWrapType )
+    public function getWrappingList($sWrapType)
     {
         // load wrapping
-        $oEntries = oxNew( 'oxlist' );
-        $oEntries->init( 'oxwrapping' );
-        $sWrappingViewName = getViewName( 'oxwrapping' );
-        $sSelect =  "select * from $sWrappingViewName where $sWrappingViewName.oxactive = '1' and $sWrappingViewName.oxtype = " . oxDb::getDb()->quote( $sWrapType );
-        $oEntries->selectString( $sSelect );
+        $oEntries = oxNew('oxlist');
+        $oEntries->init('oxwrapping');
+        $sWrappingViewName = getViewName('oxwrapping');
+        $sSelect = "select * from $sWrappingViewName where $sWrappingViewName.oxactive = '1' and $sWrappingViewName.oxtype = " . oxDb::getDb()->quote($sWrapType);
+        $oEntries->selectString($sSelect);
 
         return $oEntries;
     }
@@ -165,12 +143,13 @@ class oxWrapping extends oxI18n
      *
      * @return int
      */
-    public function getWrappingCount( $sWrapType )
+    public function getWrappingCount($sWrapType)
     {
-        $sWrappingViewName = getViewName( 'oxwrapping' );
+        $sWrappingViewName = getViewName('oxwrapping');
         $oDb = oxDb::getDb();
-        $sQ = "select count(*) from $sWrappingViewName where $sWrappingViewName.oxactive = '1' and $sWrappingViewName.oxtype = " . $oDb->quote( $sWrapType );
-        return (int) $oDb->getOne( $sQ );
+        $sQ = "select count(*) from $sWrappingViewName where $sWrappingViewName.oxactive = '1' and $sWrappingViewName.oxtype = " . $oDb->quote($sWrapType);
+
+        return (int) $oDb->getOne($sQ);
     }
 
     /**
@@ -182,7 +161,7 @@ class oxWrapping extends oxI18n
     {
         $blResult = (bool) $this->getConfig()->getConfigParam('blShowNetPrice');
         $oUser = $this->getUser();
-        if ( $oUser ) {
+        if ($oUser) {
             $blResult = $oUser->isPriceViewModeNetto();
         }
 
@@ -192,17 +171,31 @@ class oxWrapping extends oxI18n
     /**
      * Returns formatted wrapping price
      *
+     * @deprecated since v5.1 (2013-10-13); use oxPrice smarty plugin for formatting in templates
+     *
      * @return string
      */
     public function getFPrice()
     {
-        if ( $this->_isPriceViewModeNetto() ) {
+        $dPrice = $this->getPrice();
+
+        return oxRegistry::getLang()->formatCurrency($dPrice, $this->getConfig()->getActShopCurrencyObject());
+    }
+
+    /**
+     * Gets price.
+     *
+     * @return double
+     */
+    public function getPrice()
+    {
+        if ($this->_isPriceViewModeNetto()) {
             $dPrice = $this->getWrappingPrice()->getNettoPrice();
         } else {
             $dPrice = $this->getWrappingPrice()->getBruttoPrice();
         }
 
-        return oxRegistry::getLang()->formatCurrency( $dPrice, $this->getConfig()->getActShopCurrencyObject() );
+        return $dPrice;
     }
 
     /**
@@ -222,8 +215,8 @@ class oxWrapping extends oxI18n
      */
     public function getPictureUrl()
     {
-        if ( $this->oxwrapping__oxpic->value ) {
-           return $this->getConfig()->getPictureUrl( "master/wrapping/".$this->oxwrapping__oxpic->value, false, $this->getConfig()->isSsl(), null, $this->oxwrapping__oxshopid->value );
+        if ($this->oxwrapping__oxpic->value) {
+            return $this->getConfig()->getPictureUrl("master/wrapping/" . $this->oxwrapping__oxpic->value, false, $this->getConfig()->isSsl(), null, $this->oxwrapping__oxshopid->value);
         }
     }
 }

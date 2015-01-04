@@ -1,34 +1,32 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   views
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: details.php 39349 2011-10-13 08:48:54Z linas.kukulskis $
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
  * Account article file download page.
  *
- * @package main
  */
 class Account_Downloads extends Account
 {
+
     /**
      * Current class template name.
      *
@@ -49,7 +47,6 @@ class Account_Downloads extends Account
     protected $_oOrderFilesList = null;
 
 
-
     /**
      * Returns Bread Crumb - you are here page1/page2/page3...
      *
@@ -58,14 +55,17 @@ class Account_Downloads extends Account
     public function getBreadCrumb()
     {
         $aPaths = array();
-        $aPath  = array();
+        $aPath = array();
 
-        $aPath['title'] = oxRegistry::getLang()->translateString( 'MY_ACCOUNT', oxRegistry::getLang()->getBaseLanguage(), false );
-        $aPath['link']  =  oxRegistry::get("oxSeoEncoder")->getStaticUrl( $this->getViewConfig()->getSelfLink() . "cl=account" );
+        $iBaseLanguage = oxRegistry::getLang()->getBaseLanguage();
+        /** @var oxSeoEncoder $oSeoEncoder */
+        $oSeoEncoder = oxRegistry::get("oxSeoEncoder");
+        $aPath['title'] = oxRegistry::getLang()->translateString('MY_ACCOUNT', $iBaseLanguage, false);
+        $aPath['link'] = $oSeoEncoder->getStaticUrl($this->getViewConfig()->getSelfLink() . "cl=account");
         $aPaths[] = $aPath;
 
-        $aPath['title'] = oxRegistry::getLang()->translateString( 'MY_DOWNLOADS', oxRegistry::getLang()->getBaseLanguage(), false );
-        $aPath['link']  = $this->getLink();
+        $aPath['title'] = oxRegistry::getLang()->translateString('MY_DOWNLOADS', $iBaseLanguage, false);
+        $aPath['link'] = $this->getLink();
         $aPaths[] = $aPath;
 
         return $aPaths;
@@ -78,14 +78,14 @@ class Account_Downloads extends Account
      */
     public function getOrderFilesList()
     {
-        if ( $this->_oOrderFilesList !== null ) {
+        if ($this->_oOrderFilesList !== null) {
             return $this->_oOrderFilesList;
         }
 
         $oOrderFileList = oxNew('oxOrderFileList');
-        $oOrderFileList->loadUserFiles( $this->getUser()->getId() );
+        $oOrderFileList->loadUserFiles($this->getUser()->getId());
 
-        $this->_oOrderFilesList = $this->_prepareForTemplate( $oOrderFileList );
+        $this->_oOrderFilesList = $this->_prepareForTemplate($oOrderFileList);
 
         return $this->_oOrderFilesList;
     }
@@ -97,29 +97,32 @@ class Account_Downloads extends Account
      *
      * @return array
      */
-    protected function _prepareForTemplate( $oOrderFileList )
+    protected function _prepareForTemplate($oOrderFileList)
     {
         $oOrderArticles = array();
 
-        foreach ( $oOrderFileList as $oOrderFile ) {
-            $sOrderArticleId = $oOrderFile->oxorderfiles__oxorderarticleid->value;
-            $oOrderArticles[$sOrderArticleId]['oxordernr'] = $oOrderFile->oxorderfiles__oxordernr->value;
-            $oOrderArticles[$sOrderArticleId]['oxorderdate'] = substr($oOrderFile->oxorderfiles__oxorderdate->value, 0, 16);
-            $oOrderArticles[$sOrderArticleId]['oxarticletitle'] = $oOrderFile->oxorderfiles__oxarticletitle->value;
+        foreach ($oOrderFileList as $oOrderFile) {
+            $sOrderArticleIdField = 'oxorderfiles__oxorderarticleid';
+            $sOrderNumberField = 'oxorderfiles__oxordernr';
+            $sOrderDateField = 'oxorderfiles__oxorderdate';
+            $sOrderTitleField = 'oxorderfiles__oxarticletitle';
+            $sOrderArticleId = $oOrderFile->$sOrderArticleIdField->value;
+            $oOrderArticles[$sOrderArticleId]['oxordernr'] = $oOrderFile->$sOrderNumberField->value;
+            $oOrderArticles[$sOrderArticleId]['oxorderdate'] = substr($oOrderFile->$sOrderDateField->value, 0, 16);
+            $oOrderArticles[$sOrderArticleId]['oxarticletitle'] = $oOrderFile->$sOrderTitleField->value;
             $oOrderArticles[$sOrderArticleId]['oxorderfiles'][] = $oOrderFile;
         }
 
         return $oOrderArticles;
     }
 
-     /**
+    /**
      * Returns error code.
      *
      * @return int
      */
     public function getDownloadError()
     {
-        return $this->getConfig()->getParameter( 'download_error' );
+        return $this->getConfig()->getRequestParameter('download_error');
     }
-
 }

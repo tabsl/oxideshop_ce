@@ -1,34 +1,29 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
-require_once realpath( "." ).'/unit/OxidTestCase.php';
-require_once realpath( "." ).'/unit/test_config.inc.php';
-
-class Unit_Core_oxpriceTest extends OxidTestCase
+class Unit_Core_oxPriceTest extends OxidTestCase
 {
+
     protected $_oPrice;
-    protected $_oConfig;
 
     /**
      * Initialize the fixture.
@@ -38,21 +33,17 @@ class Unit_Core_oxpriceTest extends OxidTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->_oConfig = oxConfig::getInstance();
-        //$this->_oConfig = oxConfig::getInstance();
+
         $this->_oPrice = new oxPrice();
         $this->_oPrice->setBruttoPriceMode();
-
-        //Default price calculation mode
-        $this->_oConfig->blEnterNetPrice = false;
     }
 
     public function testGetPriceInActCurrency()
     {
-        $oSessCurr = oxConfig::getInstance()->getActShopCurrencyObject();
+        $oCurrency = $this->getConfig()->getActShopCurrencyObject();
         $dPrice = 99.66;
 
-        $this->assertEquals( $dPrice * $oSessCurr->rate, oxPrice::getPriceInActCurrency( $dPrice ) );
+        $this->assertEquals($dPrice * $oCurrency->rate, oxPrice::getPriceInActCurrency($dPrice));
     }
 
     public function testVatSetterAndGetter()
@@ -236,6 +227,7 @@ class Unit_Core_oxpriceTest extends OxidTestCase
         $this->assertEquals(-70.56, $this->_oPrice->getBruttoPrice());
         $this->assertEquals(-84.00, $this->_oPrice->getNettoPrice());
     }
+
 // ------------------------------------------------------------------------------------------------------
 
     public function testAddPercentCalculationWithZeroVat()
@@ -391,6 +383,7 @@ class Unit_Core_oxpriceTest extends OxidTestCase
         $this->assertEquals(384.00, $this->_oPrice->getBruttoPrice());
         $this->assertEquals(320.00, $this->_oPrice->getNettoPrice());
     }
+
 // --------------
 
     public function testDivideCalculationWithZeroVat()
@@ -461,19 +454,19 @@ class Unit_Core_oxpriceTest extends OxidTestCase
 
     public function testBrutto2Netto()
     {
-        $this->assertEquals( 200.00, $this->_oPrice->brutto2Netto(236, 18) );
-        $this->assertLessThan(0.00001, abs(200.10462372881 - $this->_oPrice->brutto2Netto(236.123456, 18) ) );
+        $this->assertEquals(200.00, $this->_oPrice->brutto2Netto(236, 18));
+        $this->assertLessThan(0.00001, abs(200.10462372881 - $this->_oPrice->brutto2Netto(236.123456, 18)));
     }
 
     public function testBrutto2NettoMinusVat()
     {
-        $this->assertEquals( 0, $this->_oPrice->brutto2Netto(236, -100) );
+        $this->assertEquals(0, $this->_oPrice->brutto2Netto(236, -100));
     }
 
     public function testNetto2Brutto()
     {
-        $this->assertEquals( 120.00, $this->_oPrice->netto2Brutto(100, 20) );
-        $this->assertLessThan(0.00001, abs(120.1481472 - $this->_oPrice->netto2Brutto(100.123456, 20) ) );
+        $this->assertEquals(120.00, $this->_oPrice->netto2Brutto(100, 20));
+        $this->assertLessThan(0.00001, abs(120.1481472 - $this->_oPrice->netto2Brutto(100.123456, 20)));
     }
 
     public function testCompare()
@@ -490,9 +483,9 @@ class Unit_Core_oxpriceTest extends OxidTestCase
         $oPrice4 = new oxPrice();
         $oPrice4->setPrice(100, 0);
 
-        $this->assertEquals( 0, $oPrice1->compare($oPrice4) );
-        $this->assertEquals( 1, $oPrice1->compare($oPrice3) );
-        $this->assertEquals( -1, $oPrice1->compare($oPrice2) );
+        $this->assertEquals(0, $oPrice1->compare($oPrice4));
+        $this->assertEquals(1, $oPrice1->compare($oPrice3));
+        $this->assertEquals(-1, $oPrice1->compare($oPrice2));
     }
 
     public function testInitWithParams()
@@ -500,41 +493,6 @@ class Unit_Core_oxpriceTest extends OxidTestCase
         $oPrice = new oxPrice(15);
         $this->assertEquals(15, $oPrice->getBruttoPrice());
     }
-
-    /**
-     * Test netto price calculation then in brutto mode.
-     *
-     * @return null
-     */
-    /*public function testRecalculate_bruttomode()
-    {
-        $oPriceProxy = $this->getProxyClass('oxPrice');
-        $oPriceProxy->setNonPublicVar('_blNetPriceMode', false);
-        $oPriceProxy->setNonPublicVar('_dVat', 7);
-        $oPriceProxy->setNonPublicVar('_dBrutto', 41.5);
-
-        $oPriceProxy->UNITrecalculate();
-
-        $this->assertLessThanOrEqual(0.00001, abs($oPriceProxy->getNonPublicVar('_dNetto') - 38.785046728972));
-    }*/
-
-    /**
-     * Test brutto price calculation then in netto mode.
-     *
-     * @return null
-     */
-    /*public function testRecalculate_nettomode()
-    {
-        $oPriceProxy = $this->getProxyClass('oxPrice');
-        $oPriceProxy->setNonPublicVar('_blNetPriceMode', true);
-        $oPriceProxy->setNonPublicVar('_dVat', 7);
-        $oPriceProxy->setNonPublicVar('_dNetto', 38.785046728972);
-
-        $oPriceProxy->UNITrecalculate();
-
-        $this->assertLessThanOrEqual(0.00001, abs($oPriceProxy->getNonPublicVar('_dBrutto') - 41.5));
-    }*/
-
 
     /**
      * Test getPrice
@@ -546,12 +504,12 @@ class Unit_Core_oxpriceTest extends OxidTestCase
         $oPrice = new oxPrice();
         $oPrice->setNettoPriceMode();
         $oPrice->setPrice(10, 19);
-        $this->assertEquals( 10, $oPrice->getPrice() );
+        $this->assertEquals(10, $oPrice->getPrice());
 
         $oPrice = new oxPrice();
         $oPrice->setBruttoPriceMode();
         $oPrice->setPrice(10, 19);
-        $this->assertEquals( 10, $oPrice->getPrice() );
+        $this->assertEquals(10, $oPrice->getPrice());
 
     }
 
@@ -565,16 +523,16 @@ class Unit_Core_oxpriceTest extends OxidTestCase
         $oPrice = new oxPrice();
         $oPrice->setNettoPriceMode();
         $oPrice->setPrice(10, 19);
-        $this->assertEquals( 10, $oPrice->getNettoPrice() );
-        $this->assertEquals( 11.9, $oPrice->getBruttoPrice() );
-        $this->assertEquals( 1.9, $oPrice->getVatValue() );
+        $this->assertEquals(10, $oPrice->getNettoPrice());
+        $this->assertEquals(11.9, $oPrice->getBruttoPrice());
+        $this->assertEquals(1.9, $oPrice->getVatValue());
 
         $oPrice = new oxPrice();
         $oPrice->setBruttoPriceMode();
         $oPrice->setPrice(10, 19);
-        $this->assertEquals( 8.40, $oPrice->getNettoPrice() );
-        $this->assertEquals( 10, $oPrice->getBruttoPrice() );
-        $this->assertEquals( 1.60, $oPrice->getVatValue() );
+        $this->assertEquals(8.40, $oPrice->getNettoPrice());
+        $this->assertEquals(10, $oPrice->getBruttoPrice());
+        $this->assertEquals(1.60, $oPrice->getVatValue());
 
     }
 
@@ -590,39 +548,61 @@ class Unit_Core_oxpriceTest extends OxidTestCase
         $oPrice->setNettoPriceMode();
         $oPrice->setPrice(10, 19);
 
-        $oPrice->setDiscount( 50, '%');
+        $oPrice->setDiscount(50, '%');
         $oPrice->calculateDiscount();
-        $this->assertEquals( 5, $oPrice->getNettoPrice() );
-        $this->assertEquals( 5.95, $oPrice->getBruttoPrice() );
-        $this->assertEquals( 0.95, $oPrice->getVatValue() );
+        $this->assertEquals(5, $oPrice->getNettoPrice());
+        $this->assertEquals(5.95, $oPrice->getBruttoPrice());
+        $this->assertEquals(0.95, $oPrice->getVatValue());
 
-        $oPrice->setDiscount( 1, 'abs');
+        $oPrice->setDiscount(1, 'abs');
         $oPrice->calculateDiscount();
-        $this->assertEquals( 4, $oPrice->getNettoPrice() );
-        $this->assertEquals( 4.76, $oPrice->getBruttoPrice() );
-        $this->assertEquals( 0.76, $oPrice->getVatValue() );
+        $this->assertEquals(4, $oPrice->getNettoPrice());
+        $this->assertEquals(4.76, $oPrice->getBruttoPrice());
+        $this->assertEquals(0.76, $oPrice->getVatValue());
 
-        $oPrice->setDiscount( -1, 'abs');
+        $oPrice->setDiscount(-1, 'abs');
         $oPrice->calculateDiscount();
-        $this->assertEquals( 5, $oPrice->getNettoPrice() );
-        $this->assertEquals( 5.95, $oPrice->getBruttoPrice() );
-        $this->assertEquals( 0.95, $oPrice->getVatValue() );
+        $this->assertEquals(5, $oPrice->getNettoPrice());
+        $this->assertEquals(5.95, $oPrice->getBruttoPrice());
+        $this->assertEquals(0.95, $oPrice->getVatValue());
 
-        $oPrice->setDiscount( -20, '%');
+        $oPrice->setDiscount(-20, '%');
         $oPrice->calculateDiscount();
-        $this->assertEquals( 6, $oPrice->getNettoPrice() );
-        $this->assertEquals( 7.14, $oPrice->getBruttoPrice() );
-        $this->assertEquals( 1.14, $oPrice->getVatValue() );
+        $this->assertEquals(6, $oPrice->getNettoPrice());
+        $this->assertEquals(7.14, $oPrice->getBruttoPrice());
+        $this->assertEquals(1.14, $oPrice->getVatValue());
 
 
-        $oPrice->setDiscount( 7, 'abs');
+        $oPrice->setDiscount(7, 'abs');
         $oPrice->calculateDiscount();
-        $this->assertEquals( 0, $oPrice->getNettoPrice() );
-        $this->assertEquals( 0, $oPrice->getBruttoPrice() );
-        $this->assertEquals( 0, $oPrice->getVatValue() );
+        $this->assertEquals(0, $oPrice->getNettoPrice());
+        $this->assertEquals(0, $oPrice->getBruttoPrice());
+        $this->assertEquals(0, $oPrice->getVatValue());
 
     }
 
+    public function testSetModeNetto_defaultParam_NettoMode()
+    {
+        $oPrice = new oxPrice();
 
+        $oPrice->setNettoMode();
+        $this->assertTrue($oPrice->isNettoMode());
+    }
+
+    public function testSetModeNetto_ParamTrue_NettoMode()
+    {
+        $oPrice = new oxPrice();
+
+        $oPrice->setNettoMode(true);
+        $this->assertTrue($oPrice->isNettoMode());
+    }
+
+    public function testSetModeNetto_ParamFalse_BruttoMode()
+    {
+        $oPrice = new oxPrice();
+
+        $oPrice->setNettoMode(false);
+        $this->assertFalse($oPrice->isNettoMode());
+    }
 
 }

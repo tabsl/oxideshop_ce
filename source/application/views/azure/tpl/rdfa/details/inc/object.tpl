@@ -1,5 +1,5 @@
 <div rel="gr:includes">
-    [{if $oProduct->getVariants() || $oView->drawParentUrl()}]
+    [{if $oProduct->getVariantsCount() || $oView->drawParentUrl()}]
         <div typeof="gr:ProductOrServiceModel" about="[{$sRDFaUrl}]#productdata">
     [{else}]
         <div typeof="gr:SomeItems" about="[{$sRDFaUrl}]#productdata">
@@ -10,7 +10,7 @@
                [{oxhasrights ident="SHOWLONGDESCRIPTION"}]
                [{assign var="oLongdesc" value=$oProduct->getLongDescription()}]
                [{if $oLongdesc->value}]
-                   <div property="gr:description" content="[{$oLongdesc->value|strip_tags|strip}]" [{if $oView->getActiveLangAbbr()}] xml:lang="[{$oView->getActiveLangAbbr()}]"[{/if}]></div>
+                   <div property="gr:description" content="[{oxeval var=$oLongdesc->value|strip_tags|strip }]" [{if $oView->getActiveLangAbbr()}] xml:lang="[{$oView->getActiveLangAbbr()}]"[{/if}]></div>
                [{/if}]
             [{/oxhasrights}]
             <div rel="foaf:depiction v:image" resource="[{$oView->getActPicture()}]"></div>
@@ -19,9 +19,9 @@
                 <div property="gr:hasMPN" content="[{$oProduct->oxarticles__oxmpn->value}]" datatype="xsd:string"></div>
             [{/if}]
             [{if $oProduct->oxarticles__oxean->value}]
-                <div property="gr:hasEAN_UCC-13" content="[{$oProduct->oxarticles__oxean->value}]" datatype="xsd:string"></div>
+                <div property="gr:hasGTIN-14" content="[{$oProduct->oxarticles__oxean->value}]" datatype="xsd:string"></div>
             [{elseif $oProduct->oxarticles__oxdistean->value}]
-                <div property="gr:hasEAN_UCC-13" content="[{$oProduct->oxarticles__oxdistean->value}]" datatype="xsd:string"></div>
+                <div property="gr:hasGTIN-14" content="[{$oProduct->oxarticles__oxdistean->value}]" datatype="xsd:string"></div>
             [{/if}]
             [{if $oView->getRDFaGenericCondition()}]
                 <div property="gr:condition" content="[{$oView->getRDFaGenericCondition()}]" xml:lang="en"></div>

@@ -1,34 +1,32 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: oxbasketreservation.php 28089 2010-06-02 13:49:19Z sarunas $
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
  * Basket reservations handler class
  *
- * @package model
  */
 class oxBasketReservation extends oxSuperCfg
 {
+
     /**
      * Reservations list
      *
@@ -50,11 +48,12 @@ class oxBasketReservation extends oxSuperCfg
      */
     protected function _getReservationsId()
     {
-        $sId = oxSession::getVar('basketReservationToken');
+        $sId = oxRegistry::getSession()->getVariable('basketReservationToken');
         if (!$sId) {
             $sId = oxUtilsObject::getInstance()->generateUId();
-            oxSession::setVar( 'basketReservationToken', $sId );
+            oxRegistry::getSession()->setVariable('basketReservationToken', $sId);
         }
+
         return $sId;
     }
 
@@ -67,16 +66,17 @@ class oxBasketReservation extends oxSuperCfg
      */
     protected function _loadReservations($sBasketId)
     {
-        $oReservations = oxNew( 'oxuserbasket' );
-        $aWhere = array( 'oxuserbaskets.oxuserid' => $sBasketId, 'oxuserbaskets.oxtitle' => 'reservations' );
+        $oReservations = oxNew('oxuserbasket');
+        $aWhere = array('oxuserbaskets.oxuserid' => $sBasketId, 'oxuserbaskets.oxtitle' => 'reservations');
 
         // creating if it does not exist
-        if ( !$oReservations->assignRecord( $oReservations->buildSelectString( $aWhere ) ) ) {
-            $oReservations->oxuserbaskets__oxtitle  = new oxField('reservations');
+        if (!$oReservations->assignRecord($oReservations->buildSelectString($aWhere))) {
+            $oReservations->oxuserbaskets__oxtitle = new oxField('reservations');
             $oReservations->oxuserbaskets__oxuserid = new oxField($sBasketId);
             // marking basket as new (it will not be saved in DB yet)
             $oReservations->setIsNewBasket();
         }
+
         return $oReservations;
     }
 
@@ -117,12 +117,13 @@ class oxBasketReservation extends oxSuperCfg
         }
 
         $this->_aCurrentlyReserved = array();
-        foreach ( $oReserved->getItems(false, false) as $oItem ) {
+        foreach ($oReserved->getItems(false, false) as $oItem) {
             if (!isset($this->_aCurrentlyReserved[$oItem->oxuserbasketitems__oxartid->value])) {
                 $this->_aCurrentlyReserved[$oItem->oxuserbasketitems__oxartid->value] = 0;
             }
             $this->_aCurrentlyReserved[$oItem->oxuserbasketitems__oxartid->value] += $oItem->oxuserbasketitems__oxamount->value;
         }
+
         return $this->_aCurrentlyReserved;
     }
 
@@ -139,6 +140,7 @@ class oxBasketReservation extends oxSuperCfg
         if (isset($aCurrentlyReserved[$sArticleId])) {
             return $aCurrentlyReserved[$sArticleId];
         }
+
         return 0;
     }
 
@@ -153,7 +155,7 @@ class oxBasketReservation extends oxSuperCfg
     {
         $aDiff = $this->_getReservedItems();
         // refreshing history
-        foreach ( $oBasket->getContents() as $oItem ) {
+        foreach ($oBasket->getContents() as $oItem) {
             $sProdId = $oItem->getProductId();
             if (!isset($aDiff[$sProdId])) {
                 $aDiff[$sProdId] = -$oItem->getAmount();
@@ -161,6 +163,7 @@ class oxBasketReservation extends oxSuperCfg
                 $aDiff[$sProdId] -= $oItem->getAmount();
             }
         }
+
         return $aDiff;
     }
 
@@ -170,12 +173,10 @@ class oxBasketReservation extends oxSuperCfg
      * @param array $aBasketDiff basket difference array
      *
      * @see oxBasketReservation::_basketDifference
-     *
-     * @return null
      */
     protected function _reserveArticles($aBasketDiff)
     {
-        $blAllowNegativeStock = $this->getConfig()->getConfigParam( 'blAllowNegativeStock' );
+        $blAllowNegativeStock = $this->getConfig()->getConfigParam('blAllowNegativeStock');
 
         $oReserved = $this->getReservations();
         foreach ($aBasketDiff as $sId => $dAmount) {
@@ -183,7 +184,7 @@ class oxBasketReservation extends oxSuperCfg
                 $oArticle = oxNew('oxarticle');
                 if ($oArticle->load($sId)) {
                     $oArticle->reduceStock(-$dAmount, $blAllowNegativeStock);
-                    $oReserved->addItemToBasket( $sId, -$dAmount );
+                    $oReserved->addItemToBasket($sId, -$dAmount);
                 }
             }
         }
@@ -194,12 +195,10 @@ class oxBasketReservation extends oxSuperCfg
      * reserve given basket items
      *
      * @param oxBasket $oBasket basket object
-     *
-     * @return null
      */
     public function reserveBasket(oxBasket $oBasket)
     {
-        $this->_reserveArticles( $this->_basketDifference($oBasket) );
+        $this->_reserveArticles($this->_basketDifference($oBasket));
     }
 
     /**
@@ -209,8 +208,6 @@ class oxBasketReservation extends oxSuperCfg
      *
      * @param string $sArticleId article id
      * @param double $dAmount    amount to use
-     *
-     * @return null
      */
     public function commitArticleReservation($sArticleId, $dAmount)
     {
@@ -220,12 +217,12 @@ class oxBasketReservation extends oxSuperCfg
             $dAmount = $dReserved;
         }
 
-        $oArticle = oxNew( 'oxarticle' );
-        $oArticle->load( $sArticleId );
+        $oArticle = oxNew('oxarticle');
+        $oArticle->load($sArticleId);
 
         $this->getReservations()->addItemToBasket($sArticleId, -$dAmount);
         $oArticle->beforeUpdate();
-        $oArticle->updateSoldAmount( $dAmount );
+        $oArticle->updateSoldAmount($dAmount);
         $this->_aCurrentlyReserved = null;
     }
 
@@ -234,8 +231,6 @@ class oxBasketReservation extends oxSuperCfg
      * return the reserved stock to article
      *
      * @param string $sArticleId article id
-     *
-     * @return null
      */
     public function discardArticleReservation($sArticleId)
     {
@@ -252,12 +247,10 @@ class oxBasketReservation extends oxSuperCfg
 
     /**
      * discard all reserved articles
-     *
-     * @return null
      */
     public function discardReservations()
     {
-        foreach ( array_keys($this->_getReservedItems()) as $sArticleId) {
+        foreach (array_keys($this->_getReservedItems()) as $sArticleId) {
             $this->discardArticleReservation($sArticleId);
         }
         if ($this->_oReservations) {
@@ -277,8 +270,8 @@ class oxBasketReservation extends oxSuperCfg
      */
     public function discardUnusedReservations($iLimit)
     {
-        $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
-        $iStartTime = oxRegistry::get("oxUtilsDate")->getTime() - (int) $this->getConfig()->getConfigParam( 'iPsBasketReservationTimeout' );
+        $oDb = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
+        $iStartTime = oxRegistry::get("oxUtilsDate")->getTime() - (int) $this->getConfig()->getConfigParam('iPsBasketReservationTimeout');
         $oRs = $oDb->select("select oxid from oxuserbaskets where oxtitle = 'reservations' and oxupdate <= $iStartTime limit $iLimit", false, false);
         if ($oRs->EOF) {
             return;
@@ -288,7 +281,7 @@ class oxBasketReservation extends oxSuperCfg
             $aFinished[] = $oDb->quote($oRs->fields['oxid']);
             $oRs->MoveNext();
         }
-        $oRs = $oDb->select("select oxartid, oxamount from oxuserbasketitems where oxbasketid in (".implode(",", $aFinished).")", false, false );
+        $oRs = $oDb->select("select oxartid, oxamount from oxuserbasketitems where oxbasketid in (" . implode(",", $aFinished) . ")", false, false);
         while (!$oRs->EOF) {
             $oArticle = oxNew('oxarticle');
             if ($oArticle->load($oRs->fields['oxartid'])) {
@@ -296,8 +289,8 @@ class oxBasketReservation extends oxSuperCfg
             }
             $oRs->MoveNext();
         }
-        $oDb->execute("delete from oxuserbasketitems where oxbasketid in (".implode(",", $aFinished).")");
-        $oDb->execute("delete from oxuserbaskets where oxid in (".implode(",", $aFinished).")");
+        $oDb->execute("delete from oxuserbasketitems where oxbasketid in (" . implode(",", $aFinished) . ")");
+        $oDb->execute("delete from oxuserbaskets where oxid in (" . implode(",", $aFinished) . ")");
 
         // cleanup basket history also..
         $oDb->execute("delete from oxuserbaskets where oxtitle = 'savedbasket' and oxupdate <= $iStartTime");
@@ -312,34 +305,33 @@ class oxBasketReservation extends oxSuperCfg
      */
     public function getTimeLeft()
     {
-        $iTimeout = $this->getConfig()->getConfigParam( 'iPsBasketReservationTimeout' );
-        if ( $iTimeout > 0 ) {
+        $iTimeout = $this->getConfig()->getConfigParam('iPsBasketReservationTimeout');
+        if ($iTimeout > 0) {
             $oRev = $this->getReservations();
-            if ( $oRev && $oRev->getId() ) {
-                $iTimeout -= ( oxRegistry::get("oxUtilsDate")->getTime() - (int) $oRev->oxuserbaskets__oxupdate->value );
-                oxSession::setVar( "iBasketReservationTimeout", $oRev->oxuserbaskets__oxupdate->value );
-            } elseif ( ( $iSessionTimeout = oxSession::getVar( "iBasketReservationTimeout" ) ) ) {
-                $iTimeout -= ( oxRegistry::get("oxUtilsDate")->getTime() - (int) $iSessionTimeout );
+            if ($oRev && $oRev->getId()) {
+                $iTimeout -= (oxRegistry::get("oxUtilsDate")->getTime() - (int) $oRev->oxuserbaskets__oxupdate->value);
+                oxRegistry::getSession()->setVariable("iBasketReservationTimeout", $oRev->oxuserbaskets__oxupdate->value);
+            } elseif (($iSessionTimeout = oxRegistry::getSession()->getVariable("iBasketReservationTimeout"))) {
+                $iTimeout -= (oxRegistry::get("oxUtilsDate")->getTime() - (int) $iSessionTimeout);
             }
 
             return $iTimeout < 0 ? 0 : $iTimeout;
         }
+
         return 0;
     }
 
     /**
      * renews expiration timer to maximum value
-     *
-     * @return null
      */
     public function renewExpiration()
     {
         if ($oReserved = $this->getReservations()) {
             $iTime = oxRegistry::get("oxUtilsDate")->getTime();
-            $oReserved->oxuserbaskets__oxupdate = new oxField( $iTime );
+            $oReserved->oxuserbaskets__oxupdate = new oxField($iTime);
             $oReserved->save();
 
-            oxSession::deleteVar( "iBasketReservationTimeout" );
+            oxRegistry::getSession()->deleteVariable("iBasketReservationTimeout");
         }
     }
 }

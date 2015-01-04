@@ -3,8 +3,9 @@
     <p>[{oxmultilang ident="HIGHLIHGT_TAGS"}]</p>
     <p class="tagCloud">
         [{assign var="oCloudManager" value=$oView->getTagCloudManager()}]
-        [{foreach from=$oCloudManager->getCloudArray() item=iCount key=sTagTitle name="taglist"}]
-            <span><span class="tagitem_[{$oCloudManager->getTagSize($sTagTitle)}]">[{$oCloudManager->getTagTitle($sTagTitle)}]</span> [{if $oCloudManager->canBeTagged($sTagTitle) }]<a href="#" class="tagText"><img src="[{$oViewConf->getImageUrl('add-icon.png')}]" alt=""></a>[{/if}][{if !$smarty.foreach.taglist.last}],[{/if}]</span>
+        [{assign var="oTagSet" value=$oCloudManager->getCloudArray() }]
+        [{foreach from=$oTagSet item=oTag }]
+            <a class="tagitem_[{ $oCloudManager->getTagSize($oTag->getTitle()) }]" href="[{ $oTag->getLink() }]">[{ $oTag->getTitle() }]</a>
         [{/foreach}]
     </p>
 

@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 
@@ -36,6 +34,7 @@ eval("class oxErpArticle450_parent extends $sArticleClass {};");
  */
 class oxErpArticle450 extends oxErpArticle450_parent
 {
+
     /**
      * Sets article parameter
      *
@@ -44,7 +43,7 @@ class oxErpArticle450 extends oxErpArticle450_parent
      *
      * @return null
      */
-    public function __set($sName, $sValue) 
+    public function __set($sName, $sValue)
     {
         if (strpos($sName, 'oxarticles__oxlongdesc') === 0) {
             if ($this->_blEmployMultilanguage) {
@@ -61,7 +60,7 @@ class oxErpArticle450 extends oxErpArticle450_parent
      *
      * @return null
      */
-    protected function _saveArtLongDesc() 
+    protected function _saveArtLongDesc()
     {
         if ($this->_blEmployMultilanguage) {
             return parent::_saveArtLongDesc();
@@ -96,13 +95,11 @@ class oxErpArticle450 extends oxErpArticle450_parent
 
         $oArtExt->save();
     }
-
 }
 
 $sArticleClass = 'oxErpArticle450';
 
 eval("class oxErpArticle_parent extends $sArticleClass {};");
-
 
 
 /**
@@ -111,6 +108,7 @@ eval("class oxErpArticle_parent extends $sArticleClass {};");
  */
 class oxErpArticle extends oxErpArticle_parent
 {
+
     /**
      * disable variant loading
      *
@@ -125,6 +123,7 @@ class oxErpArticle extends oxErpArticle_parent
  */
 class oxERPType_Article extends oxERPType
 {
+
     /**
      * class constructor
      *
@@ -134,7 +133,7 @@ class oxERPType_Article extends oxERPType
     {
         parent::__construct();
 
-        $this->_sTableName      = 'oxarticles';
+        $this->_sTableName = 'oxarticles';
         $this->_sShopObjectName = 'oxErpArticle';
     }
 
@@ -150,7 +149,7 @@ class oxERPType_Article extends oxERPType
     protected function _preAssignObject($oShopObject, $aData, $blAllowCustomShopId)
     {
         if (!isset($aData['OXSTOCKFLAG'])) {
-            if (!$aData['OXID'] || !$oShopObject->exists( $aData['OXID'] )) {
+            if (!$aData['OXID'] || !$oShopObject->exists($aData['OXID'])) {
                 // default value is 1 according to eShop admin functionality
                 $aData['OXSTOCKFLAG'] = 1;
             }
@@ -172,7 +171,7 @@ class oxERPType_Article extends oxERPType
     protected function _postSaveObject($oShopObject, $aData)
     {
         $sOXID = $oShopObject->getId();
-        
+
         $oShopObject->onChange(null, $sOXID, $sOXID);
 
         // returning ID on success
@@ -192,8 +191,7 @@ class oxERPType_Article extends oxERPType
      */
     public function checkWriteAccess($oObj, $aData = null)
     {
-            return;
+        return;
 
     }
-
 }

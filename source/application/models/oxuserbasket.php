@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -29,7 +27,6 @@
  * Collects shopping basket information, updates it (DB level), removes or adds
  * articles to it.
  *
- * @package model
  */
 class oxUserBasket extends oxBase
 {
@@ -39,7 +36,7 @@ class oxUserBasket extends oxBase
      *
      * @var array
      */
-    protected $_aSkipSaveFields = array( 'oxcreate', 'oxtimestamp' );
+    protected $_aSkipSaveFields = array('oxcreate', 'oxtimestamp');
 
     /**
      * Current object class name
@@ -70,7 +67,7 @@ class oxUserBasket extends oxBase
     public function __construct()
     {
         parent::__construct();
-        $this->init( 'oxuserbaskets' );
+        $this->init('oxuserbaskets');
     }
 
     /**
@@ -83,12 +80,12 @@ class oxUserBasket extends oxBase
         // marking basket as not new any more
         $this->_blNewBasket = false;
 
-        if ( !isset( $this->oxuserbaskets__oxpublic->value ) ) {
+        if (!isset($this->oxuserbaskets__oxpublic->value)) {
             $this->oxuserbaskets__oxpublic = new oxField(1, oxField::T_RAW);
         }
 
         $iTime = oxRegistry::get("oxUtilsDate")->getTime();
-        $this->oxuserbaskets__oxupdate = new oxField( $iTime );
+        $this->oxuserbaskets__oxupdate = new oxField($iTime);
 
         return parent::_insert();
     }
@@ -96,14 +93,12 @@ class oxUserBasket extends oxBase
     /**
      * Sets basket as newly created. This usually means that it is not
      * yet stored in DB and will only be stored if some item is added
-     *
-     * @return null
      */
     public function setIsNewBasket()
     {
         $this->_blNewBasket = true;
         $iTime = oxRegistry::get("oxUtilsDate")->getTime();
-        $this->oxuserbaskets__oxupdate = new oxField( $iTime );
+        $this->oxuserbaskets__oxupdate = new oxField($iTime);
     }
 
     /**
@@ -123,7 +118,7 @@ class oxUserBasket extends oxBase
      */
     public function isEmpty()
     {
-        if ( $this->isNewBasket() || $this->getItemCount() < 1 ) {
+        if ($this->isNewBasket() || $this->getItemCount() < 1) {
             return true;
         }
 
@@ -139,12 +134,13 @@ class oxUserBasket extends oxBase
     {
         $aRes = array();
         $aItems = $this->getItems();
-        if ( is_array( $aItems ) ) {
-            foreach ( $aItems as $sId => $oItem ) {
-                $oArticle = $oItem->getArticle( $sId );
+        if (is_array($aItems)) {
+            foreach ($aItems as $sId => $oItem) {
+                $oArticle = $oItem->getArticle($sId);
                 $aRes[$this->_getItemKey($oArticle->getId(), $oItem->getSelList(), $oItem->getPersParams())] = $oArticle;
             }
         }
+
         return $aRes;
     }
 
@@ -156,10 +152,10 @@ class oxUserBasket extends oxBase
      *
      * @return array of oxUserBasketItems
      */
-    public function getItems( $blReload = false, $blActiveCheck = true )
+    public function getItems($blReload = false, $blActiveCheck = true)
     {
         // cached ?
-        if ( $this->_aBasketItems !== null && !$blReload ) {
+        if ($this->_aBasketItems !== null && !$blReload) {
             return $this->_aBasketItems;
         }
 
@@ -167,23 +163,23 @@ class oxUserBasket extends oxBase
         $this->_aBasketItems = array();
 
         // loading basket items
-        $oArticle  = oxNew( 'oxarticle' );
+        $oArticle = oxNew('oxarticle');
         $sViewName = $oArticle->getViewName();
 
-        $sSelect  = "select oxuserbasketitems.* from oxuserbasketitems left join $sViewName on oxuserbasketitems.oxartid = $sViewName.oxid ";
+        $sSelect = "select oxuserbasketitems.* from oxuserbasketitems left join $sViewName on oxuserbasketitems.oxartid = $sViewName.oxid ";
         if ($blActiveCheck) {
-            $sSelect .= 'and '.$oArticle->getSqlActiveSnippet().' ';
+            $sSelect .= 'and ' . $oArticle->getSqlActiveSnippet() . ' ';
         }
-        $sSelect .= "where oxuserbasketitems.oxbasketid = '".$this->getId()."' and $sViewName.oxid is not null ";
+        $sSelect .= "where oxuserbasketitems.oxbasketid = '" . $this->getId() . "' and $sViewName.oxid is not null ";
 
         $sSelect .= " order by oxartnum, oxsellist, oxpersparam ";
 
-        $oItems = oxNew( 'oxlist' );
-        $oItems->init( 'oxuserbasketitem' );
-        $oItems->selectstring( $sSelect );
+        $oItems = oxNew('oxlist');
+        $oItems->init('oxuserbasketitem');
+        $oItems->selectstring($sSelect);
 
-        foreach ( $oItems as $oItem ) {
-            $sKey = $this->_getItemKey( $oItem->oxuserbasketitems__oxartid->value, $oItem->getSelList(), $oItem->getPersParams() );
+        foreach ($oItems as $oItem) {
+            $sKey = $this->_getItemKey($oItem->oxuserbasketitems__oxartid->value, $oItem->getSelList(), $oItem->getPersParams());
             $this->_aBasketItems[$sKey] = $oItem;
         }
 
@@ -200,25 +196,25 @@ class oxUserBasket extends oxBase
      * @return oxUserBasketItem
      */
 
-    protected function _createItem( $sProductId, $aSelList = null, $aPersParams = null )
+    protected function _createItem($sProductId, $aSelList = null, $aPersParams = null)
     {
-        $oNewItem = oxNew( 'oxuserbasketitem' );
-        $oNewItem->oxuserbasketitems__oxartid    = new oxField($sProductId, oxField::T_RAW);
+        $oNewItem = oxNew('oxuserbasketitem');
+        $oNewItem->oxuserbasketitems__oxartid = new oxField($sProductId, oxField::T_RAW);
         $oNewItem->oxuserbasketitems__oxbasketid = new oxField($this->getId(), oxField::T_RAW);
-        if ( $aPersParams && count($aPersParams) ) {
-            $oNewItem->setPersParams( $aPersParams );
+        if ($aPersParams && count($aPersParams)) {
+            $oNewItem->setPersParams($aPersParams);
         }
 
-        if ( !$aSelList ) {
-            $oArticle = oxNew( 'oxArticle' );
-            $oArticle->load( $sProductId );
+        if (!$aSelList) {
+            $oArticle = oxNew('oxArticle');
+            $oArticle->load($sProductId);
             $aSelectLists = $oArticle->getSelectLists();
-            if ( ( $iSelCnt = count( $aSelectLists ) ) ) {
-                $aSelList = array_fill( 0, $iSelCnt, '0' );
+            if (($iSelCnt = count($aSelectLists))) {
+                $aSelList = array_fill(0, $iSelCnt, '0');
             }
         }
 
-        $oNewItem->setSelList( $aSelList );
+        $oNewItem->setSelList($aSelList);
 
         return $oNewItem;
     }
@@ -234,19 +230,19 @@ class oxUserBasket extends oxBase
      *
      * @return oxUserBasketItem
      */
-    public function getItem( $sProductId, $aSelList, $aPersParams = null)
+    public function getItem($sProductId, $aSelList, $aPersParams = null)
     {
         // loading basket item list
-        $aItems   = $this->getItems();
-        $sItemKey = $this->_getItemKey( $sProductId, $aSelList, $aPersParams );
+        $aItems = $this->getItems();
+        $sItemKey = $this->_getItemKey($sProductId, $aSelList, $aPersParams);
         $oItem = null;
         // returning existing item
-        if ( isset( $aItems[$sProductId] )) {
+        if (isset($aItems[$sProductId])) {
             $oItem = $aItems[$sProductId];
-        } elseif ( isset( $aItems[$sItemKey] ) ) {
+        } elseif (isset($aItems[$sItemKey])) {
             $oItem = $aItems[$sItemKey];
         } else {
-            $oItem = $this->_createItem( $sProductId, $aSelList, $aPersParams );
+            $oItem = $this->_createItem($sProductId, $aSelList, $aPersParams);
         }
 
         return $oItem;
@@ -261,10 +257,11 @@ class oxUserBasket extends oxBase
      *
      * @return string
      */
-    protected function _getItemKey( $sProductId, $aSel = null, $aPersParam = null )
+    protected function _getItemKey($sProductId, $aSel = null, $aPersParam = null)
     {
-        $aSel = ( $aSel != null) ? $aSel : array (0=>'0');
-        return md5( $sProductId.'|'.serialize( $aSel ).'|'.serialize( $aPersParam ) );
+        $aSel = ($aSel != null) ? $aSel : array(0 => '0');
+
+        return md5($sProductId . '|' . serialize($aSel) . '|' . serialize($aPersParam));
     }
 
     /**
@@ -274,9 +271,9 @@ class oxUserBasket extends oxBase
      *
      * @return int
      */
-    public function getItemCount( $blReload = false )
+    public function getItemCount($blReload = false)
     {
-        return count( $this->getItems( $blReload ) );
+        return count($this->getItems($blReload));
     }
 
     /**
@@ -291,24 +288,24 @@ class oxUserBasket extends oxBase
      *
      * @return integer
      */
-    public function addItemToBasket( $sProductId = null, $dAmount = null, $aSel = null, $blOverride = false, $aPersParam = null )
+    public function addItemToBasket($sProductId = null, $dAmount = null, $aSel = null, $blOverride = false, $aPersParam = null)
     {
         // basket info is only written in DB when something is in it
-        if ( $this->_blNewBasket ) {
+        if ($this->_blNewBasket) {
             $this->save();
         }
 
-        if ( ( $oUserBasketItem = $this->getItem( $sProductId, $aSel, $aPersParam ) ) ) {
+        if (($oUserBasketItem = $this->getItem($sProductId, $aSel, $aPersParam))) {
             // updating object info and adding (if not yet added) item into basket items array
-            if ( !$blOverride && !empty($oUserBasketItem->oxuserbasketitems__oxamount->value) ) {
+            if (!$blOverride && !empty($oUserBasketItem->oxuserbasketitems__oxamount->value)) {
                 $dAmount += $oUserBasketItem->oxuserbasketitems__oxamount->value;
             }
 
-            if ( !$dAmount ) {
+            if (!$dAmount) {
                 // if amount = 0 the means remove it
                 $oUserBasketItem->delete();
-                if ( isset($this->_aBasketItems[$this->_getItemKey($sProductId, $aSel, $aPersParam)])) {
-                    unset( $this->_aBasketItems[$this->_getItemKey($sProductId, $aSel, $aPersParam)] );
+                if (isset($this->_aBasketItems[$this->_getItemKey($sProductId, $aSel, $aPersParam)])) {
+                    unset($this->_aBasketItems[$this->_getItemKey($sProductId, $aSel, $aPersParam)]);
                 }
             } else {
                 $oUserBasketItem->oxuserbasketitems__oxamount = new oxField($dAmount, oxField::T_RAW);
@@ -332,19 +329,20 @@ class oxUserBasket extends oxBase
      *
      * @return bool
      */
-    public function delete( $sOXID = null )
+    public function delete($sOXID = null)
     {
-        if ( !$sOXID ) {
+        if (!$sOXID) {
             $sOXID = $this->getId();
         }
 
         $blDelete = false;
-        if ( $sOXID && ( $blDelete = parent::delete( $sOXID ) ) ) {
+        if ($sOXID && ($blDelete = parent::delete($sOXID))) {
             // cleaning up related data
             $oDb = oxDb::getDb();
-            $sQ = "delete from oxuserbasketitems where oxbasketid = " . $oDb->quote( $sOXID );
-            $oDb->execute( $sQ );
+            $sQ = "delete from oxuserbasketitems where oxbasketid = " . $oDb->quote($sOXID);
+            $oDb->execute($sQ);
         }
+
         return $blDelete;
     }
 
@@ -357,13 +355,13 @@ class oxUserBasket extends oxBase
     {
         $oActivUser = $this->getConfig()->getUser();
         $sActivUserId = null;
-        if ($oActivUser)
+        if ($oActivUser) {
             $sActivUserId = $oActivUser->getId();
+        }
 
         $blIsVisible = (bool) ($this->oxuserbaskets__oxpublic->value) ||
-                              ($sActivUserId && ($this->oxuserbaskets__oxuserid->value == $sActivUserId));
+                       ($sActivUserId && ($this->oxuserbaskets__oxuserid->value == $sActivUserId));
 
         return $blIsVisible;
     }
-
 }

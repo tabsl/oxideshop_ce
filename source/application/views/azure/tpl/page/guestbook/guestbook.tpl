@@ -1,6 +1,5 @@
 [{capture append="oxidBlock_content"}]
-    [{assign var="template_title" value="GUESTBOOK"|oxmultilangassign}]
-    <h1 class="pageHead">[{ oxmultilang ident="GUESTBOOK" }]</h1>
+    <h1 class="pageHead">[{$oView->getTitle()}]</h1>
     <div class="listRefine clear bottomRound">
         [{include file="widget/locator/listlocator.tpl" locator=$oView->getPageNavigation() sort=true}]
     </div>
@@ -25,6 +24,5 @@
         </dl>
         [{include file="widget/locator/listlocator.tpl" locator=$oView->getPageNavigation() place="bottom"}]
     </div>
-    [{ insert name="oxid_tracker" title=$template_title }]
 [{/capture}]
 [{include file="layout/page.tpl" sidebar="Left"}]

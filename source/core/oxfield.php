@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   core
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -32,10 +30,10 @@
  * T_RAW and T_TEXT types represent not the assignment logic, but rather a
  * returned value escaping status.
  *
- * @package core
  */
 class oxField // extends oxSuperCfg
 {
+
     /**
      * escaping functionality type: expected value is escaped text.
      */
@@ -44,7 +42,7 @@ class oxField // extends oxSuperCfg
     /**
      * escaping functionality type: expected value is not escaped (raw) text.
      */
-    const T_RAW  = 2;
+    const T_RAW = 2;
 
     /**
      * Constructor
@@ -93,16 +91,16 @@ class oxField // extends oxSuperCfg
      *
      * @return boolean
      */
-    public function __isset( $sName )
+    public function __isset($sName)
     {
-        switch ( $sName ) {
+        switch ($sName) {
             case 'rawValue':
                 return ($this->rawValue !== null);
                 break;
             case 'value':
                 return ($this->value !== null);
                 break;
-                //return true;
+            //return true;
         }
         return false;
     }
@@ -114,15 +112,15 @@ class oxField // extends oxSuperCfg
      *
      * @return string | null
      */
-    public function __get( $sName )
+    public function __get($sName)
     {
-        switch ( $sName ) {
+        switch ($sName) {
             case 'rawValue':
                 return $this->value;
                 break;
             case 'value':
                 if (is_string($this->rawValue)) {
-                    $this->value = getStr()->htmlspecialchars( $this->rawValue );
+                    $this->value = getStr()->htmlspecialchars($this->rawValue);
                 } else {
                     // TODO: call htmlentities for each value (recursively?)
                     $this->value = $this->rawValue;
@@ -130,6 +128,7 @@ class oxField // extends oxSuperCfg
                 if ($this->rawValue == $this->value) {
                     unset($this->rawValue);
                 }
+
                 return $this->value;
                 break;
             default:
@@ -145,27 +144,23 @@ class oxField // extends oxSuperCfg
      */
     public function __toString()
     {
-        return (string)$this->value;
+        return (string) $this->value;
     }
 
     /**
      * Converts to formatted db date
-     *
-     * @return null
      */
     public function convertToFormattedDbDate()
     {
-        $this->setValue(oxRegistry::get("oxUtilsDate")->formatDBDate( $this->rawValue ), self::T_RAW);
+        $this->setValue(oxRegistry::get("oxUtilsDate")->formatDBDate($this->rawValue), self::T_RAW);
     }
 
     /**
      * Converts to pseudo html - new lines to <br /> tags
-     *
-     * @return null
      */
     public function convertToPseudoHtml()
     {
-        $this->setValue( str_replace( "\r", '', nl2br( getStr()->htmlspecialchars( $this->rawValue ) ) ), self::T_RAW );
+        $this->setValue(str_replace("\r", '', nl2br(getStr()->htmlspecialchars($this->rawValue))), self::T_RAW);
     }
 
     /**
@@ -173,10 +168,8 @@ class oxField // extends oxSuperCfg
      *
      * @param mixed $value Field value
      * @param int   $type  Value type
-     *
-     * @return null
      */
-    protected function _initValue( $value = null, $type = self::T_TEXT)
+    protected function _initValue($value = null, $type = self::T_TEXT)
     {
         switch ($type) {
             case self::T_TEXT:
@@ -193,8 +186,6 @@ class oxField // extends oxSuperCfg
      *
      * @param mixed $value Field value
      * @param int   $type  Value type
-     *
-     * @return null
      */
     public function setValue($value = null, $type = self::T_TEXT)
     {
@@ -213,6 +204,7 @@ class oxField // extends oxSuperCfg
         if (null === $this->rawValue) {
             return $this->value;
         };
+
         return $this->rawValue;
     }
 }

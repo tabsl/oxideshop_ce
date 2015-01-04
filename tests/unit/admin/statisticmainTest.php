@@ -1,35 +1,31 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
-
-require_once realpath( "." ).'/unit/OxidTestCase.php';
-require_once realpath( "." ).'/unit/test_config.inc.php';
 
 /**
  * Tests for Statistic_Main class
  */
 class Unit_Admin_StatisticMainTest extends OxidTestCase
 {
+
     /**
      * Unset mocked registry entry.
      *
@@ -45,17 +41,17 @@ class Unit_Admin_StatisticMainTest extends OxidTestCase
     protected function _getAllReports()
     {
         $aReportFiles = array(
-            array( 'filename' => 'report_canceled_orders.php', 'name' => 'Bestellabbrueche' ),
-            array( 'filename' => 'report_conversion_rate.php', 'name' => 'Conversion Rate' ),
-            array( 'filename' => 'report_searchstrings.php', 'name' => 'Suchwörter' ),
-            array( 'filename' => 'report_top_clicked_categories.php', 'name' => 'Top geklickte Kategorien'),
-            array( 'filename' => 'report_top_viewed_products.php', 'name' => 'Top angesehene Artikel'),
-            array( 'filename' => 'report_user_per_group.php', 'name' => 'Kunden nach Benutzergruppen'),
-            array( 'filename' => 'report_visitor_absolute.php', 'name' => 'Kunden/Besucher'),
+            array('filename' => 'report_canceled_orders.php', 'name' => 'Bestellabbrueche'),
+            array('filename' => 'report_conversion_rate.php', 'name' => 'Conversion Rate'),
+            array('filename' => 'report_searchstrings.php', 'name' => 'Suchwörter'),
+            array('filename' => 'report_top_clicked_categories.php', 'name' => 'Top geklickte Kategorien'),
+            array('filename' => 'report_top_viewed_products.php', 'name' => 'Top angesehene Artikel'),
+            array('filename' => 'report_user_per_group.php', 'name' => 'Kunden nach Benutzergruppen'),
+            array('filename' => 'report_visitor_absolute.php', 'name' => 'Kunden/Besucher'),
         );
 
         $aExpAllReports = array();
-        foreach ( $aReportFiles as $afile) {
+        foreach ($aReportFiles as $afile) {
             $oStd = new stdClass();
             $oStd->filename = $afile['filename'];
             $oStd->name = $afile['name'];
@@ -72,21 +68,21 @@ class Unit_Admin_StatisticMainTest extends OxidTestCase
      */
     public function testRender()
     {
-        $this->setRequestParam( "oxid", "testId" );
+        $this->setRequestParam("oxid", "testId");
 
         // testing..
         $oView = new Statistic_Main();
-        $this->assertEquals( 'statistic_main.tpl', $oView->render() );
+        $this->assertEquals('statistic_main.tpl', $oView->render());
 
         $aViewData = $oView->getViewData();
-        $this->assertTrue( isset( $aViewData['edit'] ) );
-        $this->assertTrue( $aViewData['edit'] instanceof oxstatistic );
+        $this->assertTrue(isset($aViewData['edit']));
+        $this->assertTrue($aViewData['edit'] instanceof oxstatistic);
 
         $sAllReports = $this->getSessionParam("allstat_reports");
-        $sReports    = $this->getSessionParam("stat_reports_testId");
-        $this->assertEquals( $this->_getAllReports(), $sAllReports );
-        $this->assertFalse( $sReports );
-        $this->assertNull( $aViewData['ireports'] );
+        $sReports = $this->getSessionParam("stat_reports_testId");
+        $this->assertEquals($this->_getAllReports(), $sAllReports);
+        $this->assertFalse($sReports);
+        $this->assertNull($aViewData['ireports']);
     }
 
     /**
@@ -96,14 +92,14 @@ class Unit_Admin_StatisticMainTest extends OxidTestCase
      */
     public function testRenderNoRealObjectId()
     {
-        $this->setRequestParam( "oxid", "-1" );
+        $this->setRequestParam("oxid", "-1");
 
         // testing..
         $oView = new Statistic_Main();
-        $this->assertEquals( 'statistic_main.tpl', $oView->render() );
+        $this->assertEquals('statistic_main.tpl', $oView->render());
         $aViewData = $oView->getViewData();
-        $this->assertTrue( isset( $aViewData['oxid'] ) );
-        $this->assertEquals( "-1", $aViewData['oxid'] );
+        $this->assertTrue(isset($aViewData['oxid']));
+        $this->assertEquals("-1", $aViewData['oxid']);
     }
 
     public function testRenderWithSomeReports()
@@ -114,21 +110,22 @@ class Unit_Admin_StatisticMainTest extends OxidTestCase
 
         $oStatMock = $this->getMock("oxstatistic", array("load", "getReports"));
         $oStatMock->expects($this->once())->method("load")->with("testId");
-        $oStatMock->expects($this->once())->method("getReports")->will($this->returnValue( array("testRes") ));
-        oxTestModules::addModuleObject( 'oxstatistic', $oStatMock );
+        $oStatMock->expects($this->once())->method("getReports")->will($this->returnValue(array("testRes")));
+        oxTestModules::addModuleObject('oxstatistic', $oStatMock);
 
-        $this->assertEquals( 'statistic_main.tpl', $oView->render() );
+        $this->assertEquals('statistic_main.tpl', $oView->render());
 
         $aViewData = $oView->getViewData();
-        $this->assertTrue( isset( $aViewData['edit'] ) );
-        $this->assertTrue( $aViewData['edit'] instanceof oxstatistic );
+        $this->assertTrue(isset($aViewData['edit']));
+        $this->assertTrue($aViewData['edit'] instanceof oxstatistic);
 
         $sAllReports = $this->getSessionParam("allstat_reports");
-        $sReports    = $this->getSessionParam("stat_reports_testId");
-        $this->assertEquals( $this->_getAllReports(), $sAllReports );
-        $this->assertEquals( array("testRes"), $sReports );
-        $this->assertEquals( 1, $aViewData['ireports'] );
+        $sReports = $this->getSessionParam("stat_reports_testId");
+        $this->assertEquals($this->_getAllReports(), $sAllReports);
+        $this->assertEquals(array("testRes"), $sReports);
+        $this->assertEquals(1, $aViewData['ireports']);
     }
+
     /**
      * Statistic_Main::Render() test case
      *
@@ -136,19 +133,19 @@ class Unit_Admin_StatisticMainTest extends OxidTestCase
      */
     public function testRenderPopup()
     {
-        $this->setRequestParam( "aoc", true );
+        $this->setRequestParam("aoc", true);
 
         $oStatMock = $this->getMock("statistic_main_ajax", array("getColumns"));
-        $oStatMock->expects($this->once())->method("getColumns")->will($this->returnValue( "testRes" ));
-        oxTestModules::addModuleObject( 'statistic_main_ajax', $oStatMock );
+        $oStatMock->expects($this->once())->method("getColumns")->will($this->returnValue("testRes"));
+        oxTestModules::addModuleObject('statistic_main_ajax', $oStatMock);
 
         // testing..
         $oView = new Statistic_Main();
-        $this->assertEquals( 'popups/statistic_main.tpl', $oView->render() );
+        $this->assertEquals('popups/statistic_main.tpl', $oView->render());
 
         $aViewData = $oView->getViewData();
-        $this->assertTrue( isset( $aViewData['oxajax'] ) );
-        $this->assertEquals( "testRes", $aViewData['oxajax'] );
+        $this->assertTrue(isset($aViewData['oxajax']));
+        $this->assertEquals("testRes", $aViewData['oxajax']);
     }
 
     /**
@@ -173,7 +170,7 @@ class Unit_Admin_StatisticMainTest extends OxidTestCase
         $oStatMock->expects($this->once())->method("load")->with("testId");
         $oStatMock->expects($this->once())->method("assign")->with($aTestParams);
         $oStatMock->expects($this->once())->method("save");
-        oxTestModules::addModuleObject( 'oxstatistic', $oStatMock );
+        oxTestModules::addModuleObject('oxstatistic', $oStatMock);
 
         $oSubj->save();
 
@@ -194,13 +191,13 @@ class Unit_Admin_StatisticMainTest extends OxidTestCase
 
         // Mock oxStatistics. oxStatistics method getReports will return array of files to generate report from.
         $sSomeClassName = 'oxSomeClass';
-        $aAllreports = array($sSomeClassName .'.php');
+        $aAllreports = array($sSomeClassName . '.php');
         $oStatistic = $this->getMock('oxStatistic', array('getReports', 'load'));
         // Id load with test id getReports() return corect value.
         $oStatistic->expects($this->once())->method('load')->with('_test_id');
         $oStatistic->expects($this->once())->method('getReports')->will($this->returnValue($aAllreports));
         // Mock oxNew to return mocked oxStatistics
-        oxTestModules::addModuleObject( 'oxstatistic', $oStatistic );
+        oxTestModules::addModuleObject('oxstatistic', $oStatistic);
 
         // Mock some object to chek if it is called when returned from oxStatistics method getReports.
         $sTemplateName = 'somefile.tpl';
@@ -208,7 +205,7 @@ class Unit_Admin_StatisticMainTest extends OxidTestCase
         $oSomeObject->expects($this->once())->method('setSmarty')->will($this->returnValue(true));
         $oSomeObject->expects($this->once())->method('render')->will($this->returnValue($sTemplateName));
         // Mock oxNew to return mocked object when creating object from oxStatistics method getReports in method generate.
-        oxTestModules::addModuleObject( $sSomeClassName, $oSomeObject );
+        oxTestModules::addModuleObject($sSomeClassName, $oSomeObject);
 
         // Mock Statistic_Main.
         $oStatistic_Main = $this->getMock('Statistic_Main', array('getEditObjectId'));

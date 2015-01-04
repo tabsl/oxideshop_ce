@@ -1,29 +1,24 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
-
-require_once realpath( "." ).'/unit/OxidTestCase.php';
-require_once realpath( "." ).'/unit/test_config.inc.php';
 
 /**
  * Unit_oxmdvariantTest
@@ -31,6 +26,7 @@ require_once realpath( "." ).'/unit/test_config.inc.php';
  */
 class Unit_Core_oxmdvariantTest extends OxidTestCase
 {
+
     /**
      * OxMdVariant
      *
@@ -48,70 +44,72 @@ class Unit_Core_oxmdvariantTest extends OxidTestCase
         parent::setUp();
 
         $aNames = Array("Red|S|Silk",
-                       "Red|M|Silk",
-                       "Red|M|Wool",
-                       "Red|L|Silk",
-                       "Red|L|Wool",
-                       "Blue|S|Silk",
-                       "Blue|M|Silk",
-                       "Blue|M|Wool",
-                       "Blue|L|Silk",
-                       "Blue|L|Wool",
-                       "Green|S|Silk",
-                       "Green|S|Wool",
-                       "Green|M|Silk",
-                       "Green|M|Wool",
-                       "Yellow|XL|Leather",
-                       "Magenta|S|Wool",
-                       "Magenta|S|Silk"
+                        "Red|M|Silk",
+                        "Red|M|Wool",
+                        "Red|L|Silk",
+                        "Red|L|Wool",
+                        "Blue|S|Silk",
+                        "Blue|M|Silk",
+                        "Blue|M|Wool",
+                        "Blue|L|Silk",
+                        "Blue|L|Wool",
+                        "Green|S|Silk",
+                        "Green|S|Wool",
+                        "Green|M|Silk",
+                        "Green|M|Wool",
+                        "Yellow|XL|Leather",
+                        "Magenta|S|Wool",
+                        "Magenta|S|Silk"
         );
 
-        $aPrices = Array( 1,1,1,1,2,3,4,4,4,4,4,4,5,5,1,2,3);
-        $aArtIds = Array( "id01",
-                          "id02",
-                          "id03",
-                          "id04",
-                          "id05",
-                          "id06",
-                          "id07",
-                          "id08",
-                          "id09",
-                          "id10",
-                          "id11",
-                          "id12",
-                          "id13",
-                          "id14",
-                          "id15",
-                          "id16",
-                          "id17",
-                );
+        $aPrices = Array(1, 1, 1, 1, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 1, 2, 3);
+        $aArtIds = Array("id01",
+                         "id02",
+                         "id03",
+                         "id04",
+                         "id05",
+                         "id06",
+                         "id07",
+                         "id08",
+                         "id09",
+                         "id10",
+                         "id11",
+                         "id12",
+                         "id13",
+                         "id14",
+                         "id15",
+                         "id16",
+                         "id17",
+        );
 
-        $aLinks = Array(  "ld01",
-                          "ld02",
-                          "ld03",
-                          "ld04",
-                          "ld05",
-                          "ld06",
-                          "ld07",
-                          "ld08",
-                          "ld09",
-                          "ld10",
-                          "ld11",
-                          "ld12",
-                          "ld13",
-                          "ld14",
-                          "ld15",
-                          "ld16",
-                          "ld17",
-                );
+        $aLinks = Array("ld01",
+                        "ld02",
+                        "ld03",
+                        "ld04",
+                        "ld05",
+                        "ld06",
+                        "ld07",
+                        "ld08",
+                        "ld09",
+                        "ld10",
+                        "ld11",
+                        "ld12",
+                        "ld13",
+                        "ld14",
+                        "ld15",
+                        "ld16",
+                        "ld17",
+        );
 
         $this->_oSubj = $this->getProxyClass("oxMdVariant");
         $iC = count($aNames);
         for ($i = 0; $i < $iC; $i++) {
-            $this->_oSubj->addNames( $aArtIds[$i],
-                                    explode("|", $aNames[$i]),
-                                    $aPrices[$i],
-                                    $aLinks[$i]);
+            $this->_oSubj->addNames(
+                $aArtIds[$i],
+                explode("|", $aNames[$i]),
+                $aPrices[$i],
+                $aLinks[$i]
+            );
         }
 
 
@@ -162,7 +160,7 @@ class Unit_Core_oxmdvariantTest extends OxidTestCase
         $oSubVariant = $this->_oSubj->getMdSubvariantByName("Blue")->getMdSubvariantByName("M");
         $oNewSubVariant = $this->_oSubj->addNames("testId", array("Blue", "M", "Test"), 5, "testLink");
         $this->assertEquals($this->_oSubj->getMdSubvariantByName("Blue")->getMdSubvariantByName("M")->getMdSubvariantByName("Test")->getParentId(), $oSubVariant->getId());
-        $this->assertTrue((bool)$oSubVariant->getId());
+        $this->assertTrue((bool) $oSubVariant->getId());
     }
 
     /**
@@ -377,16 +375,16 @@ class Unit_Core_oxmdvariantTest extends OxidTestCase
      */
     function testGetPriceNoPriceCalculate()
     {
-        oxConfig::getInstance()->setConfigParam( 'bl_perfLoadPrice', false );
+        oxRegistry::getConfig()->setConfigParam('bl_perfLoadPrice', false);
 
         $oSubj = new oxMdVariant();
         $sArtId = '';
         $aNames = array();
         $dPrice = 10.10;
         $sUrl = '';
-        $oSubj->addNames( $sArtId, $aNames, $dPrice, $sUrl );
+        $oSubj->addNames($sArtId, $aNames, $dPrice, $sUrl);
         $iPrice = $oSubj->getFPrice();
-        $this->assertTrue( empty( $iPrice ) );
+        $this->assertTrue(empty($iPrice));
     }
 
 }

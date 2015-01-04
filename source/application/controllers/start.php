@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   views
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -28,6 +26,7 @@
  */
 class Start extends oxUBase
 {
+
     /**
      * List display type
      *
@@ -37,6 +36,7 @@ class Start extends oxUBase
 
     /**
      * Current class template name.
+     *
      * @var string
      */
     protected $_sThisTemplate = 'page/shop/start.tpl';
@@ -106,12 +106,14 @@ class Start extends oxUBase
 
     /**
      * Sign if to load and show top5articles action
+     *
      * @var bool
      */
     protected $_blTop5Action = true;
 
     /**
      * Sign if to load and show bargain action
+     *
      * @var bool
      */
     protected $_blBargainAction = true;
@@ -126,21 +128,22 @@ class Start extends oxUBase
      */
     public function render()
     {
-        if ( oxConfig::getParameter( 'showexceptionpage' ) == '1' ) {
+
+        if (oxRegistry::getConfig()->getRequestParameter('showexceptionpage') == '1') {
             return 'message/exception.tpl';
         }
 
         $myConfig = $this->getConfig();
 
         $oRss = oxNew('oxrssfeed');
-        if ($myConfig->getConfigParam( 'iTop5Mode' ) && $myConfig->getConfigParam( 'bl_rssTopShop' ) ) {
-            $this->addRssFeed( $oRss->getTopInShopTitle(), $oRss->getTopInShopUrl(), 'topArticles' );
+        if ($myConfig->getConfigParam('iTop5Mode') && $myConfig->getConfigParam('bl_rssTopShop')) {
+            $this->addRssFeed($oRss->getTopInShopTitle(), $oRss->getTopInShopUrl(), 'topArticles');
         }
-        if ( $myConfig->getConfigParam( 'iNewestArticlesMode' ) && $myConfig->getConfigParam( 'bl_rssNewest' ) ) {
-            $this->addRssFeed( $oRss->getNewestArticlesTitle(), $oRss->getNewestArticlesUrl(), 'newestArticles' );
+        if ($myConfig->getConfigParam('iNewestArticlesMode') && $myConfig->getConfigParam('bl_rssNewest')) {
+            $this->addRssFeed($oRss->getNewestArticlesTitle(), $oRss->getNewestArticlesUrl(), 'newestArticles');
         }
-        if ( $myConfig->getConfigParam( 'bl_rssBargain' ) ) {
-            $this->addRssFeed( $oRss->getBargainTitle(), $oRss->getBargainUrl(), 'bargainArticles' );
+        if ($myConfig->getConfigParam('bl_rssBargain')) {
+            $this->addRssFeed($oRss->getBargainTitle(), $oRss->getBargainUrl(), 'bargainArticles');
         }
 
         parent::render();
@@ -159,15 +162,17 @@ class Start extends oxUBase
      *
      * @return string
      */
-    protected function _prepareMetaDescription( $sMeta, $iLength = 1024, $blDescTag = false )
+    protected function _prepareMetaDescription($sMeta, $iLength = 1024, $blDescTag = false)
     {
-        if ( !$sMeta &&
-            $this->getConfig()->getConfigParam( 'bl_perfLoadAktion' ) &&
-            $oArt = $this->getFirstArticle() ) {
+        if (!$sMeta &&
+            $this->getConfig()->getConfigParam('bl_perfLoadAktion') &&
+            $oArt = $this->getFirstArticle()
+        ) {
             $oDescField = $oArt->getLongDescription();
             $sMeta = $oArt->oxarticles__oxtitle->value . ' - ' . $oDescField->value;
         }
-        return parent::_prepareMetaDescription( $sMeta, $iLength, $blDescTag );
+
+        return parent::_prepareMetaDescription($sMeta, $iLength, $blDescTag);
     }
 
     /**
@@ -180,16 +185,17 @@ class Start extends oxUBase
      *
      * @return string
      */
-    protected function _prepareMetaKeyword( $sKeywords, $blRemoveDuplicatedWords = true )
+    protected function _prepareMetaKeyword($sKeywords, $blRemoveDuplicatedWords = true)
     {
-        if ( !$sKeywords &&
-            $this->getConfig()->getConfigParam( 'bl_perfLoadAktion' ) &&
-            $oArt = $this->getFirstArticle() ) {
+        if (!$sKeywords &&
+            $this->getConfig()->getConfigParam('bl_perfLoadAktion') &&
+            $oArt = $this->getFirstArticle()
+        ) {
             $oDescField = $oArt->getLongDescription();
             $sKeywords = $oDescField->value;
         }
 
-        return parent::_prepareMetaKeyword( $sKeywords, $blRemoveDuplicatedWords );
+        return parent::_prepareMetaKeyword($sKeywords, $blRemoveDuplicatedWords);
     }
 
     /**
@@ -199,12 +205,13 @@ class Start extends oxUBase
      */
     protected function _getLoadActionsParam()
     {
-        if ( $this->_blLoadActions === null ) {
+        if ($this->_blLoadActions === null) {
             $this->_blLoadActions = false;
-            if ( $this->getConfig()->getConfigParam( 'bl_perfLoadAktion' ) ) {
+            if ($this->getConfig()->getConfigParam('bl_perfLoadAktion')) {
                 $this->_blLoadActions = true;
             }
         }
+
         return $this->_blLoadActions;
     }
 
@@ -215,17 +222,18 @@ class Start extends oxUBase
      */
     public function getArticleList()
     {
-        if ( $this->_aArticleList === null ) {
+        if ($this->_aArticleList === null) {
             $this->_aArticleList = array();
-            if ( $this->_getLoadActionsParam() ) {
+            if ($this->_getLoadActionsParam()) {
                 // start list
-                $oArtList = oxNew( 'oxarticlelist' );
-                $oArtList->loadActionArticles( 'OXSTART' );
-                if ( $oArtList->count() ) {
+                $oArtList = oxNew('oxarticlelist');
+                $oArtList->loadActionArticles('OXSTART');
+                if ($oArtList->count()) {
                     $this->_aArticleList = $oArtList;
                 }
             }
         }
+
         return $this->_aArticleList;
     }
 
@@ -236,21 +244,20 @@ class Start extends oxUBase
      */
     public function getTopArticleList()
     {
-        if ( $this->_aTopArticleList === null ) {
+        if ($this->_aTopArticleList === null) {
             $this->_aTopArticleList = false;
-            if ( $this->_getLoadActionsParam() ) {
+            if ($this->_getLoadActionsParam()) {
                 // start list
-                $oArtList = oxNew( 'oxarticlelist' );
-                $oArtList->loadActionArticles( 'OXTOPSTART' );
-                if ( $oArtList->count() ) {
+                $oArtList = oxNew('oxarticlelist');
+                $oArtList->loadActionArticles('OXTOPSTART');
+                if ($oArtList->count()) {
                     $this->_aTopArticleList = $oArtList;
                 }
             }
         }
+
         return $this->_aTopArticleList;
     }
-
-
 
 
     /**
@@ -260,17 +267,18 @@ class Start extends oxUBase
      */
     public function getNewestArticles()
     {
-        if ( $this->_aNewArticleList === null ) {
+        if ($this->_aNewArticleList === null) {
             $this->_aNewArticleList = array();
-            if ( $this->_getLoadActionsParam() ) {
+            if ($this->_getLoadActionsParam()) {
                 // newest articles
-                $oArtList = oxNew( 'oxarticlelist' );
+                $oArtList = oxNew('oxarticlelist');
                 $oArtList->loadNewestArticles();
-                if ( $oArtList->count() ) {
+                if ($oArtList->count()) {
                     $this->_aNewArticleList = $oArtList;
                 }
             }
         }
+
         return $this->_aNewArticleList;
     }
 
@@ -281,17 +289,18 @@ class Start extends oxUBase
      */
     public function getFirstArticle()
     {
-        if ( $this->_oFirstArticle === null ) {
+        if ($this->_oFirstArticle === null) {
             $this->_oFirstArticle = false;
-            if ( $this->_getLoadActionsParam() ) {
+            if ($this->_getLoadActionsParam()) {
                 // top articles ( big one )
-                $oArtList = oxNew( 'oxarticlelist' );
-                $oArtList->loadActionArticles( 'OXFIRSTSTART' );
-                if ( $oArtList->count() ) {
+                $oArtList = oxNew('oxarticlelist');
+                $oArtList->loadActionArticles('OXFIRSTSTART');
+                if ($oArtList->count()) {
                     $this->_oFirstArticle = $oArtList->current();
                 }
             }
         }
+
         return $this->_oFirstArticle;
     }
 
@@ -302,12 +311,13 @@ class Start extends oxUBase
      */
     public function getCatOfferArticle()
     {
-        if ( $this->_oCatOfferArticle === null ) {
+        if ($this->_oCatOfferArticle === null) {
             $this->_oCatOfferArticle = false;
-            if ( $oArtList = $this->getCatOfferArticleList() ) {
+            if ($oArtList = $this->getCatOfferArticleList()) {
                 $this->_oCatOfferArticle = $oArtList->current();
             }
         }
+
         return $this->_oCatOfferArticle;
     }
 
@@ -318,17 +328,18 @@ class Start extends oxUBase
      */
     public function getCatOfferArticleList()
     {
-        if ( $this->_oCatOfferArtList === null ) {
+        if ($this->_oCatOfferArtList === null) {
             $this->_oCatOfferArtList = array();
-            if ( $this->_getLoadActionsParam() ) {
+            if ($this->_getLoadActionsParam()) {
                 // "category offer" articles
-                $oArtList = oxNew( 'oxarticlelist' );
-                $oArtList->loadActionArticles( 'OXCATOFFER' );
-                if ( $oArtList->count() ) {
+                $oArtList = oxNew('oxarticlelist');
+                $oArtList->loadActionArticles('OXCATOFFER');
+                if ($oArtList->count()) {
                     $this->_oCatOfferArtList = $oArtList;
                 }
             }
         }
+
         return $this->_oCatOfferArtList;
     }
 
@@ -349,8 +360,8 @@ class Start extends oxUBase
      */
     public function getCanonicalUrl()
     {
-        if ( oxRegistry::getUtils()->seoIsActive() && ( $oViewConf = $this->getViewConfig() ) ) {
-            return oxRegistry::get("oxUtilsUrl")->prepareCanonicalUrl( $oViewConf->getHomeLink() );
+        if (oxRegistry::getUtils()->seoIsActive() && ($oViewConf = $this->getViewConfig())) {
+            return oxRegistry::get("oxUtilsUrl")->prepareCanonicalUrl($oViewConf->getHomeLink());
         }
     }
 
@@ -365,9 +376,9 @@ class Start extends oxUBase
 
         $oBannerList = null;
 
-        if ( $this->getConfig()->getConfigParam( 'bl_perfLoadAktion' ) ) {
-        $oBannerList = oxNew( 'oxActionList' );
-        $oBannerList->loadBanners();
+        if ($this->getConfig()->getConfigParam('bl_perfLoadAktion')) {
+            $oBannerList = oxNew('oxActionList');
+            $oBannerList->loadBanners();
         }
 
         return $oBannerList;
@@ -383,11 +394,10 @@ class Start extends oxUBase
 
         $oList = null;
 
-        if ( $this->getConfig()->getConfigParam( 'bl_perfLoadAktion' ) ) {
+        if ($this->getConfig()->getConfigParam('bl_perfLoadAktion')) {
             $oList = $this->getManufacturerlist();
         }
 
         return $oList;
     }
-
 }

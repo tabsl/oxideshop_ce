@@ -465,11 +465,13 @@ span.new{
     padding: 1px 5px;
 }
 
-a#linkToUpdate {
+a#linkToUpdate,
+.underlined {
     text-decoration:underline;	
 }
 
-a#linkToUpdate:hover {
+a#linkToUpdate:hover,
+.underlined:hover {
     color: #787878;
 }
 #tShopLicense {
@@ -479,4 +481,22 @@ a#linkToUpdate:hover {
 	float: right;
 	width: 45%;
     border-collapse: collapse;
+}
+.mallAssignment {
+    border: 1px solid #999;
+    /* auto height */
+    overflow: scroll;
+    min-height: 300px;
+    max-height: 300px;
+}
+.shopList {
+    float: left;
+}
+.shopList li {
+    list-style: none;
+    padding: 0px 5px 0 0;
+    background: none;
+}
+.assignmentContainer {
+    width: 100%;
 }

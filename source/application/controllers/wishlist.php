@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   views
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -30,6 +28,7 @@ class Wishlist extends oxUBase
 
     /**
      * Current class template name.
+     *
      * @var string
      */
     protected $_sThisTemplate = 'page/wishlist/wishlist.tpl';
@@ -64,6 +63,7 @@ class Wishlist extends oxUBase
 
     /**
      * Sign if to load and show bargain action
+     *
      * @var bool
      */
     protected $_blBargainAction = true;
@@ -77,22 +77,24 @@ class Wishlist extends oxUBase
     public function getWishUser()
     {
 
-        if ( $this->_oWishUser === null) {
+        if ($this->_oWishUser === null) {
             $this->_oWishUser = false;
 
-            $sUserId = oxConfig::getParameter( 'wishid') ? oxConfig::getParameter( 'wishid' ): oxSession::getVar( 'wishid');
-            if ( $sUserId ) {
-                $oUser = oxNew( 'oxuser' );
-                if ( $oUser->load( $sUserId ) ) {
+            $sWishIdParameter = oxRegistry::getConfig()->getRequestParameter('wishid');
+            $sUserId = $sWishIdParameter ? $sWishIdParameter : oxRegistry::getSession()->getVariable('wishid');
+            if ($sUserId) {
+                $oUser = oxNew('oxuser');
+                if ($oUser->load($sUserId)) {
 
                     // passing wishlist information
                     $this->_oWishUser = $oUser;
 
                     // store this one to session
-                    oxSession::setVar( 'wishid', $sUserId );
+                    oxRegistry::getSession()->setVariable('wishid', $sUserId);
                 }
             }
         }
+
         return $this->_oWishUser;
     }
 
@@ -103,21 +105,23 @@ class Wishlist extends oxUBase
      */
     public function getWishList()
     {
-        if ( $this->_oWishList === null) {
+        if ($this->_oWishList === null) {
             $this->_oWishList = false;
 
             // passing wishlist information
-            if ( $oUser = $this->getWishUser() ) {
+            if ($oUser = $this->getWishUser()) {
 
-                $oWishlistBasket = $oUser->getBasket( 'wishlist' );
+                $oWishlistBasket = $oUser->getBasket('wishlist');
                 $this->_oWishList = $oWishlistBasket->getArticles();
 
-                if (!$oWishlistBasket->isVisible())
+                if (!$oWishlistBasket->isVisible()) {
                     $this->_oWishList = false;
+                }
 
 
             }
         }
+
         return $this->_oWishList;
     }
 
@@ -128,16 +132,15 @@ class Wishlist extends oxUBase
      * Template variables:
      * <b>wish_result</b>, <b>search</b>
      *
-     * @return bool
      */
     public function searchForWishList()
     {
-        if ( $sSearch = oxConfig::getParameter( 'search' ) ) {
+        if ($sSearch = oxRegistry::getConfig()->getRequestParameter('search')) {
 
             // search for baskets
-            $oUserList = oxNew( 'oxuserlist' );
-            $oUserList->loadWishlistUsers( $sSearch );
-            if ( $oUserList->count() ) {
+            $oUserList = oxNew('oxuserlist');
+            $oUserList->loadWishlistUsers($sSearch);
+            if ($oUserList->count()) {
                 $this->_oWishListUsers = $oUserList;
             }
             $this->_sSearchParam = $sSearch;
@@ -175,10 +178,32 @@ class Wishlist extends oxUBase
         $aPaths = array();
         $aPath = array();
 
-        $aPath['title'] = oxRegistry::getLang()->translateString( 'PUBLIC_GIFT_REGISTRIES', oxRegistry::getLang()->getBaseLanguage(), false );
-        $aPath['link']  = $this->getLink();
+        $iBaseLanguage = oxRegistry::getLang()->getBaseLanguage();
+        $aPath['title'] = oxRegistry::getLang()->translateString('PUBLIC_GIFT_REGISTRIES', $iBaseLanguage, false);
+        $aPath['link'] = $this->getLink();
         $aPaths[] = $aPath;
 
         return $aPaths;
+    }
+
+    /**
+     * Page title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        $oLang = oxRegistry::getLang();
+        if ($oUser = $this->getWishUser()) {
+            $sTranslatedString = $oLang->translateString('GIFT_REGISTRY_OF_3', $oLang->getBaseLanguage(), false);
+            $sFirstnameField = 'oxuser__oxfname';
+            $sLastnameField = 'oxuser__oxlname';
+
+            $sTitle = $sTranslatedString . ' ' . $oUser->$sFirstnameField->value . ' ' . $oUser->$sLastnameField->value;
+        } else {
+            $sTitle = $oLang->translateString('PUBLIC_GIFT_REGISTRIES', $oLang->getBaseLanguage(), false);
+        }
+
+        return $sTitle;
     }
 }

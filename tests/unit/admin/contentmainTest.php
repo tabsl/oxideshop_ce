@@ -1,35 +1,31 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   tests
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
-
-require_once realpath( "." ).'/unit/OxidTestCase.php';
-require_once realpath( "." ).'/unit/test_config.inc.php';
 
 /**
  * Tests for Content_Main class
  */
 class Unit_Admin_ContentMainTest extends OxidTestCase
 {
+
     /**
      * Content_Main::Render() test case
      *
@@ -37,14 +33,14 @@ class Unit_Admin_ContentMainTest extends OxidTestCase
      */
     public function testRender()
     {
-        modConfig::setParameter( "oxid", "testId" );
+        modConfig::setRequestParameter("oxid", "testId");
 
         // testing..
         $oView = new Content_Main();
-        $this->assertEquals( 'content_main.tpl', $oView->render() );
+        $this->assertEquals('content_main.tpl', $oView->render());
         $aViewData = $oView->getViewData();
-        $this->assertTrue( isset( $aViewData['edit'] ) );
-        $this->assertTrue( $aViewData['edit'] instanceof oxcontent );
+        $this->assertTrue(isset($aViewData['edit']));
+        $this->assertTrue($aViewData['edit'] instanceof oxcontent);
     }
 
     /**
@@ -54,14 +50,14 @@ class Unit_Admin_ContentMainTest extends OxidTestCase
      */
     public function testRenderNoRealObjectId()
     {
-        modConfig::setParameter( "oxid", "-1" );
+        modConfig::setRequestParameter("oxid", "-1");
 
         // testing..
         $oView = new Content_Main();
-        $this->assertEquals( 'content_main.tpl', $oView->render() );
+        $this->assertEquals('content_main.tpl', $oView->render());
         $aViewData = $oView->getViewData();
-        $this->assertTrue( isset( $aViewData['oxid'] ) );
-        $this->assertEquals( "-1", $aViewData['oxid'] );
+        $this->assertTrue(isset($aViewData['oxid']));
+        $this->assertEquals("-1", $aViewData['oxid']);
     }
 
     /**
@@ -71,18 +67,19 @@ class Unit_Admin_ContentMainTest extends OxidTestCase
      */
     public function testSave()
     {
-        oxTestModules::addFunction( 'oxcontent', 'save', '{ throw new Exception( "save" );}');
+        oxTestModules::addFunction('oxcontent', 'save', '{ throw new Exception( "save" );}');
 
         // testing..
         try {
-            $oView = $this->getMock( "Content_Main", array( "_checkIdent" ) );
-            $oView->expects( $this->once() )->method( '_checkIdent' )->will( $this->returnValue( false ) );
+            $oView = $this->getMock("Content_Main", array("_checkIdent"));
+            $oView->expects($this->once())->method('_checkIdent')->will($this->returnValue(false));
             $oView->save();
-        } catch ( Exception $oExcp ) {
-            $this->assertEquals( "save", $oExcp->getMessage(), "Error in Content_Main::Save()" );
+        } catch (Exception $oExcp) {
+            $this->assertEquals("save", $oExcp->getMessage(), "Error in Content_Main::Save()");
+
             return;
         }
-        $this->fail( "Error in Content_Main::Save()" );
+        $this->fail("Error in Content_Main::Save()");
     }
 
     /**
@@ -92,17 +89,18 @@ class Unit_Admin_ContentMainTest extends OxidTestCase
      */
     public function testSaveinnlang()
     {
-        oxTestModules::addFunction( 'oxcontent', 'save', '{ throw new Exception( "save" );}');
+        oxTestModules::addFunction('oxcontent', 'save', '{ throw new Exception( "save" );}');
 
         // testing..
         try {
             $oView = new Content_Main();
             $oView->saveinnlang();
-        } catch ( Exception $oExcp ) {
-            $this->assertEquals( "save", $oExcp->getMessage(), "Error in Content_Main::Save()" );
+        } catch (Exception $oExcp) {
+            $this->assertEquals("save", $oExcp->getMessage(), "Error in Content_Main::Save()");
+
             return;
         }
-        $this->fail( "Error in Content_Main::Save()" );
+        $this->fail("Error in Content_Main::Save()");
     }
 
     /**
@@ -114,7 +112,7 @@ class Unit_Admin_ContentMainTest extends OxidTestCase
     {
         // defining parameters
         $oView = new Content_Main();
-        $this->assertNull( $oView->UNITprepareIdent( false ) );
+        $this->assertNull($oView->UNITprepareIdent(false));
     }
 
     /**
@@ -126,7 +124,7 @@ class Unit_Admin_ContentMainTest extends OxidTestCase
     {
         // defining parameters
         $oView = new Content_Main();
-        $this->assertEquals( "aaabbb", $oView->UNITprepareIdent( "~!@#$%^&^%*%(&^)aaabbb" ) );
+        $this->assertEquals("aaabbb", $oView->UNITprepareIdent("~!@#$%^&^%*%(&^)aaabbb"));
     }
 
     /**
@@ -138,7 +136,7 @@ class Unit_Admin_ContentMainTest extends OxidTestCase
     {
         // testing..
         $oView = new Content_Main();
-        $this->assertTrue( $oView->UNITcheckIdent( "", "" ) );
+        $this->assertTrue($oView->UNITcheckIdent("", ""));
     }
 
     /**
@@ -150,6 +148,6 @@ class Unit_Admin_ContentMainTest extends OxidTestCase
     {
         // testing..
         $oView = new Content_Main();
-        $this->assertTrue( $oView->UNITcheckIdent( "oxstartwelcome", "" ) );
+        $this->assertTrue($oView->UNITcheckIdent("oxstartwelcome", ""));
     }
 }

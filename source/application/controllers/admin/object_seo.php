@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   admin
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id$
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -27,6 +25,7 @@
  */
 class Object_Seo extends oxAdminDetails
 {
+
     /**
      * Executes parent method parent::render(),
      * and returns name of template file
@@ -38,24 +37,24 @@ class Object_Seo extends oxAdminDetails
     {
         parent::render();
 
-        if ( $sType = $this->_getType() ) {
-            $oObject = oxNew( $sType );
-            if ( $oObject->load( $this->getEditObjectId() ) ) {
+        if ($sType = $this->_getType()) {
+            $oObject = oxNew($sType);
+            if ($oObject->load($this->getEditObjectId())) {
                 $oOtherLang = $oObject->getAvailableInLangs();
-                if ( !isset( $oOtherLang[$iLang] ) ) {
-                    $oObject->loadInLang( key( $oOtherLang ), $this->getEditObjectId() );
+                if (!isset($oOtherLang[$iLang])) {
+                    $oObject->loadInLang(key($oOtherLang), $this->getEditObjectId());
                 }
                 $this->_aViewData['edit'] = $oObject;
             }
 
         }
 
-        $iLang  = $this->getEditLang();
+        $iLang = $this->getEditLang();
         $aLangs = oxRegistry::getLang()->getLanguageNames();
-        foreach ( $aLangs as $sLangId => $sLanguage ) {
+        foreach ($aLangs as $sLangId => $sLanguage) {
             $oLang = new stdClass();
             $oLang->sLangDesc = $sLanguage;
-            $oLang->selected  = ( $sLangId == $iLang );
+            $oLang->selected = ($sLangId == $iLang);
             $this->_aViewData['otherlang'][$sLangId] = clone $oLang;
         }
 
@@ -64,32 +63,52 @@ class Object_Seo extends oxAdminDetails
 
     /**
      * Saves selection list parameters changes.
-     *
-     * @return mixed
      */
     public function save()
     {
         // saving/updating seo params
-        if ( ( $sOxid = $this->_getSaveObjectId() ) ) {
-            $aSeoData = oxConfig::getParameter( 'aSeoData' );
-            $iShopId  = $this->getConfig()->getShopId();
-            $iLang    = $this->getEditLang();
+        if (($sOxid = $this->_getSaveObjectId())) {
+            $aSeoData = oxRegistry::getConfig()->getRequestParameter('aSeoData');
+            $iShopId = $this->getConfig()->getShopId();
+            $iLang = $this->getEditLang();
 
             // checkbox handling
-            if ( !isset( $aSeoData['oxfixed'] ) ) {
+            if (!isset($aSeoData['oxfixed'])) {
                 $aSeoData['oxfixed'] = 0;
             }
 
-            $oEncoder = $this->_getEncoder();
+            $sParams = $this->_getAdditionalParams($aSeoData);
 
+            $oEncoder = $this->_getEncoder();
             // marking self and page links as expired
-            $oEncoder->markAsExpired( $sOxid, $iShopId, 1, $iLang );
+            $oEncoder->markAsExpired($sOxid, $iShopId, 1, $iLang, $sParams);
 
             // saving
-            $oEncoder->addSeoEntry( $sOxid, $iShopId, $iLang, $this->_getStdUrl( $sOxid ),
-                                    $aSeoData['oxseourl'], $this->_getSeoEntryType(), $aSeoData['oxfixed'],
-                                    trim( $aSeoData['oxkeywords'] ), trim( $aSeoData['oxdescription'] ), $this->processParam( $aSeoData['oxparams'] ), true, $this->_getAltSeoEntryId() );
+            $oEncoder->addSeoEntry(
+                $sOxid, $iShopId, $iLang, $this->_getStdUrl($sOxid),
+                $aSeoData['oxseourl'], $this->_getSeoEntryType(), $aSeoData['oxfixed'],
+                trim($aSeoData['oxkeywords']), trim($aSeoData['oxdescription']), $this->processParam($aSeoData['oxparams']), true, $this->_getAltSeoEntryId()
+            );
         }
+    }
+
+    /**
+     * Gets additional params from aSeoData['oxparams'] if it is set.
+     *
+     * @param array $aSeoData Seo data array
+     *
+     * @return null|string
+     */
+    protected function _getAdditionalParams($aSeoData)
+    {
+        $sParams = null;
+        if (isset($aSeoData['oxparams'])) {
+            if (preg_match('/([a-z]*#)?(?<objectseo>[a-z0-9]+)(#[0-9])?/i', $aSeoData['oxparams'], $aMatches)) {
+                $sQuotedObjectSeoId = oxDb::getDb()->quote($aMatches['objectseo']);
+                $sParams = "oxparams = {$sQuotedObjectSeoId}";
+            }
+        }
+        return $sParams;
     }
 
     /**
@@ -109,9 +128,9 @@ class Object_Seo extends oxAdminDetails
      *
      * @return string
      */
-    public function getEntryMetaData( $sMetaType )
+    public function getEntryMetaData($sMetaType)
     {
-        return $this->_getEncoder()->getMetaData( $this->getEditObjectId(), $sMetaType, $this->getConfig()->getShopId(), $this->getEditLang() );
+        return $this->_getEncoder()->getMetaData($this->getEditObjectId(), $sMetaType, $this->getConfig()->getShopId(), $this->getEditLang());
     }
 
     /**
@@ -121,19 +140,18 @@ class Object_Seo extends oxAdminDetails
      */
     public function isEntryFixed()
     {
-        $iLang   = (int) $this->getEditLang();
+        $iLang = (int) $this->getEditLang();
         $iShopId = $this->getConfig()->getShopId();
 
         $sQ = "select oxfixed from oxseo where
-                   oxseo.oxobjectid = ".oxDb::getDb()->quote( $this->getEditObjectId() )." and
+                   oxseo.oxobjectid = " . oxDb::getDb()->quote($this->getEditObjectId()) . " and
                    oxseo.oxshopid = '{$iShopId}' and oxseo.oxlang = {$iLang} and oxparams = '' ";
-        return (bool) oxDb::getDb()->getOne( $sQ, false, false );
+
+        return (bool) oxDb::getDb()->getOne($sQ, false, false);
     }
 
     /**
      * Returns url type
-     *
-     * @return string
      */
     protected function _getType()
     {
@@ -146,12 +164,12 @@ class Object_Seo extends oxAdminDetails
      *
      * @return string
      */
-    protected function _getStdUrl( $sOxid )
+    protected function _getStdUrl($sOxid)
     {
-        if ( $sType = $this->_getType() ) {
-            $oObject = oxNew( $sType );
-            if ( $oObject->load( $sOxid ) ) {
-               return $oObject->getBaseStdLink( $this->getEditLang(), true, false );
+        if ($sType = $this->_getType()) {
+            $oObject = oxNew($sType);
+            if ($oObject->load($sOxid)) {
+                return $oObject->getBaseStdLink($this->getEditLang(), true, false);
             }
         }
     }
@@ -168,8 +186,6 @@ class Object_Seo extends oxAdminDetails
 
     /**
      * Returns alternative seo entry id
-     *
-     * @return null
      */
     protected function _getAltSeoEntryId()
     {
@@ -192,15 +208,13 @@ class Object_Seo extends oxAdminDetails
      *
      * @return string
      */
-    public function processParam( $sParam )
+    public function processParam($sParam)
     {
         return $sParam;
     }
 
     /**
      * Returns current object type seo encoder object
-     *
-     * @return oxSeoEncoder
      */
     protected function _getEncoder()
     {
@@ -208,8 +222,6 @@ class Object_Seo extends oxAdminDetails
 
     /**
      * Returns seo uri
-     *
-     * @return string
      */
     public function getEntryUri()
     {
@@ -254,5 +266,4 @@ class Object_Seo extends oxAdminDetails
     {
         return false;
     }
-
 }

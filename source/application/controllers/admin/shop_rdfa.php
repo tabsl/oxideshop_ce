@@ -1,25 +1,23 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   admin
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: shop_rdfa.php 40261 2011-11-24 13:52:22Z vilma $
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 
 /**
@@ -27,10 +25,10 @@
  * Collects shop system settings, updates it on user submit, etc.
  * Admin Menu: Main Menu -> Core Settings -> RDFa.
  *
- * @package admin
  */
 class shop_rdfa extends Shop_Config
 {
+
     /**
      * Template name
      *
@@ -43,10 +41,10 @@ class shop_rdfa extends Shop_Config
      *
      * @var array
      */
-    protected $_aCustomers = array(	"Enduser" => 0,
-                                    "Reseller" => 0,
-                                    "Business" => 0,
-                                    "PublicInstitution"	=> 0);
+    protected $_aCustomers = array("Enduser"           => 0,
+                                   "Reseller"          => 0,
+                                   "Business"          => 0,
+                                   "PublicInstitution" => 0);
 
     /**
      * Gets list of content pages which could be used for embedding
@@ -58,9 +56,11 @@ class shop_rdfa extends Shop_Config
     {
         $oContentList = oxNew("oxcontentlist");
         $sTable = getViewName("oxcontents", $this->_iEditLang);
-        $oContentList->selectString("SELECT * FROM {$sTable} WHERE OXACTIVE = 1 AND OXTYPE = 0
-                                        AND OXLOADID IN ('oxagb', 'oxdeliveryinfo', 'oximpressum', 'oxrightofwithdrawal')
-                                        AND OXSHOPID = '".oxConfig::getParameter("oxid")."'");				// $this->getEditObjectId()
+        $oContentList->selectString(
+            "SELECT * FROM {$sTable} WHERE OXACTIVE = 1 AND OXTYPE = 0
+                                    AND OXLOADID IN ('oxagb', 'oxdeliveryinfo', 'oximpressum', 'oxrightofwithdrawal')
+                                    AND OXSHOPID = '" . oxRegistry::getConfig()->getRequestParameter("oxid") . "'"
+        ); // $this->getEditObjectId()
         return $oContentList;
     }
 
@@ -79,21 +79,20 @@ class shop_rdfa extends Shop_Config
         } else {
             $aCustomers = array();
         }
+
         return $aCustomers;
     }
 
     /**
      * Submits shop main page to web search engines
-     *
-     * @return null
      */
     public function submitUrl()
     {
-        $aParams = oxConfig::getParameter( "aSubmitUrl" );
+        $aParams = oxRegistry::getConfig()->getRequestParameter("aSubmitUrl");
         if ($aParams['url']) {
-            $sNotificationUrl = "http://gr-notify.appspot.com/submit?uri=".urlencode($aParams['url'])."&agent=oxid";
-            if ( $aParams['email'] ) {
-                $sNotificationUrl .= "&contact=".urlencode($aParams['email']);
+            $sNotificationUrl = "http://gr-notify.appspot.com/submit?uri=" . urlencode($aParams['url']) . "&agent=oxid";
+            if ($aParams['email']) {
+                $sNotificationUrl .= "&contact=" . urlencode($aParams['email']);
             }
             $aHeaders = $this->getHttpResponseCode($sNotificationUrl);
             if (substr($aHeaders[2], -4) === "True") {
@@ -113,7 +112,7 @@ class shop_rdfa extends Shop_Config
      *
      * @return array
      */
-    function getHttpResponseCode( $sURL )
+    public function getHttpResponseCode($sURL)
     {
         return get_headers($sURL);
     }

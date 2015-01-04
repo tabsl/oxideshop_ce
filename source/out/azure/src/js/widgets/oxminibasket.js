@@ -1,28 +1,26 @@
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of OXID eShop Community Edition.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * OXID eShop Community Edition is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * OXID eShop Community Edition is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @link      http://www.oxid-esales.com
- * @package   out
- * @copyright (C) OXID eSales AG 2003-2013
- * @version OXID eShop CE
- * @version   SVN: $Id: oxminibasket.js 35529 2011-05-23 07:31:20Z vilma $
+ * @copyright (C) OXID eSales AG 2003-2014
+ * @version   OXID eShop CE
  */
 ( function( $ ) {
 
-    oxMiniBasket = {
+    var oxMiniBasket = {
 
         _create: function(){
 
@@ -31,6 +29,8 @@
                 el      = self.element;
 
             var timeout;
+
+            $( "form.js-oxWidgetReload-miniBasket" ).submit( formSubmit );
 
             // show on hover after some time
             $("#minibasketIcon", el).hover(function(){
@@ -78,6 +78,8 @@
                         $("#countValue").parent('span').remove();
                         $("#basketFlyout").remove();
                         $("#miniBasket #minibasketIcon").unbind('mouseenter mouseleave');
+                        // refresh mini basket widget
+                        $( "form.js-oxWidgetReload-miniBasket" ).submit();
                         return container.not(element);
                     }
                     return null;
@@ -95,7 +97,40 @@
                     verticalArrowPositions: 'split'
                 });
             }
+        },
+
+        /**
+         * Reloads block
+         *
+         * @param activator
+         * @param contentTarget
+         * @returns {boolean}
+         */
+        reload: function ( activator, contentTarget ) {
+            oxAjax.ajax(
+                activator, {//onSuccess
+                    'onSuccess': function ( r ) {
+                        $( contentTarget ).html( r );
+                        if ( typeof WidgetsHandler !== 'undefined' ) {
+                            WidgetsHandler.reloadWidget( 'oxwMiniBasket' );
+                        } else {
+                            oxAjax.evalScripts( contentTarget );
+                        }
+                    }
+                }
+            );
+            return false;
         }
+    }
+
+    /**
+     * Handles form submit
+     *
+     * @returns {*}
+     */
+    function formSubmit() {
+        var target = $( this );
+        return oxMiniBasket.reload( $( target ), $( "#minibasket_container" )[0] );
     }
 
     $.widget( "ui.oxMiniBasket", oxMiniBasket );
